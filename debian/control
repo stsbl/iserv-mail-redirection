@@ -8,7 +8,7 @@ Homepage: https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection
 
 Package: stsbl-iserv-mail-redirection
 Architecture: all
-Depends: iserv-portal
+Depends: iserv-portal, stsbl-iserv3-maintenance
 Description: E-Mail-Weiterleitungs-Modul für IServ
  Dieses Modul bringt die Möglichkeit mit, E-Mail-Weiterleitungen (auch Alias genannt) über den IDesk einzurichten.
  .
