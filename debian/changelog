@@ -1,6 +1,16 @@
 stsbl-iserv-mail-redirection (16.12.31-2) experimental; urgency=medium
 
   [ Felix Jacobi ]
+  * bugfixes:
+   - postgresql: Added map from pg exim to unix root.
+
+  [ Stadtteilschule Blankenese ]
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Sat, 31 Dec 2016 07:03:56 +0100
+
+stsbl-iserv-mail-redirection (16.12.31-2) experimental; urgency=medium
+
+  [ Felix Jacobi ]
   * Added missing install file.
 
   [ Stadtteilschule Blankenese ]
