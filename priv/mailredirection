@@ -1,0 +1,5 @@
+mail_redirection_admin:
+module		E-mail
+description	Manage e-mail redirections
+assign          admins
+assignroles     admin

@@ -1,0 +1,21 @@
+services:
+    stsbl.mailredrection.admin:
+        class: Stsbl\MailRedirectionBundle\Admin\AddressAdmin # Our CRUD class
+        arguments: [Stsbl\MailRedirectionBundle\Entity\Address]  # Sets the controlled entity class
+        tags:
+            - { name: iserv.crud } # Tells IServ about our CRUD
+    stsbl.mailredrection.admin.users:
+        class: Stsbl\MailRedirectionBundle\Admin\UserRecpientAdmin # Our CRUD class
+        arguments: [Stsbl\MailRedirectionBundle\Entity\UserRecipient]  # Sets the controlled entity class
+        tags:
+            - { name: iserv.crud } # Tells IServ about our CRUD
+    stsbl.mailredrection.admin.groups:
+        class: Stsbl\MailRedirectionBundle\Admin\GroupRecpientAdmin # Our CRUD class
+        arguments: [Stsbl\MailRedirectionBundle\Entity\GroupRecipient]  # Sets the controlled entity class
+        tags:
+            - { name: iserv.crud } # Tells IServ about our CRUD
+    stsbl.mailredrection.menu:
+        class: Stsbl\MailRedirectionBundle\EventListener\MenuListener # Out MenuListener Class
+        tags:
+        #  - { name: kernel.event_listener, event: iserv_portal.menu_main, method: onBuildMainMenu } # Tells IServ about the main menu method
+          - { name: kernel.event_listener, event: iserv_portal.menu_admin, method: onBuildAdminMenu } # Tells IServ about the admin menu method]

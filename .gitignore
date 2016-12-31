@@ -1,0 +1,5 @@
+debian/stsbl-iserv-mail-redirection/*
+debian/stsbl-iserv-mail-redirection.debhelper.log
+debian/stsbl-iserv-mail-redirection.substvars
+debian/files
+debian/debhelper-build-stamp

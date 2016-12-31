@@ -1,0 +1,65 @@
+msgid "There is already an entry for that address."
+msgstr "Es gibt bereits einen Eintrag für diese Adresse."
+
+msgid "This is a system mail address, you are not allowed to create redirections for it."
+msgstr "Dies ist eine System Mail-Adresse, es ist ihnen nicht erlaubt, Weiterleitungen dafür zu erstellen."
+
+msgid "This is not a valid local part of an e-mail address."
+msgstr "Dies ist kein gültiger lokaler Teil einer E-Mail-Adresse."
+
+msgid "Enter only the address part before the @."
+msgstr "Geben sie nur den Adressteil, der vor dem @ steht, ein."
+
+msgid "Original recipient"
+msgstr "Originalempfänger"
+
+msgid "Mail redirections"
+msgstr "Mailweiterleitungen"
+
+msgid "Mail redirection"
+msgstr "Mailweiterleitung"
+
+msgid "The local part of the e-mail address which you want to redirect."
+msgstr "Der lokale Teil der E-Mail-Adresse, die sie weiterleiten möchten."
+
+msgid "Umlauts are not allowed as part of it."
+msgstr "Umlaute dürfen nicht enthalten sein."
+
+msgid "You can enable or disable this redirection. If it is disabled all assigned users and groups will stop receiving the mails of this address."
+msgstr "Sie können diese Weiterleitung aktivieren oder deaktivieren. Wenn sie deaktiviert ist, werden zugewiesene Benutzer und Gruppen die Mails an diese Adresse nicht mehr erhalten."
+
+msgid "Here you can enter further explanation for this redirection."
+msgstr "Hier können sie weitere Erläuterungen zu dieser Weiterleitung eingeben."
+
+msgid "Users as redirection targets"
+msgstr "Benutzer als Weiterleitungsziele"
+
+msgid "User as redirection target"
+msgstr "Benutzer als Weiterleitungsziel"
+
+msgid "This user has already an entry for the original recipient."
+msgstr "Dieser Benutzer hat bereits einen Eintrag für den Originalempfänger."
+
+msgid "This recipient has already an entry for the user."
+msgstr "Dieser Empfänger hat bereits einen Eintrag für den Benutzer."
+
+msgid "Set up user as redirection target"
+msgstr "Benutzer als Weiterleitungsziel einrichten"
+
+msgid "Groups as redirection targets"
+msgstr "Gruppen als Weiterleitungsziele"
+
+msgid "Group as redirection target"
+msgstr "Gruppe als Weiterleitungsziel"
+
+msgid "Set up groups as redirection target"
+msgstr "Gruppen als Weiterleitungsziel einrichten"
+
+msgid "This group has already an entry for the original recipient."
+msgstr "Diese Gruppe hat bereits einen Eintrag für den Originalempfänger."
+
+msgid "This recipient has already an entry for the group."
+msgstr "Dieser Empfänger hat bereits einen Eintrag für die Gruppe."
+
+msgid "Manage e-mail redirections"
+msgstr "E-Mail-Weiterleitungen verwalten"
