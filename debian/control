@@ -18,4 +18,4 @@ Description: E-Mail-Weiterleitungs-Modul für IServ
  https://it.stsbl.de/wp-content/uploads/2016/12/stsbl-iserv-mail-redirection.png
  .
  Weitere Hilfen zur Einrichtung finden sie auf der verlinkten Homepage.
-Tag: suite::iserv:portal, role::plugin, implemented-in::php
+Tag: suite::iserv:portal, role::plugin, status::highlighted, status::recommended, implemented-in::php
