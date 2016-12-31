@@ -1,3 +1,12 @@
+stsbl-iserv-mail-redirection (16.12.31-1) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Added status debtags.
+
+  [ Stadtteilschule Blankenese ]
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Sat, 31 Dec 2016 06:15:22 +0100
+
 stsbl-iserv-mail-redirection (16.12.31-0) unstable; urgency=low
 
   * Initial release.
