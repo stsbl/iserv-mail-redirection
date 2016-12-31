@@ -87,7 +87,7 @@ class AddressAdmin extends AbstractAdmin
                 ['help_text' => _('You can enable or disable this redirection. If it is disabled all assigned users and groups will stop receiving the mails of this address.')]
             ]);
         $formMapper->add('comment', TextareaType::class, [
-            'required' => true, 
+            'required' => false, 
             'label' => _('Note'), 
             'attr' =>
                 ['help_text' => _('Here you can enter further explanation for this redirection.')]
