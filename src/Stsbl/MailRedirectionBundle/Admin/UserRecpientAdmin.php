@@ -58,6 +58,7 @@ class UserRecpientAdmin extends AbstractAdmin
         $this->itemTitle = _('User as redirection target');
         $this->id = 'mail_redirection_users';
         $this->routesPrefix = 'admin/mailredirection/users';
+        $this->options['help'] = 'https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection';
     }
 
     /**
