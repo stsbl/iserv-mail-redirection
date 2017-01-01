@@ -15,7 +15,6 @@ services:
         calls:
             - [ setLogger, ["@iserv.logger"]]
             - [ setConfig, ["@iserv.config"]]
-    stsbl.mailredrection.menu:
     stsbl.mailredrection.admin.groups:
         class: Stsbl\MailRedirectionBundle\Admin\GroupRecpientAdmin # Our CRUD class
         arguments: [Stsbl\MailRedirectionBundle\Entity\GroupRecipient]  # Sets the controlled entity class
