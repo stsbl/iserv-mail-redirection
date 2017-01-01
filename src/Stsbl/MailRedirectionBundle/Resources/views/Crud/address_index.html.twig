@@ -1,0 +1,13 @@
+{# src/Stsbl/MailRedirectionBundle/Resources/views/Crud/address_index.html.twig #}
+{% extends 'IServCrudBundle:Crud:index.html.twig' %}
+
+{% block content %}
+    <div class="alert alert-info">
+        <strong>{{ _('Guide for configuring mail redirections:') }}</strong>
+        <ol>
+            <li>{{ _('Add an original recipient for the address which you want to redirect below.') }}</li>
+            <li>{{ _('Add users or groups for the original recipient by choosing one the buttons "Set up users as redirection target" respectively "Set up groups as redirection target".') }}</li>
+        </ol>
+    </div>
+    {{ parent() }}
+{% endblock %}

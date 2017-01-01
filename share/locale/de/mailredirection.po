@@ -57,3 +57,12 @@ msgstr "Diese Kombination von Gruppe und Originalempfänger hat bereits einen Ei
 
 msgid "This combination of user and original recipient already has an entry."
 msgstr "Diese Kombination von Benutzer und Originalempfänger hat bereits einen Eintrag."
+
+msgid "Guide for configuring mail redirections:"
+msgstr "Anleitung zum Einrichten von Mailweiterleitungen:"
+
+msgid "Add an original recipient for the address which you want to redirect below."
+msgstr "Fügen sie unten einen Originalempfänger für die Adresse hinzu, die sie weiterleiten möchten."
+
+msgid "Add users or groups for the original recipient by choosing one the buttons \"Set up users as redirection target\" respectively \"Set up groups as redirection target\"."
+msgstr "Fügen sie Benutzer oder Gruppen für den Originalempfänger durch das Auswählen einer der Buttons \"Benutzer als Weiterleitungsziel einrichten\" beziehungsweise \"Gruppen als Weiterleitungsziel einrichten\" hinzu."
