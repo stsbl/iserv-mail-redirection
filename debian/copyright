@@ -1,13 +1,12 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: stsbl-iserv-mail-redirection
-Source: <url://example.com>
 
 Files: *
-Copyright: 2016 Felix Jacobi <felix.jacobi@stsbl.de>
+Copyright: 2017 Felix Jacobi <felix.jacobi@stsbl.de>
 License: MIT
 
 Files: debian/*
-Copyright: 2016 Stadtteilschule Blankenese <repository@stsbl.de>
+Copyright: 2017 Stadtteilschule Blankenese <repository@stsbl.de>
 License: MIT
 
 License: MIT
@@ -28,8 +27,3 @@ License: MIT
  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-# Please also look if there are files or directories which have a
-# different copyright/license attached and list them here.
-# Please avoid to pick license terms that are more restrictive than the
-# packaged work, as it may make Debian's contributions unacceptable upstream.
