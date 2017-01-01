@@ -39,9 +39,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @license MIT license <https://opensource.org/licenses/MIT>
  * @ORM\Entity
  * @ORM\Table(name="mailredirection_recipient_groups")
- * * @DoctrineAssert\UniqueEntity(fields={"recipient", "originalRecipient"}, message="This combination of group and original recipient already has an entry.")
- * //@DoctrineAssert\UniqueEntity(fields="recipient", message="This group has already an entry for the original recipient.")
- * //@DoctrineAssert\UniqueEntity(fields="originalRecipient", message="This recipient has already an entry for the group.")
+ * @DoctrineAssert\UniqueEntity(fields={"recipient", "originalRecipient"}, message="This combination of group and original recipient already has an entry.")
  */
 class GroupRecipient implements CrudInterface
 {
