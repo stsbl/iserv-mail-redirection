@@ -1,3 +1,27 @@
+stsbl-iserv-mail-redirection (17.01.01-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * AddressAdmin: Remove required tag from note field.
+  * Drop unique constraints in database temporary, because their does not work properly.
+  * Added logging for editing of mail redirections.
+  * Show users and groups in address overview.
+  * Added help links.
+  * Fixed Annotation on Entities to allow multiple entries for {users,groups,originalRecipients}.
+  * Reactivated unique index in database.
+  * Removed old annotations.
+  * Added guide for setup on main page.
+  * Fixed service definition to set iserv.config correctly for UserRecipientAdmin.
+  * Fixed log messages.
+  * Updated copyright and headers.
+
+  [ Stadtteilschule Blankenese ]
+
+  iserv: Die Erstellung, Änderung und Löschung von Mailweiterleitungen wird nun im Log vermerkt.
+
+  iserv: Unter dem Menüpunkt "Verwaltung > Benutzer > Mailweiterleitungen" existiert nun eine Kurzanleitung, die die Einrichtung beschreibt.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Sun, 01 Jan 2017 09:35:28 +0100
+
 stsbl-iserv-mail-redirection (16.12.31-3) experimental; urgency=medium
 
   [ Felix Jacobi ]
