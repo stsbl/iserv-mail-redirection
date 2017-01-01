@@ -114,11 +114,15 @@ class AddressAdmin extends AbstractAdmin
         } else if ($mapper instanceof ShowMapper) {
             $mapper->add('recipient', null, ['label' => _('Original recipient')]);
         }
-            
-        $mapper->add('enabled', 'boolean', ['label' => _('Enabled')]);
-        $mapper->add('comment', null, ['label' => _('Note'), 'responsive' => 'desktop']);
-        $mapper->add('userRecipients', null, ['label' => _('Users')]);
-        $mapper->add('groupRecipients', null, ['label' => _('Groups')]);
+        
+        // explicity block FormMapper
+        // the method will also called when building form
+        if (!$mapper instanceof FormMapper) {
+            $mapper->add('enabled', 'boolean', ['label' => _('Enabled')]);
+            $mapper->add('comment', null, ['label' => _('Note'), 'responsive' => 'desktop']);
+            $mapper->add('userRecipients', null, ['label' => _('Users')]);
+            $mapper->add('groupRecipients', null, ['label' => _('Groups')]);
+        }
         
     }
     

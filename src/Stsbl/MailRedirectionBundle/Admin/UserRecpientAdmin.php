@@ -151,16 +151,16 @@ class UserRecpientAdmin extends AbstractAdmin
         /* @var $originalRecipient \Stsbl\MailRedirectionBundle\Entity\GroupRecipient */
         $originalRecipient = $this->getObjectManager()->findOneBy('StsblMailRedirectionBundle:Address', ['id' => $previousData['originalRecipient']]);
         /* @var $user \IServ\CoreBundle\Entity\User */
-        $user = $this->getObjectManager()->findOneBy('IServCoreBundle:User', ['account' => $previousData['recipient']]);
+        $user = $this->getObjectManager()->findOneBy('IServCoreBundle:User', ['username' => $previousData['recipient']]);
         
         if ($object->getOriginalRecipient() !== $originalRecipient) {
             // write log
             // use previous group to prevent confusing logs
-            $this->log('Originalempfänger '.$originalRecipient.' bei Benutzer '.$user.' geändert nach '.$object->getOriginalRecipient());
+            $this->log('Originalempfänger '.$originalRecipient.'@'.$servername.' bei Benutzer '.$user.' geändert nach '.$object->getOriginalRecipient().'@'.$servername);
         }
        
         // DO NOT COMPARE WITH $previousData['recipient'], BECAUSE THIS IS A STRING!
-        if ($object->getRecipient() !== $group) {
+        if ($object->getRecipient() !== $user) {
             // write log
             $this->log('Benutzer '.$user.' als Ziel für die Weiterleitung '.$object->getOriginalRecipient().'@'.$servername.' entfernt');
             $this->log('Benutzer '.$object->getRecipient().' als Ziel für die Weiterleitung '.$object->getOriginalRecipient().'@'.$servername.' hinzugefügt');

@@ -157,7 +157,7 @@ class GroupRecpientAdmin extends AbstractAdmin
         if ($object->getOriginalRecipient() !== $originalRecipient) {
             // write log
             // use previous group to prevent confusing logs
-            $this->log('Originalempfänger '.$originalRecipient.' bei Gruppe '.$group.' geändert nach '.$object->getOriginalRecipient());
+            $this->log('Originalempfänger '.$originalRecipient.'@'.$servername.' bei Gruppe '.$group.' geändert nach '.$object->getOriginalRecipient().'@'.$servername);
         }
        
         // DO NOT COMPARE WITH $previousData['recipient'], BECAUSE THIS IS A STRING!
