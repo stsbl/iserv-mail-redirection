@@ -49,8 +49,8 @@ CREATE TABLE mailredirection_recipient_groups (
 );
 
 -- disallow to enter the same recipient and original_recipient twice
--- CREATE UNIQUE INDEX mailredirection_recipient_users_unique ON mailredirection_recipient_users (recipient, original_recipient_id);
--- CREATE UNIQUE INDEX mailredirection_recipient_groups_unique ON mailredirection_recipient_groups (recipient, original_recipient_id);
+CREATE UNIQUE INDEX mailredirection_recipient_users_key ON mailredirection_recipient_users (recipient, original_recipient_id);
+CREATE UNIQUE INDEX mailredirection_recipient_groups_key ON mailredirection_recipient_groups (recipient, original_recipient_id);
 
 -- permissions
 GRANT SELECT, USAGE ON "mailredirection_recipient_users_id_seq", "mailredirection_recipient_groups_id_seq", "mailredirection_addresses_id_seq" TO exim, symfony;

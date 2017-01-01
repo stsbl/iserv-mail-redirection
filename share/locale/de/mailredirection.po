@@ -37,12 +37,6 @@ msgstr "Benutzer als Weiterleitungsziele"
 msgid "User as redirection target"
 msgstr "Benutzer als Weiterleitungsziel"
 
-msgid "This user has already an entry for the original recipient."
-msgstr "Dieser Benutzer hat bereits einen Eintrag für den Originalempfänger."
-
-msgid "This recipient has already an entry for the user."
-msgstr "Dieser Empfänger hat bereits einen Eintrag für den Benutzer."
-
 msgid "Set up user as redirection target"
 msgstr "Benutzer als Weiterleitungsziel einrichten"
 
@@ -55,11 +49,11 @@ msgstr "Gruppe als Weiterleitungsziel"
 msgid "Set up groups as redirection target"
 msgstr "Gruppen als Weiterleitungsziel einrichten"
 
-msgid "This group has already an entry for the original recipient."
-msgstr "Diese Gruppe hat bereits einen Eintrag für den Originalempfänger."
-
-msgid "This recipient has already an entry for the group."
-msgstr "Dieser Empfänger hat bereits einen Eintrag für die Gruppe."
-
 msgid "Manage e-mail redirections"
 msgstr "E-Mail-Weiterleitungen verwalten"
+
+msgid "This combination of group and original recipient already has an entry."
+msgstr "Diese Kombination von Gruppe und Originalempfänger hat bereits einen Eintrag."
+
+msgid "This combination of user and original recipient already has an entry."
+msgstr "Diese Kombination von Benutzer und Originalempfänger hat bereits einen Eintrag."
