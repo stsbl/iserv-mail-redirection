@@ -1,3 +1,4 @@
+# src/Stsbl/MailRedirectionBundle/Resources/config/services.yml
 services:
     stsbl.mailredrection.admin:
         class: Stsbl\MailRedirectionBundle\Admin\AddressAdmin # Our CRUD class
