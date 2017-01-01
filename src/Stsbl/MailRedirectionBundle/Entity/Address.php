@@ -2,6 +2,7 @@
 // src/Stsbl/MailRedirection/Bundle/Enity/Recipient.php
 namespace Stsbl\MailRedirectionBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use IServ\CrudBundle\Entity\CrudInterface;
 use Stsbl\MailRedirectionBundle\Validator\Contraints as StsblAssert;
@@ -72,6 +73,29 @@ class Address implements CrudInterface
      * @ORM\Column(name="comment", type="text")
      */
     private $comment;
+
+    /**
+     * @ORM\OneToMany(targetEntity="UserRecipient", mappedBy="originalRecipient")
+     *
+     * @var ArrayCollection
+     */
+    private $userRecipients;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GroupRecipient", mappedBy="originalRecipient")
+     *
+     * @var ArrayCollection
+     */
+    private $groupRecipients;
+    
+    /**
+     * The constructor
+     */
+    public function __construct() 
+    {
+        $this->groupRecipients = new ArrayCollection();
+        $this->userRecipients = new ArrayCollection();
+    }
     
     /**
      * {@inheritdoc}
@@ -120,6 +144,26 @@ class Address implements CrudInterface
     }
     
     /**
+     * Get userRecipients
+     * 
+     * @return ArrayCollection
+     */
+    public function getUserRecipients()
+    {
+        return $this->userRecipients;
+    }
+
+    /**
+     * Get groupRecipients
+     * 
+     * @return ArrayCollection
+     */
+    public function getGroupRecipients()
+    {
+        return $this->groupRecipients;
+    }
+    
+    /**
      * Set recipient
      * 
      * @param string $recipient
@@ -156,5 +200,27 @@ class Address implements CrudInterface
         $this->comment = $comment;
         
         return $this;
+    }
+    
+    /**
+     * Set userRecipients
+     * 
+     * @param ArrayCollection $userRecipients
+     * @return Address
+     */
+    public function setUserRecipients(ArrayCollection $userRecipients)
+    {
+        $this->userRecipients = $userRecipients;
+    }
+
+    /**
+     * Set groupRecipients
+     * 
+     * @param ArrayCollection $userRecipients
+     * @return Address
+     */
+    public function setGroupRecipients(ArrayCollection $groupRecipients)
+    {
+        $this->userRecipients = $groupRecipients;
     }
 }

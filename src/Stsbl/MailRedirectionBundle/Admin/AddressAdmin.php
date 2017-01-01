@@ -74,22 +74,6 @@ class AddressAdmin extends AbstractAdmin
         
         return parent::__construct($class, $title, $itemTitle);
     }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function configureListFields(ListMapper $listMapper)
-    {
-        $this->configureAll($listMapper);
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function configureShowFields(ShowMapper $showMapper)
-    {
-        $this->configureAll($showMapper);
-    }
 
     /**
      * {@inheritdoc}
@@ -121,16 +105,19 @@ class AddressAdmin extends AbstractAdmin
      * 
      * @param AbstractBaseMapper $mapper
      */
-    private function configureAll(AbstractBaseMapper $mapper)
+    public function configureFields(AbstractBaseMapper $mapper)
     {
         if ($mapper instanceof ListMapper) {
             $mapper->addIdentifier('recipient', null, ['label' => _('Original recipient')]);
-        } else {
+        } else if ($mapper instanceof ShowMapper) {
             $mapper->add('recipient', null, ['label' => _('Original recipient')]);
         }
             
         $mapper->add('enabled', 'boolean', ['label' => _('Enabled')]);
         $mapper->add('comment', null, ['label' => _('Note'), 'responsive' => 'desktop']);
+        $mapper->add('userRecipients', null, ['label' => _('Users')]);
+        $mapper->add('groupRecipients', null, ['label' => _('Groups')]);
+        
     }
     
     /**

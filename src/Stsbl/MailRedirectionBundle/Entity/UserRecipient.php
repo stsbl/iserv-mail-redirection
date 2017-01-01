@@ -54,7 +54,7 @@ class UserRecipient implements CrudInterface
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Address")
+     * @ORM\ManyToOne(targetEntity="Address", inversedBy="userRecipients")
      * @ORM\JoinColumn(name="original_recipient_id", referencedColumnName="id", onDelete="CASCADE")
      * @Assert\NotBlank()
      * 
