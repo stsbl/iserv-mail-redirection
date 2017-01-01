@@ -72,7 +72,7 @@ class AddressAdmin extends AbstractAdmin
     public function __construct($class, $title = null, $itemTitle = null) 
     {
         // set module context for logging
-        $this->logModule = _('Mail redirection');
+        $this->logModule = 'Mail redirection';
         
         return parent::__construct($class, $title, $itemTitle);
     }
