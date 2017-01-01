@@ -4,10 +4,14 @@ namespace Stsbl\MailRedirectionBundle\Admin;
 
 use IServ\AdminBundle\Admin\AbstractAdmin;
 use IServ\CoreBundle\Form\Type\BooleanType;
+use IServ\CoreBundle\Service\Config;
+use IServ\CoreBundle\Traits\LoggerTrait;
+use IServ\CrudBundle\Entity\CrudInterface;
 use IServ\CrudBundle\Mapper\AbstractBaseMapper;
 use IServ\CrudBundle\Mapper\FormMapper;
 use IServ\CrudBundle\Mapper\ListMapper;
 use IServ\CrudBundle\Mapper\ShowMapper;
+use Stsbl\MailRedirectionBundle\Security\Privilege;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 /*
@@ -42,6 +46,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
  */
 class AddressAdmin extends AbstractAdmin
 {
+    use LoggerTrait;
+    
+    /**
+     * @var Config
+     */
+    private $config;
+    
     /**
      * {@inheritdoc}
      */
@@ -51,6 +62,17 @@ class AddressAdmin extends AbstractAdmin
         $this->itemTitle = _('Mail redirection');
         $this->id = 'mail_redirection';
         $this->routesPrefix = 'admin/mailredirection';
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct($class, $title = null, $itemTitle = null) 
+    {
+        // set module context for logging
+        $this->logModule = _('Mail redirection');
+        
+        return parent::__construct($class, $title, $itemTitle);
     }
     
     /**
@@ -152,6 +174,85 @@ class AddressAdmin extends AbstractAdmin
      */
     public function isAuthorized() 
     {
-        return $this->isGranted('PRIV_MAIL_REDIRECTION_ADMIN');
+        return $this->isGranted(Privilege::Admin);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function postPersist(CrudInterface $object) 
+    {
+        /* @var $object \Stsbl\MailRedirectionBundle\Entity\Address */
+        // write log
+        $servername = $this->config->get('Servername');
+        $this->log('Weiterleitung für Adresse '.$object->getRecipient().'@'.$servername.' hinzugefügt');
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function postUpdate(CrudInterface $object, array $previousData = null) 
+    {
+        /* @var $object \Stsbl\MailRedirectionBundle\Entity\Address */
+        if ($object->getRecipient() == $previousData['recipient']
+            && $object->getComment() == $previousData['comment'] 
+            && $object->getEnabled() == $previousData['enabled']) {
+            // nothing changed, no log
+            return;
+        }
+        
+        $servername = $this->config->get('Servername');
+        
+        if ($object->getRecipient() !== $previousData['recipient']) {
+            // write log
+            $this->log('Weiterleitung für Adresse '.$previousData['recipient'].'@'.$servername.' geändert nach '.$object->getRecipient().'@'.$servername);
+        }
+
+        if ($object->getEnabled() !== $previousData['enabled']) {
+            // write log
+            if ($object->getEnabled()) {
+                $text = 'aktiviert';
+            } else {
+                $text = 'deaktviert';
+            }
+            
+            // write log
+            $this->log('Weiterleitung für Adresse '.$object->getRecipient().'@'.$servername.' '.$text);
+        }
+        
+        if($object->getComment() !== $previousData['comment']) {
+            if(empty($object->getComment())) {
+                $text = 'gelöscht';
+            } else if (empty($previousData['comment'])) {
+                $text = 'hinzugefügt';
+            } else {
+                $text = 'geändert';
+            }
+            
+            // write log
+            $this->log('Kommentar der Weiterleitung für Adresse '.$object->getRecipient().'@'.$servername.' '.$text);
+        }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function postRemove(CrudInterface $object) 
+    {
+        /* @var $object \Stsbl\MailRedirectionBundle\Entity\Address */
+        $servername = $this->config->get('Servername');
+        
+        // write log
+        $this->log('Weiterleitung für Adresse '.$object->getRecipient().'@'.$servername.' gelöscht');       
+    }
+    
+    /**
+     * Injects config into class, so that we can read servername from it
+     * 
+     * @param $config Config
+     */
+    public function setConfig(Config $config)
+    {
+        $this->config = $config;
     }
 }

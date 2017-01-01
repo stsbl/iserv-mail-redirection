@@ -70,7 +70,6 @@ class Address implements CrudInterface
 
     /**
      * @ORM\Column(name="comment", type="text")
-     * @Assert\NotBlank()
      */
     private $comment;
     

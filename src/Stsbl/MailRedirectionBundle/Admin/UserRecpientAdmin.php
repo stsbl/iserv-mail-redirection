@@ -3,8 +3,12 @@
 namespace Stsbl\MailRedirectionBundle\Admin;
 
 use IServ\AdminBundle\Admin\AbstractAdmin;
+use IServ\CoreBundle\Service\Config;
+use IServ\CoreBundle\Traits\LoggerTrait;
+use IServ\CrudBundle\Entity\CrudInterface;
 use IServ\CrudBundle\Mapper\AbstractBaseMapper;
 use IServ\CrudBundle\Mapper\ListMapper;
+use Stsbl\MailRedirectionBundle\Security\Privilege;
 
 /*
  * The MIT License
@@ -38,6 +42,13 @@ use IServ\CrudBundle\Mapper\ListMapper;
  */
 class UserRecpientAdmin extends AbstractAdmin
 {
+    use LoggerTrait;
+    
+    /**
+     * @var Config
+     */
+    private $config;
+    
     /**
      * {@inheritdoc}
      */
@@ -47,6 +58,17 @@ class UserRecpientAdmin extends AbstractAdmin
         $this->itemTitle = _('User as redirection target');
         $this->id = 'mail_redirection_users';
         $this->routesPrefix = 'admin/mailredirection/users';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct($class, $title = null, $itemTitle = null) 
+    {
+        // set module context for logging
+        $this->logModule = _('Mail redirection');
+        
+        return parent::__construct($class, $title, $itemTitle);
     }
     
     /**
@@ -99,12 +121,78 @@ class UserRecpientAdmin extends AbstractAdmin
            return sprintf('%s/%s/%s', $this->routesPrefix, $action, '{id}');
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function postPersist(CrudInterface $object)
+    {
+        /* @var $object \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
+        $servername = $this->config->get('Servername');
+        
+        // write log
+        $this->log('Benutzer '.$object->getRecipient().' als Ziel für die Weiterleitung '.$object->getOriginalRecipient().'@'.$servername.' hinzugefügt');
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function postUpdate(CrudInterface $object, array $previousData = null) 
+    {
+        /* @var $object \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
+        if ($object->getRecipient() == $previousData['recipient'] &&
+            $object->getOriginalRecipient() == $previousData['originalRecipient']) {
+            // nothing changed, no log
+            return;
+        }
+        
+        $servername = $this->config->get('Servername');
+        /* @var $originalRecipient \Stsbl\MailRedirectionBundle\Entity\GroupRecipient */
+        $originalRecipient = $this->getObjectManager()->findOneBy('StsblMailRedirectionBundle:Address', ['id' => $previousData['originalRecipient']]);
+        /* @var $user \IServ\CoreBundle\Entity\User */
+        $user = $this->getObjectManager()->findOneBy('IServCoreBundle:User', ['account' => $previousData['recipient']]);
+        
+        if ($object->getOriginalRecipient() !== $originalRecipient) {
+            // write log
+            // use previous group to prevent confusing logs
+            $this->log('Originalempfänger '.$originalRecipient.' bei Benutzer '.$user.' geändert nach '.$object->getOriginalRecipient());
+        }
+       
+        // DO NOT COMPARE WITH $previousData['recipient'], BECAUSE THIS IS A STRING!
+        if ($object->getRecipient() !== $group) {
+            // write log
+            $this->log('Benutzer '.$user.' als Ziel für die Weiterleitung '.$object->getOriginalRecipient().'@'.$servername.' entfernt');
+            $this->log('Benutzer '.$object->getRecipient().' als Ziel für die Weiterleitung '.$object->getOriginalRecipient().'@'.$servername.' hinzugefügt');
+        }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function postRemove(CrudInterface $object) 
+    {
+        /* @var $object \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
+        $servername = $this->config->get('Servername');
+        
+        // write log
+        $this->log('Benutzer '.$object->getRecipient().' als Ziel für die Weiterleitung '.$object->getOriginalRecipient().'@'.$servername.' entfernt');
+    }
     
     /**
      * {@inheritdoc}
      */
     public function isAuthorized() 
     {
-        return $this->isGranted('PRIV_MAIL_REDIRECTION_ADMIN');
+        return $this->isGranted(Privilege::Admin);
+    }
+    
+    /**
+     * Injects config into class, so that we can read servername from it
+     * 
+     * @param Config $config
+     */
+    public function setConfig(Config $config)
+    {
+        $this->config = $config;
     }
 }

@@ -1,12 +1,11 @@
 <?php
 // src/Stsbl/MailRedirectionBundle/Security/Privilege.php
-
 namespace Stsbl\MailRedirectionBundle\Security;
 
 /*
  * The MIT License
  *
- * Copyright 2016 felix.
+ * Copyright 2016 Felix Jacobi.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +27,12 @@ namespace Stsbl\MailRedirectionBundle\Security;
  */
 
 /**
- * Description of Privilege
+ * Container for easier access to privilege
  *
- * @author felix
+ * @author Felix Jacobi <felix.jacobi@stsbl.de>
+ * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class Privilege {
-    //put your code here
+class Privilege 
+{
+    const Admin = 'PRIV_MAIL_REDIRECTION_ADMIN';
 }
