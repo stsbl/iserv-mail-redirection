@@ -56,8 +56,8 @@ class GroupRecpientAdmin extends AbstractAdmin
     {
         $this->title = _('Groups as redirection targets');
         $this->itemTitle = _('Group as redirection target');
-        $this->id = 'mail_redirection_groups';
-        $this->routesPrefix = 'admin/mailredirection/groups';
+        $this->id = 'mail_aliases_groups';
+        $this->routesPrefix = 'admin/mailaliases/groups';
         $this->options['help'] = 'https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection';
     }
     
@@ -97,7 +97,7 @@ class GroupRecpientAdmin extends AbstractAdmin
     public function prepareBreadcrumbs() 
     {
         return [
-          _('Mail redirections') => $this->router->generate('admin_mail_redirection_index')  
+          _('Mail redirections') => $this->router->generate('admin_mail_aliases_index')  
         ];
     }
     

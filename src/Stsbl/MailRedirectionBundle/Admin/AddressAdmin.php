@@ -60,8 +60,8 @@ class AddressAdmin extends AbstractAdmin
     {
         $this->title = _('Mail redirections');
         $this->itemTitle = _('Mail redirection');
-        $this->id = 'mail_redirection';
-        $this->routesPrefix = 'admin/mailredirection';
+        $this->id = 'mail_aliases';
+        $this->routesPrefix = 'admin/mailaliases';
         $this->options['help'] = 'https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection';
         $this->templates['crud_index'] = 'StsblMailRedirectionBundle:Crud:address_index.html.twig';
     }
@@ -156,8 +156,8 @@ class AddressAdmin extends AbstractAdmin
     {
         $links = parent::getIndexActions();
         
-        $links['users'] = [$this->getRouter()->generate('admin_mail_redirection_users_index'), _('Set up user as redirection target'), 'pro-user'];
-        $links['groups'] = [$this->getRouter()->generate('admin_mail_redirection_groups_index'), _('Set up groups as redirection target'), 'pro-group'];
+        $links['users'] = [$this->getRouter()->generate('admin_mail_aliases_users_index'), _('Set up user as redirection target'), 'pro-user'];
+        $links['groups'] = [$this->getRouter()->generate('admin_mail_aliases_groups_index'), _('Set up groups as redirection target'), 'pro-group'];
         
         return $links;
     }

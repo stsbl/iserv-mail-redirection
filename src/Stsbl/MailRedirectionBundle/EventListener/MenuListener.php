@@ -49,7 +49,7 @@ class MenuListener implements AdminMenuListenerInterface {
             $block = $menu->getChild('users');
 
             $item = $block->addChild('mailredirection_admin', [
-                'route' => 'admin_mail_redirection_index',
+                'route' => 'admin_mail_aliases_index',
                 'label' => _('Mail redirections'),
             ]);
             
