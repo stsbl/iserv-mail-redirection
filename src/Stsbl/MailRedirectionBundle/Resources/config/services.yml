@@ -29,3 +29,15 @@ services:
         tags:
         #  - { name: kernel.event_listener, event: iserv_portal.menu_main, method: onBuildMainMenu } # Tells IServ about the main menu method
           - { name: kernel.event_listener, event: iserv_portal.menu_admin, method: onBuildAdminMenu } # Tells IServ about the admin menu method]
+          
+    stsbl.mailredirection.form.group_recipient:
+        class: Stsbl\MailRedirectionBundle\Form\Type\GroupRecipientType
+        arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
+        tags:
+            - {name: form.type }
+            
+    stsbl.mailredirection.form.user_recipient:
+        class: Stsbl\MailRedirectionBundle\Form\Type\UserRecipientType
+        arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
+        tags:
+            - {name: form.type }

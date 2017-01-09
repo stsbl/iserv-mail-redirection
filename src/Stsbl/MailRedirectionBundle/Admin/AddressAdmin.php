@@ -2,6 +2,7 @@
 // src/Stsbl/MailRedirectionBundle/Admin/MailRedirectionAdmin.php
 namespace Stsbl\MailRedirectionBundle\Admin;
 
+use Braincrafted\Bundle\BootstrapBundle\Form\Type\BootstrapCollectionType;
 use IServ\AdminBundle\Admin\AbstractAdmin;
 use IServ\CoreBundle\Form\Type\BooleanType;
 use IServ\CoreBundle\Service\Config;
@@ -11,6 +12,8 @@ use IServ\CrudBundle\Mapper\AbstractBaseMapper;
 use IServ\CrudBundle\Mapper\FormMapper;
 use IServ\CrudBundle\Mapper\ListMapper;
 use IServ\CrudBundle\Mapper\ShowMapper;
+use Stsbl\MailRedirectionBundle\Form\Type\GroupRecipientType;
+use Stsbl\MailRedirectionBundle\Form\Type\UserRecipientType;
 use Stsbl\MailRedirectionBundle\Security\Privilege;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
@@ -100,6 +103,32 @@ class AddressAdmin extends AbstractAdmin
             'attr' =>
                 ['help_text' => _('Here you can enter further explanation for this redirection.')]
             ]);
+        $formMapper->add('groupRecipients', BootstrapCollectionType::class, [
+            'required' => false,
+            'label' => _('Groups'),
+            'entry_type' => GroupRecipientType::class,
+            'prototype_name' => 'proto-entry',
+            'attr' => ['class' => 'entry-autocomplete'],
+            // Child options
+            'entry_options' => [
+                    'attr' => [
+                        'widget_col' => 12, // Single child field w/o label col
+                    ],
+                ],
+            ]);
+        $formMapper->add('userRecipients', BootstrapCollectionType::class, [
+            'required' => false,
+            'label' => _('Users'),
+            'entry_type' => UserRecipientType::class,
+            'prototype_name' => 'proto-entry',
+            'attr' => ['class' => 'entry-autocomplete'],
+            // Child options
+            'entry_options' => [
+                    'attr' => [
+                        'widget_col' => 12, // Single child field w/o label col
+                    ],
+                ],
+            ]);
     }
     
     /**
@@ -179,6 +208,11 @@ class AddressAdmin extends AbstractAdmin
         // write log
         $servername = $this->config->get('Servername');
         $this->log('Weiterleitung für Adresse '.$object->getRecipient().'@'.$servername.' hinzugefügt');
+        
+        $this->getObjectManager()->createQueryBuilder($this->class)
+            ->delete()
+            ->from('StsblMailRedirectionBundle:GroupRecipient g')
+            ->where('g.original_recipient_id IS NULL');
     }
     
     /**

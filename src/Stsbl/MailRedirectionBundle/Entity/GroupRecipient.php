@@ -71,10 +71,19 @@ class GroupRecipient implements CrudInterface
     private $recipient;
     
     /**
+     * @var string
+     */
+    private $groupRecipient;
+    
+    /**
      * {@inheritdoc}
      */
     public function __toString()
     {
+        if (!is_null($this->groupRecipient)) {
+            return (string)$this->groupRecipient;
+        }
+        
         return (string)$this->recipient;
     }
     
@@ -104,7 +113,17 @@ class GroupRecipient implements CrudInterface
     public function getOriginalRecipient()
     {
         return $this->originalRecipient;
-    }     
+    }
+    
+    /**
+     * Get transformed recipient
+     * 
+     * @return string
+     */
+    public function getGroupRecipient()
+    {
+        return $this->groupRecipient;
+    }
 
     /**
      * Get recipient
@@ -125,11 +144,23 @@ class GroupRecipient implements CrudInterface
      * @param Address $originalRecipient
      * @return GroupRecipient
      */
-    public function setOriginalRecipient(Address $originalRecipient)
+    public function setOriginalRecipient($originalRecipient)
     {
         $this->originalRecipient = $originalRecipient;
         
         return $this;
     }
-
+    
+    /**
+     * Set transformed recipient
+     * 
+     * @param string $groupRecipient
+     * @return GroupRecipient
+     */
+    public function setGroupRecipient($groupRecipient)
+    {
+        $this->groupRecipient = $groupRecipient;
+        
+        return $this;
+    }
 }

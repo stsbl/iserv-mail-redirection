@@ -71,10 +71,19 @@ class UserRecipient implements CrudInterface
     private $recipient;
     
     /**
+     * @var string
+     */
+    private $userRecipient;
+    
+    /**
      * {@inheritdoc}
      */
     public function __toString()
     {
+        if (!is_null($this->userRecipient)) {
+            return (string)$this->userRecipient;
+        }
+        
         return (string)$this->recipient;
     }
     
@@ -107,6 +116,16 @@ class UserRecipient implements CrudInterface
     }     
 
     /**
+     * Get transformed recipient
+     * 
+     * @return string
+     */
+    public function getUserRecipient()
+    {
+        return $this->userRecipient;
+    }
+    
+    /**
      * Get recipient
      * 
      * @param User $recipient
@@ -125,11 +144,23 @@ class UserRecipient implements CrudInterface
      * @param Addressnew $originalRecipient
      * @return UserRecipient
      */
-    public function setOriginalRecipient(Address $originalRecipient)
+    public function setOriginalRecipient($originalRecipient)
     {
         $this->originalRecipient = $originalRecipient;
         
         return $this;
     }
-
+    /**
+     * Set transformed recipient
+     * 
+     * @param string $userRecipient
+     * @return UserRecipient
+     */
+    public function setUserRecipient($userRecipient)
+    {
+        $this->userRecipient = $userRecipient;
+        
+        return $this;
+    }
+    
 }

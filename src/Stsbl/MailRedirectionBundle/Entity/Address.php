@@ -40,7 +40,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @license MIT license <https://opensource.org/licenes/MIT>
  * @ORM\Entity
  * @ORM\Table(name="mailredirection_addresses")
+ * @ORM\HasLifecycleCallbacks()
  * @DoctrineAssert\UniqueEntity(fields="recipient", message="There is already an entry for that address.")
+ * //@DoctrineAssert\UniqueEntity(fields="userRecipients", message="Every user can only added one time to the redirection.")
+ * //@DoctrineAssert\UniqueEntity(fields="groupRecipients", message="Every group can only added one time to the redirection.")
  */
 class Address implements CrudInterface
 {
@@ -75,14 +78,14 @@ class Address implements CrudInterface
     private $comment;
 
     /**
-     * @ORM\OneToMany(targetEntity="UserRecipient", mappedBy="originalRecipient")
+     * @ORM\OneToMany(targetEntity="UserRecipient", mappedBy="originalRecipient", cascade={"all"}, orphanRemoval=true)
      *
      * @var ArrayCollection
      */
     private $userRecipients;
 
     /**
-     * @ORM\OneToMany(targetEntity="GroupRecipient", mappedBy="originalRecipient")
+     * @ORM\OneToMany(targetEntity="GroupRecipient", mappedBy="originalRecipient", cascade={"all"}, orphanRemoval=true)
      *
      * @var ArrayCollection
      */
@@ -104,7 +107,29 @@ class Address implements CrudInterface
     {
         return (string)$this->recipient;
     }
-
+    
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function removeDuplicateRecipients($eventArgs)
+    {
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $eventArgs->getEntityManager();
+        /*
+        $userRecipients = $this->getUserRecipients();
+        $deleted = $this->setUserRecipients(array_unique($userRecipients));
+        foreach ($deleted as $userRecipient) {
+            $em->remove($userRecipient);
+        }
+        
+        $groupRecipients = $this->getGroupRecipients();
+        $deleted = $this->setGroupRecipients(array_unique($groupRecipients));
+        foreach ($deleted as $groupRecipient) {
+            $em->remove($groupRecipient);
+        }
+        */
+    }
     /**
      * {@inheritdoc}
      */
@@ -203,24 +228,192 @@ class Address implements CrudInterface
     }
     
     /**
+     * Adds one or more user recipients to this original recipient
+     * 
+     * @param array|UserRecipient $userRecipient
+     */
+    public function addUserRecipient($userRecipient)
+    {
+        if(is_array($userRecipient) || $userRecipient instanceof \Traversable) {
+            $this->addUserRecipients($userRecipient);
+        } else {
+            /* @var $userRecipient UserRecipient */
+            $userRecipient->setOriginalRecipient($this);
+            $this->userRecipients->add($userRecipient);
+        }
+    }
+    
+    /**
+     * Adds multiple user recipients to this original recipient
+     * 
+     * @param array $userRecipients
+     */
+    public function addUserRecipients($userRecipients)
+    {
+        foreach ($userRecipients as $userRecipient) {
+            /* @var $userRecipient UserRecipient */
+            $this->addUserRecipient($userRecipient);
+        }
+    }
+    
+    /**
      * Set userRecipients
      * 
-     * @param ArrayCollection $userRecipients
+     * @param array $userRecipients
      * @return Address
      */
-    public function setUserRecipients(ArrayCollection $userRecipients)
+    public function setUserRecipients($userRecipients)
     {
-        $this->userRecipients = $userRecipients;
+        if (!is_array($userRecipients) && !$userRecipients instanceof \Traversable) {
+            throw new \InvalidArgumentException(sprintf('setUserRecipients: Expected traversable, got %s.', gettype($userRecipients)));
+        }
+        
+        $oldUserRecipients = $this->getUserRecipients()->toArray();
+        
+        foreach ($userRecipients as $userRecipient) {
+            if(!$userRecipient instanceof UserRecipient) {
+                throw new \InvalidArgumentException(sprintf('setUserRecipients: Expected only instances of type %s in array elements, got %s.', UserRecipient::class, gettype($userRecipient)));
+            }
+            $this->addUserRecipient($userRecipient);
+        }
+        
+        $toRemove = array_udiff($oldUserRecipients, $this->getUserRecipients()->toArray(), 
+            function (UserRecipient $userRecipient1, UserRecipient $userRecipient2) {
+                $id1 = $userRecipient1->getId();
+                $id2 = $userRecipient2->getId();
+                if ($id1 < $id2) {
+                    return -1;
+                } else if ($id1 > $id2) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        );
+        
+        $this->removeUserRecipients($toRemove);
+        
+        return $this;
     }
 
     /**
+     * removes one or multiple user recipient for original recipient
+     * 
+     * @param UserRecipient|array $userRecipient
+     */
+    public function removeUserRecipient($userRecipient)
+    {
+        if (is_array($userRecipient) || $userRecipient instanceof \Traversable) {
+            $this->removeUserRecipients($userRecipient);
+        } else {
+            $this->userRecipients->removeElement($userRecipient);
+        }
+    }
+
+    /**
+     * removes multiple user recipients from the original recipient
+     * 
+     * @param array $userRecipients
+     */
+    public function removeUserRecipients($userRecipients)
+    {
+        foreach ($userRecipients as $userRecipient) {
+            $this->removeUserRecipient($userRecipient);
+        }
+    }
+
+    /**
+     * Adds one or more group recipients to this original recipient
+     * 
+     * @param array|GroupRecipient $groupRecipient
+     */
+    public function addGroupRecipient($groupRecipient)
+    {
+        if(is_array($groupRecipient) || $groupRecipient instanceof \Traversable) {
+            $this->addGroupRecipients($groupRecipient);
+        } else {
+            /* @var $groupRecipient GroupRecipient */
+            $groupRecipient->setOriginalRecipient($this);
+            $this->groupRecipients->add($groupRecipient);
+        }
+    }
+    
+    /**
+     * Adds multiple group recipients to this original recipient
+     * 
+     * @param array $groupRecipients
+     */
+    public function addGroupRecipients($groupRecipients)
+    {
+        foreach ($groupRecipients as $groupRecipient) {
+            /* @var $groupRecipient GroupRecipient */
+            $this->addGroupRecipient($groupRecipient);
+        }
+    }
+    
+    /**
      * Set groupRecipients
      * 
-     * @param ArrayCollection $userRecipients
+     * @param array $groupRecipients
      * @return Address
      */
-    public function setGroupRecipients(ArrayCollection $groupRecipients)
+    public function setGroupRecipients($groupRecipients)
     {
-        $this->userRecipients = $groupRecipients;
+        if (!is_array($groupRecipients) && !$groupRecipients instanceof \Traversable) {
+            throw new \InvalidArgumentException(sprintf('setGroupRecipients: Expected traversable, got %s.', gettype($groupRecipients)));
+        }
+        
+        $oldGroupRecipients = $this->getGroupRecipients()->toArray();
+        
+        foreach ($groupRecipients as $groupRecipient) {
+            if(!$groupRecipient instanceof GroupRecipient) {
+                throw new \InvalidArgumentException(sprintf('setGroupRecipients: Expected only instances of type %s in array elements, got %s.', GroupRecipient::class, gettype($groupRecipient)));
+            }
+            $this->addGroupRecipient($groupRecipient);
+        }
+        
+        $toRemove= array_udiff($oldGroupRecipients, $this->getGroupRecipients()->toArray(), 
+            function (GroupRecipient $groupRecipient1, GroupRecipient $groupRecipient2) {
+                $id1 = $groupRecipient1->getId();
+                $id2 = $groupRecipient2->getId();
+                if ($id1 < $id2) {
+                    return -1;
+                } else if ($id1 > $id2) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        );
+        
+        $this->removeGroupRecipients($toRemove);
+        
+        return $this;
+    }
+    
+    /**
+     * removes one or multiple group recipient for original recipient
+     * 
+     * @param GroupRecipient|array $groupRecipient
+     */
+    public function removeGroupRecipient($groupRecipient)
+    {
+        if (is_array($groupRecipient) || $groupRecipient instanceof \Traversable) {
+            $this->removeGroupRecipients($groupRecipient);
+        } else {
+            $this->groupRecipients->removeElement($groupRecipient);
+        }
+    }
+
+    /**
+     * removes multiple group recipients from the original recipient
+     * 
+     * @param array $groupRecipients
+     */
+    public function removeGroupRecipients($groupRecipients)
+    {
+        foreach ($groupRecipients as $groupRecipient) {
+            $this->removeGroupRecipient($groupRecipient);
+        }
     }
 }
