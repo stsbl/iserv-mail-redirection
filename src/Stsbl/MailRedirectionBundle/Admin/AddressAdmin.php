@@ -66,7 +66,6 @@ class AddressAdmin extends AbstractAdmin
         $this->id = 'mail_aliases';
         $this->routesPrefix = 'admin/mailaliases';
         $this->options['help'] = 'https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection';
-        $this->templates['crud_index'] = 'StsblMailRedirectionBundle:Crud:address_index.html.twig';
     }
     
     /**
@@ -180,19 +179,6 @@ class AddressAdmin extends AbstractAdmin
         } else if ('delete' === $action) {
            return sprintf('%s/%s/%s', $this->routesPrefix, $action, '{id}');
         }
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function getIndexActions() 
-    {
-        $links = parent::getIndexActions();
-        
-        $links['users'] = [$this->getRouter()->generate('admin_mail_aliases_users_index'), _('Set up user as redirection target'), 'pro-user'];
-        $links['groups'] = [$this->getRouter()->generate('admin_mail_aliases_groups_index'), _('Set up groups as redirection target'), 'pro-group'];
-        
-        return $links;
     }
     
     /**
