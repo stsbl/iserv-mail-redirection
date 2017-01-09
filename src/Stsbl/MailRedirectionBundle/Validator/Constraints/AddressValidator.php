@@ -1,9 +1,11 @@
 <?php
-// src/Stsbl/MailRedirectionBundle/Form/DataTransformer/ContructorTrait.php
-namespace Stsbl\MailRedirectionBundle\Form\DataTransformer;
+// src/Stsbl/MailRedirectionBundle/Validator/Constraints/GroupRecipientValidator.php
+namespace Stsbl\MailRedirectionBundle\Validator\Constraints;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use IServ\CoreBundle\Service\Config;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
 
 /*
  * The MIT License
@@ -30,12 +32,12 @@ use IServ\CoreBundle\Service\Config;
  */
 
 /**
- * Common trait for both transformers
+ * Validator for GroupRecipient
  *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-trait ConstructorTrait 
+class AddressValidator extends ConstraintValidator
 {
     /**
      * @var Config
@@ -43,9 +45,9 @@ trait ConstructorTrait
     protected $config;
 
     /**
-     * @var ObjectManager
+     * @var EntityManager
      */
-    protected $om;
+    protected $em;
     
     /**
      * Constructor to inject required classes
@@ -53,17 +55,41 @@ trait ConstructorTrait
      * @param Config $config
      * @param ObjectManager $om
      */
-    public function __construct(Config $config = null, ObjectManager $om = null)
+    public function __construct(Config $config = null, EntityManager $em = null)
     {
         if (!isset($config)) {
             throw new \RuntimeException('config is empty, did you forget to pass it to the constructor?');
         }
         
-        if (!isset($om)) {
-            throw new \RuntimeException('om is empty, did you forget to pass it to the constructor?');
+        if (!isset($em)) {
+            throw new \RuntimeException('em is empty, did you forget to pass it to the constructor?');
         }
         
         $this->config = $config;
-        $this->om = $om;
+        $this->em = $em;
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function validate($address, Constraint $constraint) 
+    {
+        /* @var $address \Stsbl\MailRedirectionBundle\Entity\Address */
+        /* @var $constraint Address */
+        
+        $groupRecipients = $address->getGroupRecipients()->toArray();
+        $duplicatedGroupRecipients = array_unique(array_diff_assoc($groupRecipients, array_unique($groupRecipients)));
+        
+        foreach ($duplicatedGroupRecipients as $duplicate) {
+            $this->context->buildViolation(sprintf($constraint->getDuplicateGroupMessage(), $duplicate))->atPath('recipient')->addViolation();
+        }
+        
+        $userRecipients = $address->getUserRecipients()->toArray();
+        $duplicatedUserRecipients = array_unique(array_diff_assoc($userRecipients, array_unique($userRecipients)));
+        
+        foreach ($duplicatedUserRecipients as $duplicate) {
+            $this->context->buildViolation(sprintf($constraint->getDuplicateUserMessage(), $duplicate))->atPath('recipient')->addViolation();
+        }
+    }
+
 }

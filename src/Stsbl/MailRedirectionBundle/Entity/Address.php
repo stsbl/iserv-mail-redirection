@@ -5,7 +5,7 @@ namespace Stsbl\MailRedirectionBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use IServ\CrudBundle\Entity\CrudInterface;
-use Stsbl\MailRedirectionBundle\Validator\Contraints as StsblAssert;
+use Stsbl\MailRedirectionBundle\Validator\Constraints as StsblAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -42,8 +42,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="mailredirection_addresses")
  * @ORM\HasLifecycleCallbacks()
  * @DoctrineAssert\UniqueEntity(fields="recipient", message="There is already an entry for that address.")
- * //@DoctrineAssert\UniqueEntity(fields="userRecipients", message="Every user can only added one time to the redirection.")
- * //@DoctrineAssert\UniqueEntity(fields="groupRecipients", message="Every group can only added one time to the redirection.")
+ * @StsblAssert\Address()
  */
 class Address implements CrudInterface
 {
@@ -116,19 +115,29 @@ class Address implements CrudInterface
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $eventArgs->getEntityManager();
-        /*
-        $userRecipients = $this->getUserRecipients();
-        $deleted = $this->setUserRecipients(array_unique($userRecipients));
-        foreach ($deleted as $userRecipient) {
-            $em->remove($userRecipient);
-        }
+        $userRecipients = $this->getUserRecipients()->toArray();
+        $uniqueEntries = [];
         
-        $groupRecipients = $this->getGroupRecipients();
-        $deleted = $this->setGroupRecipients(array_unique($groupRecipients));
-        foreach ($deleted as $groupRecipient) {
-            $em->remove($groupRecipient);
+        foreach ($userRecipients as $recipient) {
+            $exists = false;
+            
+            foreach ($uniqueEntries as $unique) {
+                if ((string)$unique == (string)$recipient) {
+                    $exists = true;
+                    break;
+                }
+            }
+            
+            if(!$exists) {
+                $uniqueEntries[] = $recipient;
+            }
+        } 
+        
+        $deleted = $this->setUserRecipients($uniqueEntries);
+        
+        foreach ($deleted as $recipient) {
+            $em->remove($recipient);
         }
-        */
     }
     /**
      * {@inheritdoc}
@@ -260,12 +269,12 @@ class Address implements CrudInterface
      * Set userRecipients
      * 
      * @param array $userRecipients
-     * @return Address
+     * @return array
      */
     public function setUserRecipients($userRecipients)
     {
         if (!is_array($userRecipients) && !$userRecipients instanceof \Traversable) {
-            throw new \InvalidArgumentException(sprintf('setUserRecipients: Expected traversable, got %s.', gettype($userRecipients)));
+            throw new \InvalidArgumentException(sprintf('setUserRecipients: Expected %s, got %s.', \Traversable::class, gettype($userRecipients)));
         }
         
         $oldUserRecipients = $this->getUserRecipients()->toArray();
@@ -277,7 +286,7 @@ class Address implements CrudInterface
             $this->addUserRecipient($userRecipient);
         }
         
-        $toRemove = array_udiff($oldUserRecipients, $this->getUserRecipients()->toArray(), 
+        return array_udiff($oldUserRecipients, $this->getUserRecipients()->toArray(), 
             function (UserRecipient $userRecipient1, UserRecipient $userRecipient2) {
                 $id1 = $userRecipient1->getId();
                 $id2 = $userRecipient2->getId();
@@ -290,10 +299,6 @@ class Address implements CrudInterface
                 }
             }
         );
-        
-        $this->removeUserRecipients($toRemove);
-        
-        return $this;
     }
 
     /**
@@ -355,12 +360,12 @@ class Address implements CrudInterface
      * Set groupRecipients
      * 
      * @param array $groupRecipients
-     * @return Address
+     * @return array
      */
     public function setGroupRecipients($groupRecipients)
     {
         if (!is_array($groupRecipients) && !$groupRecipients instanceof \Traversable) {
-            throw new \InvalidArgumentException(sprintf('setGroupRecipients: Expected traversable, got %s.', gettype($groupRecipients)));
+            throw new \InvalidArgumentException(sprintf('setGroupRecipients: Expected %s, got %s.', \Traversable::class, gettype($groupRecipients)));
         }
         
         $oldGroupRecipients = $this->getGroupRecipients()->toArray();
@@ -372,7 +377,7 @@ class Address implements CrudInterface
             $this->addGroupRecipient($groupRecipient);
         }
         
-        $toRemove= array_udiff($oldGroupRecipients, $this->getGroupRecipients()->toArray(), 
+        return array_udiff($oldGroupRecipients, $this->getGroupRecipients()->toArray(), 
             function (GroupRecipient $groupRecipient1, GroupRecipient $groupRecipient2) {
                 $id1 = $groupRecipient1->getId();
                 $id2 = $groupRecipient2->getId();
@@ -385,10 +390,6 @@ class Address implements CrudInterface
                 }
             }
         );
-        
-        $this->removeGroupRecipients($toRemove);
-        
-        return $this;
     }
     
     /**

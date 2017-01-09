@@ -1,6 +1,6 @@
 <?php
 // src/Stsbl/MailRedirectionBundle/Validator/Contraints/LocalPartValidator.php
-namespace Stsbl\MailRedirectionBundle\Validator\Contraints;
+namespace Stsbl\MailRedirectionBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;

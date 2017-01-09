@@ -1,9 +1,8 @@
 <?php
-// src/Stsbl/MailRedirectionBundle/Validator/Contraints/SystemAddressValidator.php
-namespace Stsbl\MailRedirectionBundle\Validator\Contraints;
+// src/Stsbl/MailRedirectionBundle/Validator/GroupRecipient.php
+namespace Stsbl\MailRedirectionBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintValidator;
 
 /*
  * The MIT License
@@ -30,24 +29,45 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 
 /**
- * Validate that given address is not a system mail address.
- *
+ * Validates the user recipients and group recipients 
+ * 
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
- * @license MIT license <https://opensource.org/licneses/MIT>
+ * @license MIT license <https://opensource.org/licenses/MIT>
+ * @Annotation
  */
-class SystemAddressValidator extends ConstraintValidator
+class Address extends Constraint
 {
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validatedBy() 
     {
-        /* @var $constraint SystemAddress */
-        // disallow redirection of system mails, this must be done via /etc/aliases.
-        if (preg_match('(root|postmaster|mailer-daemon|nobody|hostmaster|usenet|news|webmaster|ftp|abuse|noc|security|monit|clamav|www-data)', $value)) {
-            $this->context->buildViolation($constraint->getMessage())
-                ->addViolation();
-        }
+        return 'stsbl_mailredirection_address_validator';
     }
-
+    
+    /**
+     * {@inheritdoc]
+     */
+    public function getTargets()
+    {
+        return self::CLASS_CONSTRAINT;
+    }
+    
+    /* Message functions */
+    
+    /**
+     * @return string
+     */
+    public function getDuplicateGroupMessage()
+    {
+        return _('Group "%s" can not added multiple times to the original recipient.');
+    }
+    
+    /**
+     * @returns string
+     */
+        public function getDuplicateUserMessage()
+    {
+        return _('User "%s" can not added multiple times to the original recipient.');
+    }
 }

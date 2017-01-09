@@ -1,8 +1,9 @@
 <?php
-// src/Stsbl/MailRedirectionBundle/Validator/Contraints/SystemAddress.php
-namespace Stsbl\MailRedirectionBundle\Validator\Contraints;
+// src/Stsbl/MailRedirectionBundle/Validator/Contraints/SystemAddressValidator.php
+namespace Stsbl\MailRedirectionBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
 
 /*
  * The MIT License
@@ -29,29 +30,24 @@ use Symfony\Component\Validator\Constraint;
  */
 
 /**
- * Validate that given address is not a system mail address
+ * Validate that given address is not a system mail address.
  *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
- * @license MIT license <https://opensource.org/licenses/MIT>
- * @Annotation
+ * @license MIT license <https://opensource.org/licneses/MIT>
  */
-class SystemAddress extends Constraint 
+class SystemAddressValidator extends ConstraintValidator
 {
-    /**
-     * get message
-     * 
-     * @return string
-     */
-    public function getMessage()
-    {
-        return _('This is a system mail address, you are not allowed to create redirections for it.');
-    }
-    
     /**
      * {@inheritdoc}
      */
-    public function validatedBy()
+    public function validate($value, Constraint $constraint)
     {
-        return get_class($this).'Validator';
+        /* @var $constraint SystemAddress */
+        // disallow redirection of system mails, this must be done via /etc/aliases.
+        if (preg_match('(root|postmaster|mailer-daemon|nobody|hostmaster|usenet|news|webmaster|ftp|abuse|noc|security|monit|clamav|www-data)', $value)) {
+            $this->context->buildViolation($constraint->getMessage())
+                ->addViolation();
+        }
     }
+
 }

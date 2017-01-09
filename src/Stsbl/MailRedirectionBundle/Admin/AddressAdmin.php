@@ -108,7 +108,9 @@ class AddressAdmin extends AbstractAdmin
             'label' => _('Groups'),
             'entry_type' => GroupRecipientType::class,
             'prototype_name' => 'proto-entry',
-            'attr' => ['class' => 'entry-autocomplete'],
+            'attr' => [
+                'help_text' => _('The groups which should receive the e-mails to that address.')
+            ],
             // Child options
             'entry_options' => [
                     'attr' => [
@@ -121,7 +123,9 @@ class AddressAdmin extends AbstractAdmin
             'label' => _('Users'),
             'entry_type' => UserRecipientType::class,
             'prototype_name' => 'proto-entry',
-            'attr' => ['class' => 'entry-autocomplete'],
+            'attr' => [
+                'help_text' => _('The users who should receive the e-mails to that address.')
+            ],
             // Child options
             'entry_options' => [
                     'attr' => [

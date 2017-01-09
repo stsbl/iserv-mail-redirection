@@ -1,6 +1,6 @@
 <?php
-// src/Stsbl/MailRedirectionBundle/Validator/Contraints/LocalPart.php
-namespace Stsbl\MailRedirectionBundle\Validator\Contraints;
+// src/Stsbl/MailRedirectionBundle/Validator/Contraints/SystemAddress.php
+namespace Stsbl\MailRedirectionBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
@@ -29,49 +29,37 @@ use Symfony\Component\Validator\Constraint;
  */
 
 /**
- * Validate that given address is a valid local part.
+ * Validate that given address is not a system mail address
  *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
- * @license MIT license <https://opensource.org/liceneses/MIT>
+ * @license MIT license <https://opensource.org/licenses/MIT>
  * @Annotation
  */
-class LocalPart extends Constraint
+class SystemAddress extends Constraint 
 {
     /**
-     * Get message for invalid address.
+     * get message
      * 
      * @return string
      */
     public function getMessage()
     {
-        return _('This is not a valid local part of an email address.');
+        return _('This is a system mail address, you are not allowed to create redirections for it.');
     }
     
-    /**
-     * Get message for invalid address if an @ is contained in it.
-     * 
-     * @return string
-     */
-    public function getMessageForAt()
-    {
-        return _('Enter only the address part before the @.');
-    }
-
-    /**
-     * Get message for invalid address if an ä,ö,ü,ß is contained in it.
-     * 
-     * @return string
-     */
-    public function getMessageForUmlauts()
-    {
-        return _('Umlauts are not allowed as part of it.');
-    }
-
     /**
      * {@inheritdoc}
      */
     public function validatedBy()
     {
         return get_class($this).'Validator';
+    }
+    
+    /**
+     * {@inheritdoc]
+     */
+    public function getTargets()
+    {
+        return self::PROPERTY_CONSTRAINT;
     }
 }

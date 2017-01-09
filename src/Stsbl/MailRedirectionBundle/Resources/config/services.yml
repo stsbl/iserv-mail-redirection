@@ -41,3 +41,9 @@ services:
         arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
         tags:
             - {name: form.type }
+            
+    stsbl.mailredirection.validator.address:
+        class: Stsbl\MailRedirectionBundle\Validator\Constraints\AddressValidator
+        arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
+        tags:
+            - { name: validator.constraint_validator, alias: stsbl_mailredirection_address_validator }

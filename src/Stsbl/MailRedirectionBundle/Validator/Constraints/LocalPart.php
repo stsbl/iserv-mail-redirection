@@ -1,9 +1,8 @@
 <?php
-// src/Stsbl/MailRedirectionBundle/Form/DataTransformer/ContructorTrait.php
-namespace Stsbl\MailRedirectionBundle\Form\DataTransformer;
+// src/Stsbl/MailRedirectionBundle/Validator/Contraints/LocalPart.php
+namespace Stsbl\MailRedirectionBundle\Validator\Constraints;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use IServ\CoreBundle\Service\Config;
+use Symfony\Component\Validator\Constraint;
 
 /*
  * The MIT License
@@ -30,40 +29,57 @@ use IServ\CoreBundle\Service\Config;
  */
 
 /**
- * Common trait for both transformers
+ * Validate that given address is a valid local part.
  *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
- * @license MIT license <https://opensource.org/licenses/MIT>
+ * @license MIT license <https://opensource.org/liceneses/MIT>
+ * @Annotation
  */
-trait ConstructorTrait 
+class LocalPart extends Constraint
 {
     /**
-     * @var Config
+     * Get message for invalid address.
+     * 
+     * @return string
      */
-    protected $config;
-
-    /**
-     * @var ObjectManager
-     */
-    protected $om;
+    public function getMessage()
+    {
+        return _('This is not a valid local part of an email address.');
+    }
     
     /**
-     * Constructor to inject required classes
+     * Get message for invalid address if an @ is contained in it.
      * 
-     * @param Config $config
-     * @param ObjectManager $om
+     * @return string
      */
-    public function __construct(Config $config = null, ObjectManager $om = null)
+    public function getMessageForAt()
     {
-        if (!isset($config)) {
-            throw new \RuntimeException('config is empty, did you forget to pass it to the constructor?');
-        }
-        
-        if (!isset($om)) {
-            throw new \RuntimeException('om is empty, did you forget to pass it to the constructor?');
-        }
-        
-        $this->config = $config;
-        $this->om = $om;
+        return _('Enter only the address part before the @.');
+    }
+
+    /**
+     * Get message for invalid address if an ä,ö,ü,ß is contained in it.
+     * 
+     * @return string
+     */
+    public function getMessageForUmlauts()
+    {
+        return _('Umlauts are not allowed as part of it.');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validatedBy()
+    {
+        return get_class($this).'Validator';
+    }
+    
+    /**
+     * {@inheritdoc]
+     */
+    public function getTargets()
+    {
+        return self::PROPERTY_CONSTRAINT;
     }
 }
