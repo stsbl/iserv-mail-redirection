@@ -13,11 +13,11 @@ msgstr "Geben sie nur den Adressteil, der vor dem @ steht, ein."
 msgid "Original recipient"
 msgstr "Originalempfänger"
 
-msgid "Mail redirections"
-msgstr "Mailweiterleitungen"
+msgid "Mail aliases"
+msgstr "Mailaliase"
 
-msgid "Mail redirection"
-msgstr "Mailweiterleitung"
+msgid "Mail alias"
+msgstr "Mailalias"
 
 msgid "The local part of the e-mail address which you want to redirect."
 msgstr "Der lokale Teil der E-Mail-Adresse, die sie weiterleiten möchten."

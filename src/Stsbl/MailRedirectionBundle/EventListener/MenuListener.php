@@ -5,6 +5,7 @@ namespace Stsbl\MailRedirectionBundle\EventListener;
 
 use IServ\AdminBundle\EventListener\AdminMenuListenerInterface;
 use IServ\CoreBundle\Event\MenuEvent;
+use Stsbl\MailRedirectionBundle\Security\Privilege;
 
 /*
  * The MIT License
@@ -43,14 +44,14 @@ class MenuListener implements AdminMenuListenerInterface {
     public function onBuildAdminMenu(MenuEvent $event)
     {
         // check if user is privileged
-        if ($event->getAuthorizationChecker()->isGranted('PRIV_MAIL_REDIRECTION_ADMIN'))
+        if ($event->getAuthorizationChecker()->isGranted(Privilege::Admin))
         {
             $menu = $event->getMenu();
             $block = $menu->getChild('users');
 
-            $item = $block->addChild('mailredirection_admin', [
+            $item = $block->addChild('mail_aliases_admin', [
                 'route' => 'admin_mail_aliases_index',
-                'label' => _('Mail redirections'),
+                'label' => _('Mail aliases'),
             ]);
             
             $item->setExtra('icon', 'mail');

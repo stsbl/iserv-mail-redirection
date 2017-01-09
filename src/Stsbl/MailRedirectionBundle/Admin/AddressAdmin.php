@@ -61,8 +61,8 @@ class AddressAdmin extends AbstractAdmin
      */
     protected function configure()
     {
-        $this->title = _('Mail redirections');
-        $this->itemTitle = _('Mail redirection');
+        $this->title = _('Mail aliases');
+        $this->itemTitle = _('Mail alias');
         $this->id = 'mail_aliases';
         $this->routesPrefix = 'admin/mailaliases';
         $this->options['help'] = 'https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection';
