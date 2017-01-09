@@ -90,18 +90,6 @@ class AddressAdmin extends AbstractAdmin
                 ['help_text' => _('The local part of the e-mail address which you want to redirect.')]
             ]
         );
-        $formMapper->add('enabled', BooleanType::class, [
-            'required' => true, 
-            'label' => _('Enabled'), 
-            'attr' =>
-                ['help_text' => _('You can enable or disable this redirection. If it is disabled all assigned users and groups will stop receiving the mails of this address.')]
-            ]);
-        $formMapper->add('comment', TextareaType::class, [
-            'required' => false, 
-            'label' => _('Note'), 
-            'attr' =>
-                ['help_text' => _('Here you can enter further explanation for this redirection.')]
-            ]);
         $formMapper->add('groupRecipients', BootstrapCollectionType::class, [
             'required' => false,
             'label' => _('Groups'),
@@ -131,6 +119,18 @@ class AddressAdmin extends AbstractAdmin
                         'widget_col' => 12, // Single child field w/o label col
                     ],
                 ],
+            ]);
+        $formMapper->add('enabled', BooleanType::class, [
+            'required' => true, 
+            'label' => _('Enabled'), 
+            'attr' =>
+                ['help_text' => _('You can enable or disable this redirection. If it is disabled all assigned users and groups will stop receiving the mails of this address.')]
+            ]);
+        $formMapper->add('comment', TextareaType::class, [
+            'required' => false, 
+            'label' => _('Note'), 
+            'attr' =>
+                ['help_text' => _('Here you can enter further explanation for this redirection.')]
             ]);
     }
     

@@ -45,3 +45,9 @@ msgstr "Gruppe \"%s\" kann nicht mehrmals zum Originalempfänger %s hinzugefügt
 
 msgid "User \"%s\" can not added multiple times to the original recipient %s."
 msgstr "Benutzer \"%s\" kann nicht mehrmals zum Originalempfänger %s hinzugefügt werden."
+
+msgid "The groups which should receive the e-mails to that address."
+msgstr "Die Gruppen, welche die E-Mails an diese Adresse erhalten sollen."
+
+msgid "The users who should receive the e-mails to that address."
+msgstr "Die Benutzer, welche die E-Mails an diese Adresse erhalten sollen."
