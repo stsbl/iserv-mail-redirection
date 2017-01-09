@@ -74,7 +74,7 @@ class AddressAdmin extends AbstractAdmin
     public function __construct($class, $title = null, $itemTitle = null) 
     {
         // set module context for logging
-        $this->logModule = 'Mail redirection';
+        $this->logModule = 'Mail aliases';
         
         return parent::__construct($class, $title, $itemTitle);
     }
@@ -197,12 +197,7 @@ class AddressAdmin extends AbstractAdmin
         /* @var $object \Stsbl\MailRedirectionBundle\Entity\Address */
         // write log
         $servername = $this->config->get('Servername');
-        $this->log('Weiterleitung für Adresse '.$object->getRecipient().'@'.$servername.' hinzugefügt');
-        
-        $this->getObjectManager()->createQueryBuilder($this->class)
-            ->delete()
-            ->from('StsblMailRedirectionBundle:GroupRecipient g')
-            ->where('g.original_recipient_id IS NULL');
+        $this->log(sprintf('Weiterleitung für Adresse %s@%s hinzugefügt', $object->getRecipient(), $servername));
     }
     
     /**
@@ -211,33 +206,33 @@ class AddressAdmin extends AbstractAdmin
     public function postUpdate(CrudInterface $object, array $previousData = null) 
     {
         /* @var $object \Stsbl\MailRedirectionBundle\Entity\Address */
-        if ($object->getRecipient() == $previousData['recipient']
-            && $object->getComment() == $previousData['comment'] 
-            && $object->getEnabled() == $previousData['enabled']) {
+        if ((string)$object->getRecipient() == (string)$previousData['recipient']
+            && (string)$object->getComment() == (string)$previousData['comment'] 
+            && (bool)$object->getEnabled() == (bool)$previousData['enabled']) {
             // nothing changed, no log
             return;
         }
         
         $servername = $this->config->get('Servername');
         
-        if ($object->getRecipient() !== $previousData['recipient']) {
+        if ((string)$object->getRecipient() !== (string)$previousData['recipient']) {
             // write log
-            $this->log('Weiterleitung für Adresse '.$previousData['recipient'].'@'.$servername.' geändert nach '.$object->getRecipient().'@'.$servername);
+            $this->log(sprintf('Weiterleitung für Adresse %s@%s geändert nach %s@%s', $previousData['recipient'], $servername, $object->getRecipient(), $servername));
         }
 
-        if ($object->getEnabled() !== $previousData['enabled']) {
+        if ((bool)$object->getEnabled() !== (bool)$previousData['enabled']) {
             // write log
             if ($object->getEnabled()) {
                 $text = 'aktiviert';
             } else {
-                $text = 'deaktviert';
+                $text = 'deaktiviert';
             }
             
-            // write log
-            $this->log('Weiterleitung für Adresse '.$object->getRecipient().'@'.$servername.' '.$text);
+            // write log*
+            $this->log(sprintf('Weiterleitung für Adresse %s@%s %s', $object->getRecipient(), $servername, $text));
         }
         
-        if($object->getComment() !== $previousData['comment']) {
+        if((string)$object->getComment() !== (string)$previousData['comment']) {
             if(empty($object->getComment())) {
                 $text = 'gelöscht';
             } else if (empty($previousData['comment'])) {
@@ -247,7 +242,7 @@ class AddressAdmin extends AbstractAdmin
             }
             
             // write log
-            $this->log('Kommentar der Weiterleitung für Adresse '.$object->getRecipient().'@'.$servername.' '.$text);
+            $this->log(sprintf('Kommentar der Weiterleitung für Adresse %s@%s %s', $object->getRecipient(), $servername, $text));
         }
     }
     
@@ -260,7 +255,7 @@ class AddressAdmin extends AbstractAdmin
         $servername = $this->config->get('Servername');
         
         // write log
-        $this->log('Weiterleitung für Adresse '.$object->getRecipient().'@'.$servername.' gelöscht');       
+        $this->log(sprintf('Weiterleitung für Adresse %s@%s gelöscht', (string)$object->getRecipient(), $servername));       
     }
     
     /**

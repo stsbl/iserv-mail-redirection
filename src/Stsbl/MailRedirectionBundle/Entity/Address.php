@@ -2,7 +2,9 @@
 // src/Stsbl/MailRedirection/Bundle/Enity/Recipient.php
 namespace Stsbl\MailRedirectionBundle\Entity;
 
+
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\EventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use IServ\CrudBundle\Entity\CrudInterface;
 use Stsbl\MailRedirectionBundle\Validator\Constraints as StsblAssert;
@@ -97,6 +99,44 @@ class Address implements CrudInterface
     {
         $this->groupRecipients = new ArrayCollection();
         $this->userRecipients = new ArrayCollection();
+    }
+    
+    /**
+     * Remove all user and group recipients from database, to prevent collision with postgresql constraint.
+     * 
+     * @ORM\PreUpdate
+     */
+    public function cleanupDatabase(EventArgs $eventArgs)
+    {
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $eventArgs->getEntityManager();
+        
+        $storedUserRecipients = $this->getUserRecipients()->toArray();
+        $storedGroupRecipients = $this->getGroupRecipients()->toArray();
+        $userRecipients = $em->getRepository('StsblMailRedirectionBundle:UserRecipient')->findByOriginalRecipient($this);
+        $groupRecipients = $em->getRepository('StsblMailRedirectionBundle:GroupRecipient')->findByOriginalRecipient($this);
+        
+        foreach ($userRecipients as $recipient) {
+            $em->remove($recipient);
+        }
+        
+        foreach ($groupRecipients as $recipient) {
+            $em->remove($recipient);
+        }
+        
+        $em->flush();
+        
+        foreach ($storedUserRecipients as $recipient) {
+            /* @var $recipient UserRecipient */
+            $recipient->setOriginalRecipient($this);
+            $em->persist($recipient);
+        }
+        
+        foreach ($storedGroupRecipients as $recipient) {
+            /* @var $recipient GroupRecipient */
+            $recipient->setOriginalRecipient($this);
+            $em->persist($recipient);
+        }
     }
     
     /**

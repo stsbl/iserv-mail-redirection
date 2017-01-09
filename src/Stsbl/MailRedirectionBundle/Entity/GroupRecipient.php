@@ -54,7 +54,7 @@ class GroupRecipient implements CrudInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Address", inversedBy="groupRecipients")
-     * @ORM\JoinColumn(name="original_recipient_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="original_recipient_id", referencedColumnName="id", onDelete="CASCADE")
      * @Assert\NotBlank()
      * 
      * @var Address

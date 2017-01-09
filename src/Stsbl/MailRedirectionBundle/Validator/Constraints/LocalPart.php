@@ -44,7 +44,7 @@ class LocalPart extends Constraint
      */
     public function getMessage()
     {
-        return _('This is not a valid local part of an email address.');
+        return _('This is not a valid local part of an e-mail address.');
     }
     
     /**
