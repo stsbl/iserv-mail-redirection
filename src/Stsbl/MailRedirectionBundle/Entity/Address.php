@@ -40,7 +40,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @license MIT license <https://opensource.org/licenes/MIT>
  * @ORM\Entity
  * @ORM\Table(name="mailredirection_addresses")
- * @ORM\HasLifecycleCallbacks()
+ * //@ORM\HasLifecycleCallbacks()
  * @DoctrineAssert\UniqueEntity(fields="recipient", message="There is already an entry for that address.")
  * @StsblAssert\Address()
  */
@@ -106,23 +106,7 @@ class Address implements CrudInterface
     {
         return (string)$this->recipient;
     }
-    
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function removeDuplicateRecipients($eventArgs)
-    {
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $eventArgs->getEntityManager();
-        $userRecipients = $this->getUserRecipients()->toArray();
-        
-        $duplicatedUserRecipients = array_unique(array_diff_assoc($userRecipients, array_unique($userRecipients)));
-        
-        foreach ($duplicatedUserRecipients as $recipient) {
-            $em->remove($recipient);
-        }
-    }
+
     /**
      * {@inheritdoc}
      */
