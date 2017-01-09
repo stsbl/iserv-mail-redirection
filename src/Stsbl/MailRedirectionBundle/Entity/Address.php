@@ -116,26 +116,10 @@ class Address implements CrudInterface
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $eventArgs->getEntityManager();
         $userRecipients = $this->getUserRecipients()->toArray();
-        $uniqueEntries = [];
         
-        foreach ($userRecipients as $recipient) {
-            $exists = false;
-            
-            foreach ($uniqueEntries as $unique) {
-                if ((string)$unique == (string)$recipient) {
-                    $exists = true;
-                    break;
-                }
-            }
-            
-            if(!$exists) {
-                $uniqueEntries[] = $recipient;
-            }
-        } 
+        $duplicatedUserRecipients = array_unique(array_diff_assoc($userRecipients, array_unique($userRecipients)));
         
-        $deleted = $this->setUserRecipients($uniqueEntries);
-        
-        foreach ($deleted as $recipient) {
+        foreach ($duplicatedUserRecipients as $recipient) {
             $em->remove($recipient);
         }
     }
@@ -278,6 +262,7 @@ class Address implements CrudInterface
         }
         
         $oldUserRecipients = $this->getUserRecipients()->toArray();
+        $this->removeUserRecipients($oldUserRecipients);
         
         foreach ($userRecipients as $userRecipient) {
             if(!$userRecipient instanceof UserRecipient) {
@@ -369,6 +354,7 @@ class Address implements CrudInterface
         }
         
         $oldGroupRecipients = $this->getGroupRecipients()->toArray();
+        $this->removeGroupRecipients($oldGroupRecipients);
         
         foreach ($groupRecipients as $groupRecipient) {
             if(!$groupRecipient instanceof GroupRecipient) {
