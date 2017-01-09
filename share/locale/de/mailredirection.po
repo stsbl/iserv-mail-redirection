@@ -1,8 +1,8 @@
 msgid "There is already an entry for that address."
 msgstr "Es gibt bereits einen Eintrag für diese Adresse."
 
-msgid "This is a system mail address, you are not allowed to create redirections for it."
-msgstr "Dies ist eine System Mail-Adresse, es ist ihnen nicht erlaubt, Weiterleitungen dafür zu erstellen."
+msgid "This is a system e-mail address, you are not allowed to create redirections for it."
+msgstr "Dies ist eine System E-Mail-Adresse, es ist ihnen nicht erlaubt, Weiterleitungen dafür zu erstellen."
 
 msgid "This is not a valid local part of an e-mail address."
 msgstr "Dies ist kein gültiger lokaler Teil einer E-Mail-Adresse."
@@ -31,24 +31,6 @@ msgstr "Sie können diese Weiterleitung aktivieren oder deaktivieren. Wenn sie d
 msgid "Here you can enter further explanation for this redirection."
 msgstr "Hier können sie weitere Erläuterungen zu dieser Weiterleitung eingeben."
 
-msgid "Users as redirection targets"
-msgstr "Benutzer als Weiterleitungsziele"
-
-msgid "User as redirection target"
-msgstr "Benutzer als Weiterleitungsziel"
-
-msgid "Set up user as redirection target"
-msgstr "Benutzer als Weiterleitungsziel einrichten"
-
-msgid "Groups as redirection targets"
-msgstr "Gruppen als Weiterleitungsziele"
-
-msgid "Group as redirection target"
-msgstr "Gruppe als Weiterleitungsziel"
-
-msgid "Set up groups as redirection target"
-msgstr "Gruppen als Weiterleitungsziel einrichten"
-
 msgid "Manage e-mail redirections"
 msgstr "E-Mail-Weiterleitungen verwalten"
 
@@ -58,11 +40,8 @@ msgstr "Diese Kombination von Gruppe und Originalempfänger hat bereits einen Ei
 msgid "This combination of user and original recipient already has an entry."
 msgstr "Diese Kombination von Benutzer und Originalempfänger hat bereits einen Eintrag."
 
-msgid "Guide for configuring mail redirections:"
-msgstr "Anleitung zum Einrichten von Mailweiterleitungen:"
+msgid "Group \"%s\" can not added multiple times to the original recipient %s."
+msgstr "Gruppe \"%s\" kann nicht mehrmals zum Originalempfänger %s hinzugefügt werden."
 
-msgid "Add an original recipient for the address which you want to redirect below."
-msgstr "Fügen sie unten einen Originalempfänger für die Adresse hinzu, die sie weiterleiten möchten."
-
-msgid "Add users or groups for the original recipient by choosing one the buttons \"Set up users as redirection target\" respectively \"Set up groups as redirection target\"."
-msgstr "Fügen sie Benutzer oder Gruppen für den Originalempfänger durch das Auswählen einer der Buttons \"Benutzer als Weiterleitungsziel einrichten\" beziehungsweise \"Gruppen als Weiterleitungsziel einrichten\" hinzu."
+msgid "User \"%s\" can not added multiple times to the original recipient %s."
+msgstr "Benutzer \"%s\" kann nicht mehrmals zum Originalempfänger %s hinzugefügt werden."

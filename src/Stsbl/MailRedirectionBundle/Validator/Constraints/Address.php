@@ -60,7 +60,7 @@ class Address extends Constraint
      */
     public function getDuplicateGroupMessage()
     {
-        return _('Group "%s" can not added multiple times to the original recipient.');
+        return _('Group "%s" can not added multiple times to the original recipient %s.');
     }
     
     /**
@@ -68,6 +68,6 @@ class Address extends Constraint
      */
         public function getDuplicateUserMessage()
     {
-        return _('User "%s" can not added multiple times to the original recipient.');
+        return _('User "%s" can not added multiple times to the original recipient %s.');
     }
 }

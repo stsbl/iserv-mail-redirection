@@ -81,14 +81,14 @@ class AddressValidator extends ConstraintValidator
         $duplicatedGroupRecipients = array_unique(array_diff_assoc($groupRecipients, array_unique($groupRecipients)));
         
         foreach ($duplicatedGroupRecipients as $duplicate) {
-            $this->context->buildViolation(sprintf($constraint->getDuplicateGroupMessage(), $duplicate))->atPath('recipient')->addViolation();
+            $this->context->buildViolation(sprintf($constraint->getDuplicateGroupMessage(), $duplicate, $address->getRecipient()))->atPath('recipient')->addViolation();
         }
         
         $userRecipients = $address->getUserRecipients()->toArray();
         $duplicatedUserRecipients = array_unique(array_diff_assoc($userRecipients, array_unique($userRecipients)));
         
         foreach ($duplicatedUserRecipients as $duplicate) {
-            $this->context->buildViolation(sprintf($constraint->getDuplicateUserMessage(), $duplicate))->atPath('recipient')->addViolation();
+            $this->context->buildViolation(sprintf($constraint->getDuplicateUserMessage(), $duplicate, $address->getRecipient()))->atPath('recipient')->addViolation();
         }
     }
 
