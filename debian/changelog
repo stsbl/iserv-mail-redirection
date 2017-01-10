@@ -1,3 +1,28 @@
+stsbl-iserv-mail-redirection (17.01.10-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Added form fields for users and groups in main crud (AddressAdmin).
+  * Added validation constraint for Address entity.
+  * Dropped links to GroupRecipientAdmin and UserRecipientAdmin in main menu. 
+  * Dropped explanaition text from main menu (not longer required).
+  * i18n: Removed unused localization strings. 
+  * l10n: Updated localization.
+  * Disabled key indexes in database, their cause problems during persisting objects.
+  * Removed unnecessary LifeCycleCallBack from Address.
+  * Reordered form elements in AddressAdmin.
+  * Renamed mail redirections to mail aliases.
+  * Reworked logging in AddressAdmin. 
+  * Fixed i18n.
+  * Reworked logging in AddressAdmin.
+  * Improved logging grammar.
+  * Dropped GroupRecipientAdmin and UserRecipientAdmin (not longer required).
+
+  [ Stadtteilschule Blankenese ]
+
+  iserv: Die Einrichtung von Mailaliasen wurde vereinfacht, alle Konfigurationsschritte erfolgen statt über drei Formulare nun über eines.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Tue, 10 Jan 2017 19:27:38 +0100
+
 stsbl-iserv-mail-redirection (17.01.05-0) experimental; urgency=medium
 
   [ Felix Jacobi ]
