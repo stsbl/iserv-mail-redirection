@@ -351,7 +351,7 @@ class AddressAdmin extends AbstractAdmin
         if ((string)$object->getRecipient() == (string)$previousData['recipient']
             && (string)$object->getComment() == (string)$previousData['comment'] 
             && (bool)$object->getEnabled() == (bool)$previousData['enabled']) {
-            // nothing changed, skip next sections and got directly to recipient log
+            // nothing changed, skip next sections and go directly to recipient log
             goto recipientLog;
         }
         
@@ -375,16 +375,19 @@ class AddressAdmin extends AbstractAdmin
         }
         
         if((string)$object->getComment() !== (string)$previousData['comment']) {
+            $prePosition = 'von';
             if(empty($object->getComment())) {
                 $text = 'gelöscht';
             } else if (empty($previousData['comment'])) {
+                // german grammatic: "Notiz von Alias xy hinzugefügt" sounds ugly.
+                $prePosition = 'für';
                 $text = 'hinzugefügt';
             } else {
                 $text = 'geändert';
             }
             
             // write log
-            $this->log(sprintf('Kommentar für Alias %s@%s %s', (string)$object, $servername, $text));
+            $this->log(sprintf('Notiz %s Alias %s@%s %s', $prePosition, (string)$object, $servername, $text));
         }
         
         recipientLog:
