@@ -12,6 +12,7 @@ use IServ\CrudBundle\Mapper\AbstractBaseMapper;
 use IServ\CrudBundle\Mapper\FormMapper;
 use IServ\CrudBundle\Mapper\ListMapper;
 use IServ\CrudBundle\Mapper\ShowMapper;
+use Stsbl\MailRedirectionBundle\Entity\UserRecipient;
 use Stsbl\MailRedirectionBundle\Form\Type\GroupRecipientType;
 use Stsbl\MailRedirectionBundle\Form\Type\UserRecipientType;
 use Stsbl\MailRedirectionBundle\Security\Privilege;
@@ -42,7 +43,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
  */
 
 /**
- * CRUD to manage mail redirections via IDesk
+ * CRUD to manage mail aliases via IDesk
  *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://mit.otg/licenses/MIT>
@@ -190,6 +191,143 @@ class AddressAdmin extends AbstractAdmin
     }
     
     /**
+     * Logs the adding and removing of user recipients.
+     * 
+     * @param CrudInterface $object
+     * @param array $previousData
+     */
+    private function logRecipients(CrudInterface $object, array $previousData = null)
+    {
+        /* @var $object \Stsbl\MailRedirectionBundle\Entity\Address */
+        $userRecipients = $object->getUserRecipients()->toArray();
+        $groupRecipients = $object->getGroupRecipients()->toArray();
+        $servername = $this->config->get('Servername');
+        
+        if (is_null($previousData)) {
+            // if there is no previous data, assume that we are called from post persist
+            foreach ($userRecipients as $recipient) {
+                /* @var $recipient \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
+                $this->log(sprintf('Benutzer %s als Empfänger von Alias %s@%s hinzugefügt', (string)$recipient->getRecipient(), (string)$object, $servername));
+            }
+            
+            foreach ($groupRecipients as $recipient) {
+                /* @var $recipient \Stsbl\MailRedirectionBundle\Entity\GroupRecipient */
+                $this->log(sprintf('Gruppe %s als Empfänger von Alias %s@%s hinzugefügt', (string)$recipient->getRecipient(), (string)$object, $servername));
+            }
+            
+            // stop here
+            return;
+        }
+        
+        $previousUserRecipients = [];
+        foreach ($previousData['userRecipients'] as $recipientId) {
+            $previousUserRecipients[] = $this->getObjectManager()->findOneBy('StsblMailRedirectionBundle:UserRecipient', ['id' => $recipientId]);
+        }
+        
+        $previousGroupRecipients = [];
+        foreach ($previousData['groupRecipients'] as $recipientId) {
+            $previousGroupRecipients[] = $this->getObjectManager()->findOneBy('StsblMailRedirectionBundle:GroupRecipient', ['id' => $recipientId]);
+        }
+        
+        $removedUserRecipients = [];
+        
+        // array_diff_assoc does not work here, so we use our own optmized version here and in the further comparisons
+        // which can better handle arrays with objects inside.
+        foreach ($previousUserRecipients as $previousUserRecipient) {
+            /* @var $previousUserRecipient \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
+            /* @var $userRecipient \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
+            $inArray = false;
+            
+            foreach ($userRecipients as $userRecipient) {
+                if ($userRecipient->getRecipient() == $previousUserRecipient->getRecipient()) {
+                    $inArray = true;
+                }
+            }
+            
+            if (!$inArray) {
+                $removedUserRecipients[] = $previousUserRecipient;
+            }
+        }
+        
+        $addedUserRecipients = [];
+        
+        // see above
+        foreach ($userRecipients as $userRecipient) {
+            /* @var $previousUserRecipient \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
+            /* @var $userRecipient \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
+            $inArray = false;
+            
+            foreach ($previousUserRecipients as $previousUserRecipient) {
+                if ($previousUserRecipient->getRecipient() == $userRecipient->getRecipient()) {
+                    $inArray = true;
+                }
+            }
+            
+            if(!$inArray) {
+                $addedUserRecipients[] = $userRecipient;
+            }
+        }
+        
+        $removedGroupRecipients = [];
+        
+        // see two above
+        foreach ($previousGroupRecipients as $previousGroupRecipient) {
+            /* @var $previousGroupRecipient \Stsbl\MailRedirectionBundle\Entity\GroupRecipient */
+            /* @var $groupRecipient \Stsbl\MailRedirectionBundle\Entity\GroupRecipient */
+            $inArray = false;
+            
+            foreach ($groupRecipients as $groupRecipient) {
+                if ($groupRecipient->getRecipient() == $previousGroupRecipient->getRecipient()) {
+                    $inArray = true;
+                }
+            }
+            
+            if (!$inArray) {
+                $removedGroupRecipients[] = $previousGroupRecipient;
+            }
+        }
+        
+        $addedGroupRecipients = [];
+        
+        // see three above
+        foreach ($groupRecipients as $groupRecipient) {
+            /* @var $previousGroupRecipient \Stsbl\MailRedirectionBundle\Entity\GroupRecipient */
+            /* @var $groupRecipient \Stsbl\MailRedirectionBundle\Entity\GroupRecipient */
+            $inArray = false;
+            
+            foreach ($previousGroupRecipients as $previousGroupRecipient) {
+                if ($previousGroupRecipient->getRecipient() == $groupRecipient->getRecipient()) {
+                    $inArray = true;
+                }
+            }
+            
+            if(!$inArray) {
+                $addedGroupRecipients[] = $groupRecipient;
+            }
+        }
+        
+        // log removed user recipients
+        foreach ($removedUserRecipients as $removed) {
+            $this->log(sprintf('Benutzer %s als Empfänger von Alias %s@%s entfernt', (string)$removed->getRecipient(), (string)$object, $servername));
+        }
+        
+        // log added user recipients
+        foreach ($addedUserRecipients as $added) {
+            $this->log(sprintf('Benutzer %s als Empfänger von Alias %s@%s hinzugefügt', (string)$added->getRecipient(), (string)$object, $servername));
+        }
+        
+        // log removed group recipients
+        foreach ($removedGroupRecipients as $removed) {
+            $this->log(sprintf('Gruppe %s als Empfänger von Alias %s@%s entfernt', (string)$removed->getRecipient(), (string)$object, $servername));
+        }
+        
+        // log added group recipients
+        foreach ($addedGroupRecipients as $added) {
+            $this->log(sprintf('Gruppe %s als Empfänger von Alias %s@%s hinzugefügt', (string)$added->getRecipient(), (string)$object, $servername));
+        }
+    }
+    
+    /**
      * {@inheritdoc}
      */
     public function postPersist(CrudInterface $object) 
@@ -197,27 +335,31 @@ class AddressAdmin extends AbstractAdmin
         /* @var $object \Stsbl\MailRedirectionBundle\Entity\Address */
         // write log
         $servername = $this->config->get('Servername');
-        $this->log(sprintf('Weiterleitung für Adresse %s@%s hinzugefügt', $object->getRecipient(), $servername));
+        $this->log(sprintf('Alias %s@%s hinzugefügt', $object->getRecipient(), $servername));
+        
+        $this->logRecipients($object);
     }
     
     /**
+     * Logging should not run as postUpdate, because then we are not able to find previous user recipients!
+     * 
      * {@inheritdoc}
      */
-    public function postUpdate(CrudInterface $object, array $previousData = null) 
+    public function preUpdate(CrudInterface $object, array $previousData = null) 
     {
         /* @var $object \Stsbl\MailRedirectionBundle\Entity\Address */
         if ((string)$object->getRecipient() == (string)$previousData['recipient']
             && (string)$object->getComment() == (string)$previousData['comment'] 
             && (bool)$object->getEnabled() == (bool)$previousData['enabled']) {
-            // nothing changed, no log
-            return;
+            // nothing changed, skip next sections and got directly to recipient log
+            goto recipientLog;
         }
         
         $servername = $this->config->get('Servername');
         
         if ((string)$object->getRecipient() !== (string)$previousData['recipient']) {
             // write log
-            $this->log(sprintf('Weiterleitung für Adresse %s@%s geändert nach %s@%s', $previousData['recipient'], $servername, $object->getRecipient(), $servername));
+            $this->log(sprintf('Alias %s@%s geändert nach %s@%s', $previousData['recipient'], $servername, (string)$object, $servername));
         }
 
         if ((bool)$object->getEnabled() !== (bool)$previousData['enabled']) {
@@ -229,7 +371,7 @@ class AddressAdmin extends AbstractAdmin
             }
             
             // write log*
-            $this->log(sprintf('Weiterleitung für Adresse %s@%s %s', $object->getRecipient(), $servername, $text));
+            $this->log(sprintf('Alias %s@%s %s', (string)$object, $servername, $text));
         }
         
         if((string)$object->getComment() !== (string)$previousData['comment']) {
@@ -242,8 +384,12 @@ class AddressAdmin extends AbstractAdmin
             }
             
             // write log
-            $this->log(sprintf('Kommentar der Weiterleitung für Adresse %s@%s %s', $object->getRecipient(), $servername, $text));
+            $this->log(sprintf('Kommentar für Alias %s@%s %s', (string)$object, $servername, $text));
         }
+        
+        recipientLog:
+        // log recipient changes
+        $this->logRecipients($object, $previousData);
     }
     
     /**
@@ -255,7 +401,7 @@ class AddressAdmin extends AbstractAdmin
         $servername = $this->config->get('Servername');
         
         // write log
-        $this->log(sprintf('Weiterleitung für Adresse %s@%s gelöscht', (string)$object->getRecipient(), $servername));       
+        $this->log(sprintf('Alias %s@%s gelöscht', (string)$object, $servername));       
     }
     
     /**
