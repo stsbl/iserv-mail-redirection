@@ -1,3 +1,12 @@
+stsbl-iserv-mail-redirection (17.01.12-1) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Disable javascript console logs in prod environment.
+
+  [ Stadtteilschule Blankenese ]
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Thu, 12 Jan 2017 05:01:56 +0100
+
 stsbl-iserv-mail-redirection (17.01.12-0) experimental; urgency=medium
 
   [ Felix Jacobi ]
