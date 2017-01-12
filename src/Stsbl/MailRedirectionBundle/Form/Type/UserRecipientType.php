@@ -7,7 +7,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use IServ\CoreBundle\Service\Config;
 use Stsbl\MailRedirectionBundle\Form\DataTransformer\UserToRfc822Transformer;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -73,13 +73,11 @@ class UserRecipientType extends AbstractType
     {
         $transformer = new UserToRfc822Transformer($this->config, $this->om);
         
-        $builder->add('userRecipient', ChoiceType::class, [
+        $builder->add('userRecipient', TextType::class, [
             'label' => false,
-            'choices' => $this->getUsersAsRfc822(),
-            'choice_label' => function ($value, $key, $index) {
-                return $value;
-            },
-            'choices_as_values' => true
+            'attr' => [
+                'class' => 'mail-aliases-recipient-user-autocomplete'
+            ]
         ]);
         
         $builder->addModelTransformer($transformer);

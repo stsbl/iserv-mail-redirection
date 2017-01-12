@@ -67,6 +67,8 @@ class AddressAdmin extends AbstractAdmin
         $this->id = 'mail_aliases';
         $this->routesPrefix = 'admin/mailaliases';
         $this->options['help'] = 'https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection';
+        $this->templates['crud_add'] = 'StsblMailRedirectionBundle:Crud:address_add.html.twig';
+        $this->templates['crud_edit'] = 'StsblMailRedirectionBundle:Crud:address_edit.html.twig';
     }
     
     /**
