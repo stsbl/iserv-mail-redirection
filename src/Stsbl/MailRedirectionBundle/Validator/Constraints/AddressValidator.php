@@ -53,7 +53,7 @@ class AddressValidator extends ConstraintValidator
      * Constructor to inject required classes
      * 
      * @param Config $config
-     * @param ObjectManager $om
+     * @param EntityManager $em
      */
     public function __construct(Config $config = null, EntityManager $em = null)
     {

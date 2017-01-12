@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraint;
  */
 
 /**
- * Validate that given address is a valid local part.
+ * Validates that given address is a valid local part.
  *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/liceneses/MIT>

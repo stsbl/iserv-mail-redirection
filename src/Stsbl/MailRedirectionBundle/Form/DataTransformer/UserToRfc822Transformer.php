@@ -2,8 +2,10 @@
 // src/Stsbl/MailRedirectionBundle/Form/DataTransformer/UserToRfc822Transformer.php
 namespace Stsbl\MailRedirectionBundle\Form\DataTransformer;
 
+use Doctrine\ORM\NoResultException;
 use Stsbl\MailRedirectionBundle\Entity\UserRecipient;
 use Symfony\Component\Form\DataTransformerInterface;
+use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /*
  * The MIT License
@@ -48,19 +50,24 @@ class UserToRfc822Transformer implements DataTransformerInterface
      */
     public function reverseTransform($addr) 
     {
-        $objects = [];
-        $addr = imap_rfc822_parse_adrlist($addr, $this->config->get('Servername'));
+        try {
+            $objects = [];
+            $addr = imap_rfc822_parse_adrlist($addr, $this->config->get('Servername'));
 
-        foreach ($addr as $a) {
-            $object = new UserRecipient();
-            $repository = $this->om->getRepository('IServCoreBundle:User');
-            $user = $repository->findOneByUsername($a->mailbox);
-            $object->setRecipient($user);
+            foreach ($addr as $a) {
+                $object = new UserRecipient();
+                $repository = $this->om->getRepository('IServCoreBundle:User');
+                $user = $repository->findOneByUsername($a->mailbox);
+                $object->setRecipient($user);
             
-            $objects[] = $object;
-        }
+                $objects[] = $object;
+            }
 
-        return $objects;
+            return $objects;
+        } catch (NoResultException $e) {
+            // tell Smyfony that we are failed to tranform the string
+            throw new TransformationFailedException('No user was found for that rfc822 string.');
+        }
     }
     
     /**

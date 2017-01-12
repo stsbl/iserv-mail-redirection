@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraint;
  */
 
 /**
- * Validate that given address is not a system mail address
+ * Validates that given address is not a system mail address
  *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
