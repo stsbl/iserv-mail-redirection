@@ -50,15 +50,15 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
         
     	IServ.Autocomplete.make(groupCollection, thSourceGroup, thOptions);
         IServ.Autocomplete.make(userCollection, thSourceUser, thOptions);
-        console.log('IServ.MailAliases.Autocomplete.initalize: Autocompleters registered');
+        consoleLog('IServ.MailAliases.Autocomplete.initalize: Autocompleter registered');
         
         groupCollection.initialize( function (e) {
             IServ.Autocomplete.make($('.mail-aliases-recipient-group-autocomplete'), thSourceGroup, thOptions);
-            console.log('IServ.MailAliases.Autocomplete.initalize: Autocompleters registered');
+            consoleLog('IServ.MailAliases.Autocomplete.initalize: Autocompleter registered');
         });
         userCollection.initialize( function (e) {
             IServ.Autocomplete.make($('.mail-aliases-recipient-user-autocomplete'), thSourceUser, thOptions);
-            console.log('IServ.MailAliases.Autocomplete.initalize: Autocompleters registered');
+            consoleLog('IServ.MailAliases.Autocomplete.initalize: Autocompleter registered');
         });
     }
     
@@ -80,6 +80,14 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
         }
 
         return '<p>' + IServ.Icon.get(icon) + ' ' + data.label + ext + '</p>';
+    }
+    
+    // for console logging in debug mode
+    function consoleLog(text)
+    {
+        if (IServ.App.isDebug()) {
+            console.log(text);
+        }
     }
 
     // Public API
