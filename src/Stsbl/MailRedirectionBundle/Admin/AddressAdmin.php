@@ -93,13 +93,13 @@ class AddressAdmin extends AbstractAdmin
                 ['help_text' => _('The local part of the e-mail address which you want to redirect.')]
             ]
         );
-        $formMapper->add('groupRecipients', BootstrapCollectionType::class, [
+        $formMapper->add('userRecipients', BootstrapCollectionType::class, [
             'required' => false,
-            'label' => _('Groups'),
-            'entry_type' => GroupRecipientType::class,
+            'label' => _('Users'),
+            'entry_type' => UserRecipientType::class,
             'prototype_name' => 'proto-entry',
             'attr' => [
-                'help_text' => _('The groups which should receive the e-mails to that address.')
+                'help_text' => _('The users who should receive the e-mails to that address.')
             ],
             // Child options
             'entry_options' => [
@@ -108,13 +108,13 @@ class AddressAdmin extends AbstractAdmin
                     ],
                 ],
             ]);
-        $formMapper->add('userRecipients', BootstrapCollectionType::class, [
+        $formMapper->add('groupRecipients', BootstrapCollectionType::class, [
             'required' => false,
-            'label' => _('Users'),
-            'entry_type' => UserRecipientType::class,
+            'label' => _('Groups'),
+            'entry_type' => GroupRecipientType::class,
             'prototype_name' => 'proto-entry',
             'attr' => [
-                'help_text' => _('The users who should receive the e-mails to that address.')
+                'help_text' => _('The groups which should receive the e-mails to that address.')
             ],
             // Child options
             'entry_options' => [
@@ -153,10 +153,10 @@ class AddressAdmin extends AbstractAdmin
         // explicity block FormMapper
         // the method will also called when building form
         if (!$mapper instanceof FormMapper) {
-            $mapper->add('enabled', 'boolean', ['label' => _('Enabled')]);
-            $mapper->add('comment', null, ['label' => _('Note'), 'responsive' => 'desktop']);
             $mapper->add('userRecipients', null, ['label' => _('Users')]);
             $mapper->add('groupRecipients', null, ['label' => _('Groups')]);
+            $mapper->add('enabled', 'boolean', ['label' => _('Enabled')]);
+            $mapper->add('comment', null, ['label' => _('Note'), 'responsive' => 'desktop']);
         }
         
     }
