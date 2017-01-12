@@ -1,3 +1,15 @@
+stsbl-iserv-mail-redirection (17.01.12-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Added autocompletion for users and groups.
+  * Added dependency on stsbl-iserv3-js-libs.
+  * Added exception handling if no user or group is found during transform process.
+  * Harmonized order of list and form elements.
+
+  [ Stadtteilschule Blankenese ]
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Thu, 12 Jan 2017 04:35:59 +0100
+
 stsbl-iserv-mail-redirection (17.01.10-0) experimental; urgency=medium
 
   [ Felix Jacobi ]
