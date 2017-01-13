@@ -76,7 +76,8 @@ class GroupRecipientType extends AbstractType
         $builder->add('groupRecipient', TextType::class, [
             'label' => false,
             'attr' => [
-                'class' => 'mail-aliases-recipient-group-autocomplete'
+                'class' => 'mail-aliases-recipient-group-autocomplete',
+                'placeholder' => _('Enter a search term...')
             ]
         ]);
         

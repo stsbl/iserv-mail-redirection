@@ -27,7 +27,7 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
     "use strict";
 
     var thOptions = {
-        minLength: 0
+        minLength: 1
     };
     var thSourceUser = {
     	remote: IServ.Routing.generate('admin_mail_aliases_recipients') + '?type=user&query=%QUERY',

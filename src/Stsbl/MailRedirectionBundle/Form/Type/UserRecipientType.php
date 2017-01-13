@@ -76,7 +76,8 @@ class UserRecipientType extends AbstractType
         $builder->add('userRecipient', TextType::class, [
             'label' => false,
             'attr' => [
-                'class' => 'mail-aliases-recipient-user-autocomplete'
+                'class' => 'mail-aliases-recipient-user-autocomplete',
+                'placeholder' => _('Enter a search term...')
             ]
         ]);
         
