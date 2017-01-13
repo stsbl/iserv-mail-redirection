@@ -1,3 +1,14 @@
+stsbl-iserv-mail-redirection (17.01.13-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Require at least one character in text field for autocomplete. 
+  * Add placeholder in GroupRecipientType and UserRecipientType.
+  * Fixed search algorithm in json backend.
+  * Improve design of suggestions by showing more information based on role.
+  * Show AuxInfo in Label user users to allow to differentiate users with same full name.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Fri, 13 Jan 2017 19:30:46 +0100
+
 stsbl-iserv-mail-redirection (17.01.12-1) experimental; urgency=medium
 
   [ Felix Jacobi ]
