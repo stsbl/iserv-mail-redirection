@@ -131,16 +131,20 @@ class MailAliasController extends PageController
             $personal = $result->getName();
             if ($result instanceof Group) {
                 $mailbox = $result->getAccount();
+                $extra = 'Group';
             } else if ($result instanceof User) {
                 $mailbox = $result->getUsername();
                 if ($result->hasRole('ROLE_ADMIN')) {
                     $type = 'admin';
+                    $extra = 'Administrator';
                 } else if ($result->hasRole('ROLE_TEACHER')) {
                     $type = 'teacher';
+                    $extra = 'Teacher';
                 } else if($result->hasRole('ROLE_STUDENT')) {
                     $type = 'student';
+                    $extra = 'Student';
                 } else {
-                    $type = 'user';
+                    $extra = 'User';
                 }
             }
 
@@ -148,7 +152,7 @@ class MailAliasController extends PageController
                 
             $rfc822string = imap_rfc822_write_address($mailbox, $host, $personal);
                 
-            $suggestions[] = ['label' => $personal, 'value' => $rfc822string, 'type' => $type];
+            $suggestions[] = ['label' => $personal, 'value' => $rfc822string, 'type' => $type, 'extra' => $extra];
         }
         
         return new JsonResponse($suggestions);

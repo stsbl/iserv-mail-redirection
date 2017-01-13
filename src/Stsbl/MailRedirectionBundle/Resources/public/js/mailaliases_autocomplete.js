@@ -67,19 +67,41 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
     {
         var icon;
         var ext = '';
-
-        switch(data.source) {
+        
+        consoleLog('IServ.MailAliases.Autocomplete.renderSuggestion: Type is ' + data.type + '.');
+        
+        switch(data.type) {
             case 'group': 
                 icon = 'pro-group'; 
                 break;
             case 'user':
                 icon = 'pro-user'; 
                 break;
+            case 'admin':
+                icon = 'pro-user-asterisk';
+                break;
+            case 'student':
+                icon = 'pro-user'; 
+                break;
+            case 'teacher':
+                icon = 'education';
+                break;
             default: 
                 icon = 'envelope';
         }
-
-        return '<p>' + IServ.Icon.get(icon) + ' ' + data.label + ext + '</p>';
+        
+        var suggestion = '<div class="media autocomplete-suggestion">';
+        suggestion += '<div class="media-left">';
+        suggestion += '<div class="icon">' + IServ.Icon.get(icon) + '</div>';
+        suggestion += '</div>';
+        suggestion += '<div class="media-body">';
+        suggestion += '<h4 class="media-heading">' + data.label + '</h4>';
+        suggestion += '<span class="text-muted">' + _(data.extra, false) + '</span>';
+        suggestion += '</div>';
+        suggestion += '</div>';
+        
+        consoleLog('IServ.MailAliases.Autocomplete.renderSuggestion: Rendered output is ' + suggestion + '.');
+        return suggestion;
     }
     
     // for console logging in debug mode

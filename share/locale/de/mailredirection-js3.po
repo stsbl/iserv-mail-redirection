@@ -1,0 +1,19 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Group"
+msgstr "Gruppe"
+
+msgid "Teacher"
+msgstr "Lehrer"
+
+msgid "User"
+msgstr "Benutzer"
+
+msgid "Student"
+msgstr "Schüler"
+
+msgid "Administrator"
+msgstr "Administrator"
