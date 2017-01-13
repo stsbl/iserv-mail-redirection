@@ -58,6 +58,7 @@ class MailAliasController extends PageController
     {
         $type = $request->query->get('type');
         $query = $request->query->get('query');
+        $explodedQuery = explode(' ', $query);
         
         if (is_null($type)) {
             throw new \InvalidArgumentException('Parameter type should not be null.');
@@ -98,11 +99,24 @@ class MailAliasController extends PageController
                 $qb
                     ->select('p')
                     ->from('IServCoreBundle:User', 'p')
-                    ->where('p.firstname LIKE :query')
-                    ->orWhere('p.lastname LIKE :query')
-                    ->orWhere('p.username LIKE :query') 
-                    ->setParameter('query', '%'.$query.'%')
+                    ->where('p.firstname LIKE :queryOriginal')
+                    ->orWhere('p.lastname LIKE :queryOriginal')
+                    ->orWhere('p.username LIKE :queryOriginal')
                 ;
+                
+                $i = 0;
+                foreach ($explodedQuery as $q) {
+                    $qb
+                        ->orWhere(sprintf('p.firstname LIKE :query%s', $i))
+                        ->orWhere(sprintf('p.lastname LIKE :query%s', $i))
+                        ->orWhere(sprintf('p.username LIKE :query%s', $i))
+                        ->setParameter(sprintf('query%s', $i), '%'.$q.'%')
+                    ;
+                    
+                    $i++;
+                }
+                
+                $qb->setParameter('queryOriginal', '%'.$query.'%');
                 
                 try {
                     $results = $qb->getQuery()->getResult();
@@ -119,12 +133,22 @@ class MailAliasController extends PageController
                 $mailbox = $result->getAccount();
             } else if ($result instanceof User) {
                 $mailbox = $result->getUsername();
+                if ($result->hasRole('ROLE_ADMIN')) {
+                    $type = 'admin';
+                } else if ($result->hasRole('ROLE_TEACHER')) {
+                    $type = 'teacher';
+                } else if($result->hasRole('ROLE_STUDENT')) {
+                    $type = 'student';
+                } else {
+                    $type = 'user';
+                }
             }
+
             $host = $this->get('iserv.config')->get('Servername');
                 
             $rfc822string = imap_rfc822_write_address($mailbox, $host, $personal);
                 
-            $suggestions[] = ['label' => $personal, 'value' => $rfc822string, 'source' => $type];
+            $suggestions[] = ['label' => $personal, 'value' => $rfc822string, 'type' => $type];
         }
         
         return new JsonResponse($suggestions);
