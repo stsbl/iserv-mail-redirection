@@ -146,13 +146,18 @@ class MailAliasController extends PageController
                 } else {
                     $extra = 'User';
                 }
+                
+                $label = $personal;
+                if(!empty($result->getAuxInfo())) {
+                    $label .= sprintf(' (%s)', $result->getAuxInfo());
+                }
             }
 
             $host = $this->get('iserv.config')->get('Servername');
                 
             $rfc822string = imap_rfc822_write_address($mailbox, $host, $personal);
                 
-            $suggestions[] = ['label' => $personal, 'value' => $rfc822string, 'type' => $type, 'extra' => $extra];
+            $suggestions[] = ['label' => $label, 'value' => $rfc822string, 'type' => $type, 'extra' => $extra];
         }
         
         return new JsonResponse($suggestions);
