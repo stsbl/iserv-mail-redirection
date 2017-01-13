@@ -51,3 +51,6 @@ msgstr "Die Gruppen, welche die E-Mails an diese Adresse erhalten sollen."
 
 msgid "The users who should receive the e-mails to that address."
 msgstr "Die Benutzer, welche die E-Mails an diese Adresse erhalten sollen."
+
+msgid "Enter a search term..."
+msgstr "Suchbegriff eingeben..."
