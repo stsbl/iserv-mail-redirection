@@ -1,3 +1,17 @@
+stsbl-iserv-mail-redirection (17.01.14-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Added update script for renaming dynamic lists.
+  * Ignore empty query strings to prevent crashing of json backend.
+  * Disabled the usement of query pieces as condition (too much results).
+  * Fixed "Undefined variable $label" if groups are queried.
+  * Moved defintion of $label to top of output generation, because it is referenced later.
+  * Fixed search algorithm in json backend.
+  * Splitted out dynamic aliases into own module.
+  * Removed sql code for dynamic aliases.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Sat, 14 Jan 2017 15:47:43 +0100
+
 stsbl-iserv-mail-redirection (17.01.13-1) experimental; urgency=medium
 
   [ Felix Jacobi ]
