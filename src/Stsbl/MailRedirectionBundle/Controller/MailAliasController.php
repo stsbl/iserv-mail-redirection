@@ -106,12 +106,17 @@ class MailAliasController extends PageController
                 
                 $i = 0;
                 foreach ($explodedQuery as $q) {
-                    $qb
-                        ->orWhere(sprintf('p.firstname LIKE :query%s', $i))
-                        ->orWhere(sprintf('p.lastname LIKE :query%s', $i))
-                        ->orWhere(sprintf('p.username LIKE :query%s', $i))
-                        ->setParameter(sprintf('query%s', $i), '%'.$q.'%')
-                    ;
+                    // ignore empty strings, this would to that the search condition is %%, which means
+                    // ALL entries in database and that usually lead to a scricpt execution timeout and 
+                    // makes the JSON Backend slow!
+                    if (!empty($q)) {
+                        $qb
+                            ->orWhere(sprintf('p.firstname LIKE :query%s', $i))
+                            ->orWhere(sprintf('p.lastname LIKE :query%s', $i))
+                            ->orWhere(sprintf('p.username LIKE lower(:query%s)', $i))
+                            ->setParameter(sprintf('query%s', $i), '%'.$q.'%')
+                        ;
+                    }
                     
                     $i++;
                 }

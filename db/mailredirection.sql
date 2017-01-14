@@ -48,12 +48,59 @@ CREATE TABLE mailredirection_recipient_groups (
                                             ON DELETE CASCADE
 );
 
+CREATE TABLE mailaliases_dynamic (
+    id                      SERIAL          PRIMARY KEY,
+    recipient               VARCHAR(255)    NOT NULL,
+    enabled                 BOOLEAN         NOT NULL
+);
+
+CREATE TABLE mailaliases_dynamic_user (
+    id                      SERIAL          PRIMARY KEY,
+    recipient               VARCHAR(255)    NOT NULL 
+                                            REFERENCES users(act)
+                                            ON UPDATE CASCADE
+                                            ON DELETE CASCADE,
+    dynamic_recipient_id   INT              REFERENCES mailaliases_dynamic(id)
+                                            ON UPDATE CASCADE
+                                            ON DELETE CASCADE 
+);
+
+CREATE TABLE mailaliases_dynamic_users (
+    id                      SERIAL          PRIMARY KEY,
+    recipient               VARCHAR(255)    NOT NULL 
+                                            REFERENCES users(act)
+                                            ON UPDATE CASCADE
+                                            ON DELETE CASCADE,
+    dynamic_recipient_id   INT              REFERENCES mailaliases_dynamic(id)
+                                            ON UPDATE CASCADE
+                                            ON DELETE CASCADE 
+);
+
+CREATE TABLE mailaliases_dynamic_groups (
+    id                      SERIAL          PRIMARY KEY,
+    recipient               VARCHAR(255)    NOT NULL 
+                                            REFERENCES groups(act)
+                                            ON UPDATE CASCADE
+                                            ON DELETE CASCADE,
+    dynamic_recipient_id   INT              REFERENCES mailaliases_dynamic(id)
+                                            ON UPDATE CASCADE
+                                            ON DELETE CASCADE 
+);
+
 -- disallow to enter the same recipient and original_recipient twice
 -- Disabled, now handled by Constraint on Symfony Side.
 -- CREATE UNIQUE INDEX mailredirection_recipient_users_key ON mailredirection_recipient_users (recipient, original_recipient_id);
 -- CREATE UNIQUE INDEX mailredirection_recipient_groups_key ON mailredirection_recipient_groups (recipient, original_recipient_id);
+CREATE UNIQUE INDEX mailaliases_dynamic_key ON mailaliases_dynamic(recipient);
 
 -- permissions
-GRANT SELECT, USAGE ON "mailredirection_recipient_users_id_seq", "mailredirection_recipient_groups_id_seq", "mailredirection_addresses_id_seq" TO exim, symfony;
-GRANT SELECT ON "mailredirection_addresses", "mailredirection_recipient_users", "mailredirection_recipient_groups" TO exim;
-GRANT INSERT, SELECT, UPDATE, DELETE ON "mailredirection_addresses", "mailredirection_recipient_users", "mailredirection_recipient_groups" TO symfony;
+GRANT SELECT, USAGE ON "mailredirection_recipient_users_id_seq", "mailredirection_recipient_groups_id_seq", 
+    "mailredirection_addresses_id_seq", "mailaliases_dynamic_id_seq", "mailaliases_dynamic_users_id_seq", 
+    "mailaliases_dynamic_groups_id_seq" TO exim, symfony;
+GRANT SELECT ON "mailredirection_addresses", "mailredirection_recipient_users", "mailredirection_recipient_groups", 
+    "mailaliases_dynamic", "mailaliases_dynamic_users", "mailaliases_dynamic_groups" 
+    TO exim;
+GRANT INSERT, SELECT, UPDATE, DELETE ON "mailredirection_addresses", "mailredirection_recipient_users", 
+    "mailredirection_recipient_groups", "mailaliases_dynamic", "mailaliases_dynamic_users", 
+    "mailaliases_dynamic_groups" 
+    TO symfony;
