@@ -104,22 +104,35 @@ class MailAliasController extends PageController
                     ->orWhere('p.username LIKE :queryAct')
                 ;
                 
-                /*$i = 0;
+                $i = 0;
+                $length = count($explodedQuery);
+                $halfLengthUp = round($length / 2, 0, PHP_ROUND_HALF_UP);
+                $halfLengthDown = round($length / 2, 0, PHP_ROUND_HALF_DOWN);
+                
                 foreach ($explodedQuery as $q) {
                     // ignore empty strings, this would to that the search condition is %%, which means
                     // ALL entries in database and that usually lead to a scricpt execution timeout and 
                     // makes the JSON Backend slow!
                     if (!empty($q)) {
-                        $qb
-                            ->orWhere(sprintf('p.firstname LIKE :query%s', $i))
-                            ->orWhere(sprintf('p.lastname LIKE :query%s', $i))
-                            ->orWhere(sprintf('p.username LIKE lower(:query%s)', $i))
-                            ->setParameter(sprintf('query%s', $i), '%'.$q.'%')
-                        ;
+                        // assume that the first half of the query is the first name, the second one
+                        // account name, thjis should work for almost all cases.
+                        if ($i < $halfLengthUp) {
+                            $qb->orWhere(sprintf('p.firstname LIKE :query%s', $i));
+                        } else {
+                            $qb->orWhere(sprintf('p.lastname LIKE :query%s', $i));
+                        }
+                        
+                        if ($i < $halfLengthDown) {
+                            $qb->orWhere(sprintf('p.firstname LIKE :query%s', $i));
+                        } else {
+                            $qb->orWhere(sprintf('p.lastname LIKE :query%s', $i));
+                        }
+                        
+                        $qb->setParameter(sprintf('query%s', $i), '%'.$q.'%');
                     }
                     
                     $i++;
-                }*/
+                }
                 
                 $qb->setParameter('queryOriginal', '%'.$query.'%');
                 
