@@ -101,10 +101,10 @@ class MailAliasController extends PageController
                     ->from('IServCoreBundle:User', 'p')
                     ->where('p.firstname LIKE :queryOriginal')
                     ->orWhere('p.lastname LIKE :queryOriginal')
-                    ->orWhere('p.username LIKE :queryOriginal')
+                    ->orWhere('p.username LIKE :queryAct')
                 ;
                 
-                $i = 0;
+                /*$i = 0;
                 foreach ($explodedQuery as $q) {
                     // ignore empty strings, this would to that the search condition is %%, which means
                     // ALL entries in database and that usually lead to a scricpt execution timeout and 
@@ -119,9 +119,13 @@ class MailAliasController extends PageController
                     }
                     
                     $i++;
-                }
+                }*/
                 
                 $qb->setParameter('queryOriginal', '%'.$query.'%');
+                
+                // transform full name into an account
+                $act = strtolower(str_replace(' ', '.', $query));
+                $qb->setParameter('queryAct', '%'.$act.'%');
                 
                 try {
                     $results = $qb->getQuery()->getResult();
