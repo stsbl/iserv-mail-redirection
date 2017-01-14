@@ -156,11 +156,12 @@ class MailAliasController extends PageController
                     $extra = 'User';
                 }
                 
-                $label = $personal;
                 if(!empty($result->getAuxInfo())) {
                     $label .= sprintf(' (%s)', $result->getAuxInfo());
                 }
             }
+            
+            $label = $personal;
 
             $host = $this->get('iserv.config')->get('Servername');
                 
