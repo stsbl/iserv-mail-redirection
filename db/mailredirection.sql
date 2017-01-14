@@ -48,34 +48,6 @@ CREATE TABLE mailredirection_recipient_groups (
                                             ON DELETE CASCADE
 );
 
-CREATE TABLE mailaliases_dynamic (
-    id                      SERIAL          PRIMARY KEY,
-    recipient               VARCHAR(255)    NOT NULL,
-    enabled                 BOOLEAN         NOT NULL
-);
-
-CREATE TABLE mailaliases_dynamic_users (
-    id                      SERIAL          PRIMARY KEY,
-    recipient               VARCHAR(255)    NOT NULL 
-                                            REFERENCES users(act)
-                                            ON UPDATE CASCADE
-                                            ON DELETE CASCADE,
-    dynamic_recipient_id   INT              REFERENCES mailaliases_dynamic(id)
-                                            ON UPDATE CASCADE
-                                            ON DELETE CASCADE 
-);
-
-CREATE TABLE mailaliases_dynamic_groups (
-    id                      SERIAL          PRIMARY KEY,
-    recipient               VARCHAR(255)    NOT NULL 
-                                            REFERENCES groups(act)
-                                            ON UPDATE CASCADE
-                                            ON DELETE CASCADE,
-    dynamic_recipient_id   INT              REFERENCES mailaliases_dynamic(id)
-                                            ON UPDATE CASCADE
-                                            ON DELETE CASCADE 
-);
-
 -- disallow to enter the same recipient and original_recipient twice
 -- Disabled, now handled by Constraint on Symfony Side.
 -- CREATE UNIQUE INDEX mailredirection_recipient_users_key ON mailredirection_recipient_users (recipient, original_recipient_id);
