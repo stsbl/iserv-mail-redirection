@@ -138,6 +138,7 @@ class MailAliasController extends PageController
 
         foreach ($results as $result) {
             $personal = $result->getName();
+            $label = $personal;
             if ($result instanceof Group) {
                 $mailbox = $result->getAccount();
                 $extra = 'Group';
@@ -160,13 +161,9 @@ class MailAliasController extends PageController
                     $label .= sprintf(' (%s)', $result->getAuxInfo());
                 }
             }
-            
-            $label = $personal;
 
             $host = $this->get('iserv.config')->get('Servername');
-                
             $rfc822string = imap_rfc822_write_address($mailbox, $host, $personal);
-                
             $suggestions[] = ['label' => $label, 'value' => $rfc822string, 'type' => $type, 'extra' => $extra];
         }
         
