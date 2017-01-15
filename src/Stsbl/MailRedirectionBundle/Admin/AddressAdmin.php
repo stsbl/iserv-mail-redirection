@@ -12,10 +12,10 @@ use IServ\CrudBundle\Mapper\AbstractBaseMapper;
 use IServ\CrudBundle\Mapper\FormMapper;
 use IServ\CrudBundle\Mapper\ListMapper;
 use IServ\CrudBundle\Mapper\ShowMapper;
-use Stsbl\MailRedirectionBundle\Entity\UserRecipient;
 use Stsbl\MailRedirectionBundle\Form\Type\GroupRecipientType;
 use Stsbl\MailRedirectionBundle\Form\Type\UserRecipientType;
 use Stsbl\MailRedirectionBundle\Security\Privilege;
+use Stsbl\MailRedirectionBundle\Util\ArrayUtil;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 /*
@@ -231,82 +231,10 @@ class AddressAdmin extends AbstractAdmin
             $previousGroupRecipients[] = $this->getObjectManager()->findOneBy('StsblMailRedirectionBundle:GroupRecipient', ['id' => $recipientId]);
         }
         
-        $removedUserRecipients = [];
-        
-        // array_diff_assoc does not work here, so we use our own optmized version here and in the further comparisons
-        // which can better handle arrays with objects inside.
-        foreach ($previousUserRecipients as $previousUserRecipient) {
-            /* @var $previousUserRecipient \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
-            /* @var $userRecipient \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
-            $inArray = false;
-            
-            foreach ($userRecipients as $userRecipient) {
-                if ($userRecipient->getRecipient() == $previousUserRecipient->getRecipient()) {
-                    $inArray = true;
-                }
-            }
-            
-            if (!$inArray) {
-                $removedUserRecipients[] = $previousUserRecipient;
-            }
-        }
-        
-        $addedUserRecipients = [];
-        
-        // see above
-        foreach ($userRecipients as $userRecipient) {
-            /* @var $previousUserRecipient \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
-            /* @var $userRecipient \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
-            $inArray = false;
-            
-            foreach ($previousUserRecipients as $previousUserRecipient) {
-                if ($previousUserRecipient->getRecipient() == $userRecipient->getRecipient()) {
-                    $inArray = true;
-                }
-            }
-            
-            if(!$inArray) {
-                $addedUserRecipients[] = $userRecipient;
-            }
-        }
-        
-        $removedGroupRecipients = [];
-        
-        // see two above
-        foreach ($previousGroupRecipients as $previousGroupRecipient) {
-            /* @var $previousGroupRecipient \Stsbl\MailRedirectionBundle\Entity\GroupRecipient */
-            /* @var $groupRecipient \Stsbl\MailRedirectionBundle\Entity\GroupRecipient */
-            $inArray = false;
-            
-            foreach ($groupRecipients as $groupRecipient) {
-                if ($groupRecipient->getRecipient() == $previousGroupRecipient->getRecipient()) {
-                    $inArray = true;
-                }
-            }
-            
-            if (!$inArray) {
-                $removedGroupRecipients[] = $previousGroupRecipient;
-            }
-        }
-        
-        $addedGroupRecipients = [];
-        
-        // see three above
-        foreach ($groupRecipients as $groupRecipient) {
-            /* @var $previousGroupRecipient \Stsbl\MailRedirectionBundle\Entity\GroupRecipient */
-            /* @var $groupRecipient \Stsbl\MailRedirectionBundle\Entity\GroupRecipient */
-            $inArray = false;
-            
-            foreach ($previousGroupRecipients as $previousGroupRecipient) {
-                if ($previousGroupRecipient->getRecipient() == $groupRecipient->getRecipient()) {
-                    $inArray = true;
-                }
-            }
-            
-            if(!$inArray) {
-                $addedGroupRecipients[] = $groupRecipient;
-            }
-        }
+        $removedUserRecipients = ArrayUtil::getArrayDifferenceByCallables($previousUserRecipients, $userRecipients, 'getRecipient', 'getRecipient');
+        $addedUserRecipients = ArrayUtil::getArrayDifferenceByCallables($userRecipients, $previousUserRecipients, 'getRecipient', 'getRecipient');
+        $removedGroupRecipients = ArrayUtil::getArrayDifferenceByCallables($previousGroupRecipients, $groupRecipients, 'getRecipient', 'getRecipient');     
+        $addedGroupRecipients = ArrayUtil::getArrayDifferenceByCallables($groupRecipients, $previousGroupRecipients, 'getRecipient', 'getRecipient');
         
         // log removed user recipients
         foreach ($removedUserRecipients as $removed) {
