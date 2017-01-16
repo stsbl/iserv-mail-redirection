@@ -67,6 +67,11 @@ class MailAliasController extends PageController
             throw new \InvalidArgumentException(sprintf('Invalid type %s.', $type));
         }
         
+        // require minimum string length to prevent script timeouts due to too much database results :/
+        if (strlen($query) < 3) {
+            return new JsonResponse([]);
+        }
+        
         $suggestions = [];
         if (empty($query)) {
             if ($type == 'group') {
