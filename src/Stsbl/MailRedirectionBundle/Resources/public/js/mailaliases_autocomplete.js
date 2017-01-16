@@ -27,7 +27,8 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
     "use strict";
 
     var thOptions = {
-        minLength: 1
+        minLength: 1,
+        highlight: false
     };
     var thSourceUser = {
     	remote: IServ.Routing.generate('admin_mail_aliases_recipients') + '?type=user&query=%QUERY',
@@ -66,7 +67,8 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
     function renderSuggestion(data)
     {
         var icon;
-        var ext = '';
+        var label;
+        var extra;
         
         consoleLog('IServ.MailAliases.Autocomplete.renderSuggestion: Type is ' + data.type + '.');
         
@@ -86,8 +88,23 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
             case 'teacher':
                 icon = 'education';
                 break;
+            case 'notice':
+                icon = 'info-sign';
+                break;
             default: 
-                icon = 'envelope';
+                icon = 'question-sign';
+        }
+        
+        if (data.label == 'Too much results, please enter more specicfic term.') {
+            label = '<span class="text-muted">' + _(data.label, false) + '</span>';
+        } else  {
+            label = '<h4 class="media-heading">' + data.label + '</h4>';
+        }
+        
+        if (data.extra === null || data.extra === '') {
+            extra = '';
+        } else {
+            extra = '<span class="text-muted">' + _(data.extra, false) + '</span>';
         }
         
         var suggestion = '<div class="media autocomplete-suggestion">';
@@ -95,8 +112,8 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
         suggestion += '<div class="icon">' + IServ.Icon.get(icon) + '</div>';
         suggestion += '</div>';
         suggestion += '<div class="media-body">';
-        suggestion += '<h4 class="media-heading">' + data.label + '</h4>';
-        suggestion += '<span class="text-muted">' + _(data.extra, false) + '</span>';
+        suggestion += label;
+        suggestion += extra;
         suggestion += '</div>';
         suggestion += '</div>';
         

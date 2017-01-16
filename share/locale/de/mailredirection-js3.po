@@ -17,3 +17,6 @@ msgstr "Schüler"
 
 msgid "Administrator"
 msgstr "Administrator"
+
+msgid "Too much results, please enter more specicfic term."
+msgstr "Zu viele Ergebnisse, bitte spezifischeren Suchbegriff eingeben."

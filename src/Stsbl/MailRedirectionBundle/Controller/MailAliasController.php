@@ -69,7 +69,12 @@ class MailAliasController extends PageController
         
         // require minimum string length to prevent script timeouts due to too much database results :/
         if (strlen($query) < 3) {
-            return new JsonResponse([]);
+            return new JsonResponse([[
+                'label' => 'Too much results, please enter more specicfic term.', 
+                'value' => '', 
+                'type' => 'notice',
+                'extra' => ''
+            ]]);
         }
         
         $suggestions = [];
