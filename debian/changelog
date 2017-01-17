@@ -1,3 +1,13 @@
+stsbl-iserv-mail-redirection (17.01.17-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Moved object array comparision into own function block.
+  * Require minimum string length for search term to prevent backend hangs due too much database query results.
+  * Added user-friendly message of there is a too short search term.
+  * Replaced iconf patch with sed script (more reliable).
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Tue, 17 Jan 2017 01:52:28 +0100
+
 stsbl-iserv-mail-redirection (17.01.14-0) experimental; urgency=medium
 
   [ Felix Jacobi ]
