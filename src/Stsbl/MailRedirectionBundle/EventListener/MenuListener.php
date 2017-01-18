@@ -37,7 +37,8 @@ use Stsbl\MailRedirectionBundle\Security\Privilege;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class MenuListener implements AdminMenuListenerInterface {
+class MenuListener implements AdminMenuListenerInterface
+{
     /**
      * {@inheritdoc}
      */

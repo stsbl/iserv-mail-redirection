@@ -1,5 +1,5 @@
 <?php
-// src/Stsbl/BillBoardBundle/DependencyInjection/StsblBillBoardExtension.php
+// src/Stsbl/MailRedirectionBundle/DependencyInjection/StsblMailRedirectionExtension.php
 namespace Stsbl\MailRedirectionBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
