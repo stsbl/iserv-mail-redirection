@@ -1,3 +1,9 @@
+stsbl-iserv-mail-redirection (17.01.20-0) experimental; urgency=medium
+
+  * Updated copyright headers.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Fri, 20 Jan 2017 07:16:57 +0100
+
 stsbl-iserv-mail-redirection (17.01.17-0) experimental; urgency=medium
 
   [ Felix Jacobi ]
