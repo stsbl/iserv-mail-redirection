@@ -1,11 +1,11 @@
 {# src/Stsbl/MailRedirectionBundle/Resources/views/Crud/address_edit.html.twig #}
 {% extends 'IServCrudBundle:Crud:edit.html.twig' %}
-{% import 'StsblJavaScriptLibraryBundle::macros.html.twig' as jsm %}
+{% import 'StsblJavaScriptLibraryBundle::jquery.initialize.html.twig' as jqi %}
 
 {% block javascripts %}
     {{ parent() }}
     
-    {{ jsm.StsblJavascriptLibraries() }}
+    {{ jqi.integrate() }}
 
     {% if app.environment != 'prod' %}
 	<!-- {{ _self.templateName }} => mailaliases.js -->
