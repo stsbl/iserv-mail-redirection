@@ -9,7 +9,7 @@
     
     {% if app.environment != 'prod' %}
 	<!-- {{ _self.templateName }} => mailaliases.js -->
-	{% endif %}
+    {% endif %}
     {% javascripts output='js/compiled/mailaliases.js' filter='?uglifyjs2' '@StsblMailRedirectionBundle/Resources/public/js/mailaliases_autocomplete.js' %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
