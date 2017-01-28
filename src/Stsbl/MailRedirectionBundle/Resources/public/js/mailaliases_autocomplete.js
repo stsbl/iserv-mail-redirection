@@ -95,7 +95,7 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
                 icon = 'question-sign';
         }
         
-        if (data.label == 'Too much results, please enter more specicfic term.') {
+        if (data.label == 'Too much results, please enter more specific term.') {
             label = '<span class="text-muted">' + _(data.label, false) + '</span>';
         } else  {
             label = '<h4 class="media-heading">' + data.label + '</h4>';
