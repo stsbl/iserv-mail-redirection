@@ -2,13 +2,13 @@ msgid "There is already an entry for that address."
 msgstr "Es gibt bereits einen Eintrag für diese Adresse."
 
 msgid "This is a system e-mail address, you are not allowed to create redirections for it."
-msgstr "Dies ist eine System E-Mail-Adresse, es ist ihnen nicht erlaubt, Weiterleitungen dafür zu erstellen."
+msgstr "Dies ist eine System E-Mail-Adresse, es ist Ihnen nicht erlaubt, Weiterleitungen dafür zu erstellen."
 
 msgid "This is not a valid local part of an e-mail address."
 msgstr "Dies ist kein gültiger lokaler Teil einer E-Mail-Adresse."
 
 msgid "Enter only the address part before the @."
-msgstr "Geben sie nur den Adressteil, der vor dem @ steht, ein."
+msgstr "Geben Sie nur den Adressteil, der vor dem @ steht, ein."
 
 msgid "Original recipient"
 msgstr "Originalempfänger"
@@ -20,16 +20,16 @@ msgid "Mail alias"
 msgstr "Mailalias"
 
 msgid "The local part of the e-mail address which you want to redirect."
-msgstr "Der lokale Teil der E-Mail-Adresse, die sie weiterleiten möchten."
+msgstr "Der lokale Teil der E-Mail-Adresse, die Sie weiterleiten möchten."
 
 msgid "Umlauts are not allowed as part of it."
 msgstr "Umlaute dürfen nicht enthalten sein."
 
 msgid "You can enable or disable this redirection. If it is disabled all assigned users and groups will stop receiving the mails of this address."
-msgstr "Sie können diese Weiterleitung aktivieren oder deaktivieren. Wenn sie deaktiviert ist, werden zugewiesene Benutzer und Gruppen die Mails an diese Adresse nicht mehr erhalten."
+msgstr "Sie können diese Weiterleitung aktivieren oder deaktivieren. Wenn Sie deaktiviert ist, werden zugewiesene Benutzer und Gruppen die Mails an diese Adresse nicht mehr erhalten."
 
 msgid "Here you can enter further explanation for this redirection."
-msgstr "Hier können sie weitere Erläuterungen zu dieser Weiterleitung eingeben."
+msgstr "Hier können Sie weitere Erläuterungen zu dieser Weiterleitung eingeben."
 
 msgid "Manage e-mail redirections"
 msgstr "E-Mail-Weiterleitungen verwalten"
