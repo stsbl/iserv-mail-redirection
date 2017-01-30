@@ -32,7 +32,10 @@ namespace Stsbl\MailRedirectionBundle\Security;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class Privilege 
+final class Privilege 
 {
+    /**
+     * Privilege that allows users to edit the mail aliases (admin password required)
+     */
     const Admin = 'PRIV_MAIL_REDIRECTION_ADMIN';
 }
