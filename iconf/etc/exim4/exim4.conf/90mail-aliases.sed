@@ -5,6 +5,8 @@
     driver = redirect\
     allow_fail\
     allow_defer\
+    # only apply for local domains\
+    domains = +local_domains\
     condition = ${if eq {${lookup pgsql{ SELECT 1 FROM mailredirection_addresses a \\\
       WHERE a.recipient = '${quote_pgsql:$local_part}' AND enabled = true \\\
       AND (EXISTS (SELECT 1 FROM mailredirection_recipient_users u WHERE \\\
