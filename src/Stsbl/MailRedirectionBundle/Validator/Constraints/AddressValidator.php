@@ -58,11 +58,11 @@ class AddressValidator extends ConstraintValidator
     public function __construct(Config $config = null, EntityManager $em = null)
     {
         if (!isset($config)) {
-            throw new \RuntimeException('config is empty, did you forget to pass it to the constructor?');
+            throw new \InvalidArgumentException('config is empty, did you forget to pass it to the constructor?');
         }
         
         if (!isset($em)) {
-            throw new \RuntimeException('em is empty, did you forget to pass it to the constructor?');
+            throw new \InvalidArgumentException('em is empty, did you forget to pass it to the constructor?');
         }
         
         $this->config = $config;
