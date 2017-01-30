@@ -1,3 +1,16 @@
+stsbl-iserv-mail-redirection (17.01.30-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Syntax fixes.
+  * Fixed l10n.
+  * Fixed js i18n.
+  * Made privilege container final.
+  * Fixed typo.
+  * Use InvalidArgumentException instead of RuntimeException.
+  * Fixed exim config, redirections will not longer triggered for external e-mail addresses with the same local part.
+
+ -- Felix Jacobi <felix.jacobi@stsbl.de>  Mon, 30 Jan 2017 22:01:28 +0100
+
 stsbl-iserv-mail-redirection (17.01.20-0) experimental; urgency=medium
 
   [ Felix Jacobi ]
