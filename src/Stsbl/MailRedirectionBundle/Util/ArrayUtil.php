@@ -41,11 +41,11 @@ class ArrayUtil
      * @param array $secondArray
      * @param string $firstCallable
      * @param string $secondCallable
-     * @param array $firstCallableParamters
+     * @param array $firstCallableParameters
      * @param array $secondCallableParameters
      * @return array The objects which are in the $firstArray, but not in the $secondArray.
      */
-    public static function getArrayDifferenceByCallables(array $firstArray, array $secondArray, $firstCallable, $secondCallable, array $firstCallableParamters = null, array $secondCallableParameters = null)
+    public static function getArrayDifferenceByCallables(array $firstArray, array $secondArray, $firstCallable, $secondCallable, array $firstCallableParameters = null, array $secondCallableParameters = null)
     {
         $notInSecondArray = [];
                     
@@ -53,8 +53,8 @@ class ArrayUtil
             $inArray = false;
             
             foreach ($secondArray as $secondArrayElement) {
-                if (!is_null($firstCallableParamters)) {
-                    $firstResult = call_user_func_array([$firstArrayElement, $firstCallable], $firstCallableParamters);
+                if (!is_null($firstCallableParameters)) {
+                    $firstResult = call_user_func_array([$firstArrayElement, $firstCallable], $firstCallableParameters);
                 } else {
                     $firstResult = call_user_func([$firstArrayElement, $firstCallable]);
                 }
