@@ -1,8 +1,17 @@
+stsbl-iserv-mail-redirection (17.02.07-0) experimental; urgency=medium
+  
+  [ Felix Jacobi ]
+  * Replace deprecated _self.templateName with _self.
+  * Fixed block prefix.
+  * Removed unused functions.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Tue, 07 Feb 2017 04:41:21 +0100
+
 stsbl-iserv-mail-redirection (17.01.30-1) experimental; urgency=medium
 
   * Fixed changelog.
 
- -- Felix Jacobi <felix.jacobi@stsbl.de>  Mon, 30 Jan 2017 22:07:43 +0100
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Mon, 30 Jan 2017 22:07:43 +0100
 
 stsbl-iserv-mail-redirection (17.01.30-0) experimental; urgency=medium
 
