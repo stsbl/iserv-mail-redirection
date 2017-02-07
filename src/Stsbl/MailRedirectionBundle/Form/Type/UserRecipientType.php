@@ -100,25 +100,6 @@ class UserRecipientType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'mailredirection_grouprecipient';
-    }
-    
-    /**
-     * Gets a list of all users as rfc822 string
-     * 
-     * @return ArrayCollection
-     */
-    public function getUsersAsRfc822()
-    {
-        $repository = $this->om->getRepository('IServCoreBundle:User');
-        $users = $repository->findAll();
-        $result = [];
-        
-        foreach ($users as $user) {
-            /* @var $user \IServ\CoreBundle\Entity\User */
-            $result[] = imap_rfc822_write_address($user->getUsername(), $this->config->get('Servername'), $user->getName());
-        }
-        
-        return new ArrayCollection($result);
+        return 'mailredirection_userrecipient';
     }
 }

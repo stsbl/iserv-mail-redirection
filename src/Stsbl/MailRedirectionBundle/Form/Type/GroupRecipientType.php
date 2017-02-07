@@ -102,23 +102,4 @@ class GroupRecipientType extends AbstractType
     {
         return 'mailredirection_grouprecipient';
     }
-    
-    /**
-     * Gets a list of all users as rfc822 string
-     * 
-     * @return ArrayCollection
-     */
-    private function getGroupsAsRfc822()
-    {
-        $repository = $this->om->getRepository('IServCoreBundle:Group');
-        $groups = $repository->findAll();
-        $result = [];
-        
-        foreach ($groups as $group) {
-            /* @var $group \IServ\CoreBundle\Entity\Group */
-            $result[] = imap_rfc822_write_address($group->getAccount(), $this->config->get('Servername'), $group->getName());
-        }
-        
-        return new ArrayCollection($result);
-    }
 }
