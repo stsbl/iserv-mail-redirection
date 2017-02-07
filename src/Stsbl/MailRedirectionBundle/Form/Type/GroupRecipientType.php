@@ -100,7 +100,7 @@ class GroupRecipientType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'mailredirection_userrecipient';
+        return 'mailredirection_grouprecipient';
     }
     
     /**
