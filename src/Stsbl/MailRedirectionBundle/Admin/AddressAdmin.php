@@ -52,6 +52,37 @@ class AddressAdmin extends AbstractAdmin
 {
     use LoggerTrait;
     
+    const LOG_ALIAS_ADDED = 'Alias %s@%s hinzugefügt';
+    
+    const LOG_USER_RECIPEINT_ADDED = 'Benutzer %s als Empfänger von Alias %s@%s hinzugefügt';
+    
+    const LOG_GROUP_RECIPIENT_ADDED = 'Gruppe %s als Empfänger von Alias %s@%s hinzugefügt';
+    
+    /**
+     * Gets explanation for import
+     * 
+     * @return string
+     */
+    public static function getImportExplanation()
+    {
+        return _('You can import mail aliases from a CSV file. The CSV file should have no column titles and the following columns (from left to right):');
+    }
+    
+    /**
+     * Gets fields for explanation for import
+     * 
+     * @return array<string>
+     */
+    public static function getImportExplanationFieldList()
+    {
+        return [
+            _('Original recipient').' '._('(Only local part, without the @ and the domain)'),
+            _('Users').' '._('(Account names as a comma separated list, can be empty)'),
+            _('Groups').' '. _('(Account names as a comma separated list, can be empty)'),
+            _('Note').' ('._('optional').')',
+        ];
+    }
+    
     /**
      * @var Config
      */
@@ -67,8 +98,22 @@ class AddressAdmin extends AbstractAdmin
         $this->id = 'mail_aliases';
         $this->routesPrefix = 'admin/mailaliases';
         $this->options['help'] = 'https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection';
+        $this->templates['crud_index'] = 'StsblMailRedirectionBundle:Crud:address_index.html.twig';
         $this->templates['crud_add'] = 'StsblMailRedirectionBundle:Crud:address_add.html.twig';
         $this->templates['crud_edit'] = 'StsblMailRedirectionBundle:Crud:address_edit.html.twig';
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function buildRoutes() 
+    {
+        parent::buildRoutes();
+        
+        $this->routes[self::ACTION_INDEX]['_controller'] = 'StsblMailRedirectionBundle:MailAlias:index';
+        $this->routes[self::ACTION_ADD]['_controller'] = 'StsblMailRedirectionBundle:MailAlias:add';
+        $this->routes[self::ACTION_SHOW]['_controller'] = 'StsblMailRedirectionBundle:MailAlias:show';
+        $this->routes[self::ACTION_EDIT]['_controller'] = 'StsblMailRedirectionBundle:MailAlias:edit';
     }
     
     /**
@@ -209,12 +254,12 @@ class AddressAdmin extends AbstractAdmin
             // if there is no previous data, assume that we are called from post persist
             foreach ($userRecipients as $recipient) {
                 /* @var $recipient \Stsbl\MailRedirectionBundle\Entity\UserRecipient */
-                $this->log(sprintf('Benutzer %s als Empfänger von Alias %s@%s hinzugefügt', (string)$recipient->getRecipient(), (string)$object, $servername));
+                $this->log(sprintf(self::LOG_USER_RECIPIENT_ADDED, (string)$recipient->getRecipient(), (string)$object, $servername));
             }
             
             foreach ($groupRecipients as $recipient) {
                 /* @var $recipient \Stsbl\MailRedirectionBundle\Entity\GroupRecipient */
-                $this->log(sprintf('Gruppe %s als Empfänger von Alias %s@%s hinzugefügt', (string)$recipient->getRecipient(), (string)$object, $servername));
+                $this->log(sprintf(self::LOG_GROUP_RECIPIENT_ADDED, (string)$recipient->getRecipient(), (string)$object, $servername));
             }
             
             // stop here
@@ -243,7 +288,7 @@ class AddressAdmin extends AbstractAdmin
         
         // log added user recipients
         foreach ($addedUserRecipients as $added) {
-            $this->log(sprintf('Benutzer %s als Empfänger von Alias %s@%s hinzugefügt', (string)$added->getRecipient(), (string)$object, $servername));
+            $this->log(sprintf(self::LOG_USER_RECIPIENT_ADDED, (string)$added->getRecipient(), (string)$object, $servername));
         }
         
         // log removed group recipients
@@ -253,7 +298,7 @@ class AddressAdmin extends AbstractAdmin
         
         // log added group recipients
         foreach ($addedGroupRecipients as $added) {
-            $this->log(sprintf('Gruppe %s als Empfänger von Alias %s@%s hinzugefügt', (string)$added->getRecipient(), (string)$object, $servername));
+            $this->log(sprintf(self::LOG_GROUP_RECIPIENT_ADDED, (string)$added->getRecipient(), (string)$object, $servername));
         }
     }
     
@@ -265,7 +310,7 @@ class AddressAdmin extends AbstractAdmin
         /* @var $object \Stsbl\MailRedirectionBundle\Entity\Address */
         // write log
         $servername = $this->config->get('Servername');
-        $this->log(sprintf('Alias %s@%s hinzugefügt', $object->getRecipient(), $servername));
+        $this->log(sprintf(self::LOG_ALIAS_ADDED, $object->getRecipient(), $servername));
         
         $this->logRecipients($object);
     }

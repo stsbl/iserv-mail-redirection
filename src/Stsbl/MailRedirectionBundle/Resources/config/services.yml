@@ -32,3 +32,7 @@ services:
         arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
         tags:
             - { name: validator.constraint_validator, alias: stsbl_mailredirection_address_validator }
+            
+    stsbl.mailrediction.service.importer:
+        class: Stsbl\MailRedirectionBundle\Service\Importer
+        arguments: ["@doctrine.orm.entity_manager"]

@@ -3,14 +3,22 @@
 namespace Stsbl\MailRedirectionBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
-use IServ\CoreBundle\Controller\PageController;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
+use IServ\CoreBundle\Form\Type\BooleanType;
+use IServ\CrudBundle\Controller\CrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Stsbl\MailRedirectionBundle\Admin\AddressAdmin;
+use Stsbl\MailRedirectionBundle\Exception\ImportException;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /*
  * The MIT License
@@ -41,16 +49,29 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
- * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
- * @Route("admin/mailaliases")
  */
-class MailAliasController extends PageController 
+class MailAliasController extends CrudController 
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function indexAction(Request $request) 
+    {
+        $ret = parent::indexAction($request);
+        
+        if (is_array($ret)) {
+            $ret['importForm'] = $this->getImportForm()->createView();
+        }
+        
+        return $ret;
+    }
+
     /**
      * Get auto-completion suggestions for users and groups
      * 
      * @Method("GET")
-     * @Route("/recipients", name="admin_mail_aliases_recipients", options={"expose"=true})
+     * @Route("admin/mailaliases/recipients", name="admin_mail_aliases_recipients", options={"expose"=true})
+     * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
      * @param Request $request
      * @return JsonResponse
      */
@@ -191,5 +212,136 @@ class MailAliasController extends PageController
         }
         
         return new JsonResponse($suggestions);
+    }
+    
+    /**
+     * Imports a submitted csv file
+     * 
+     * @param Request $request
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route("admin/mailaliases/import", name="admin_mail_aliases_import")
+     * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
+     * @Template()
+     */
+    public function importAction(Request $request)
+    {
+        $form = $this->getImportForm();
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            
+            /* @var $importer \Stsbl\MailRedirectionBundle\Service\Importer */
+            $importer = $this->get('stsbl.mailrediction.service.importer');
+            
+            try {
+                $importer->setEnableNewAliases((bool)$data['enable']);
+                $importer->setUploadedFile($data['file']);
+                $importer->transform();
+                
+                $warnings = [];
+                foreach ($importer->getWarnings() as $w) {
+                    $warnings[] = $w;
+                }
+                
+                if (count($warnings) > 0) {
+                    $this->get('iserv.flash')->alert(implode("\n", $warnings));
+                }
+                
+                /* @var $logger \IServ\CoreBundle\Service\Logger */
+                $logger = $this->get('iserv.logger');
+                $servername = $this->get('iserv.config')->get('Servername');
+                $module = 'Mail aliases';
+                $messages = [];
+                
+                /* @var $newAddresses \Stsbl\MailRedirectionBundle\Entity\Address[] */
+                $newAddresses = $importer->getNewAddresses();
+                foreach ($newAddresses as $a) {
+                    $logger->writeForModule(sprintf(AddressAdmin::LOG_ALIAS_ADDED, (string)$a, $servername), $module);
+                    $messages[] = __('Added alias %s@%s.', (string)$a, $servername);
+                }
+                
+                /* @var $newUserRecipients \Stsbl\MailRedirectionBundle\Entity\UserRecipient[] */
+                $newUserRecipients = $importer->getNewUserRecipients();
+                foreach ($newUserRecipients as $u) {
+                    $logger->writeForModule(sprintf(AddressAdmin::LOG_USER_RECIPEINT_ADDED, (string)$u, (string)$u->getOriginalRecipient(), $servername), $module);
+                    $messages[] = __('Added user %s as recipient for alias %s@%s.', (string)$u, (string)$u->getOriginalRecipient(), $servername);
+                }
+                
+                /* @var $newGroupRecipients \Stsbl\MailRedirectionBundle\Entity\GroupRecipient[] */
+                $newGroupRecipients = $importer->getNewGroupRecipients();
+                foreach ($newGroupRecipients as $g) {
+                    $logger->writeForModule(sprintf(AddressAdmin::LOG_GROUP_RECIPIENT_ADDED, (string)$g, (string)$g->getOriginalRecipient(), $servername), $module);
+                    $messages[] = __('Added group %s as recipient for alias %s@%s.', (string)$g, (string)$g->getOriginalRecipient(), $servername);
+                }
+                
+                if (count($messages) > 0) 
+                    $this->get('iserv.flash')->success(implode("\n", $messages));
+                
+                return new RedirectResponse($this->generateUrl('admin_mail_aliases_index'));
+            } catch (ImportException $e) {
+                $message = $e->getMessage();
+                $line = $e->getFileLine();
+                
+                if ($message === ImportException::MESSAGE_INVALID_COLUMN_AMOUNT) {
+                    $message = str_replace('.', '', $message);
+                    if (!is_null($line)) {
+                        $message .= ' near line %s.';
+                    } else {
+                        $message .= '.';
+                    }
+                    
+                    $message = __($message, $line);
+                } else {
+                    $message = _($message);
+                }
+                
+                $this->get('iserv.flash')->error($message);
+            }
+        }
+        
+        // track path
+        $this->addBreadcrumb(_('Mail aliases'), $this->generateUrl('admin_mail_aliases_index'));
+        $this->addBreadcrumb(_('Import'));
+        
+        return [
+            'importForm' => $form->createView(),
+            'importExplanation' => AddressAdmin::getImportExplanation(),
+            'importExplanationFieldList' => AddressAdmin::getImportExplanationFieldList()
+        ];
+    }
+    
+    /**
+     * Gets an form for csv import
+     * 
+     * @return \Symfony\Component\Form\Form
+     */
+    private function getImportForm()
+    {
+        /* @var $builder \Symfony\Component\Form\FormBuilder */
+        $builder = $this->get('form.factory')->createNamedBuilder('mail_alias_import');
+        
+        $builder
+            ->setAction($this->generateUrl('admin_mail_aliases_import'))
+            ->add('file', FileType::class, [
+                'label' => false,
+                'constraints' => [new NotBlank(['message' => _('Please select a CSV file for import.')])]
+            ])
+            ->add('enable', BooleanType::class, [
+                'label' => false,
+                'choices' => [
+                    _('Enable new aliases') => '1',
+                    _('Disable new aliases') => '0',
+                ],
+                'constraints' => [new NotBlank()]
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => _('Import'),
+                'buttonClass' => 'btn-success',
+                'icon' => 'pro-file-import'
+            ])
+        ;
+        
+        return $builder->getForm();
     }
 }

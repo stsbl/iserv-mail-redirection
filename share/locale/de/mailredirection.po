@@ -54,3 +54,51 @@ msgstr "Die Benutzer, welche die E-Mails an diese Adresse erhalten sollen."
 
 msgid "Enter a search term..."
 msgstr "Suchbegriff eingeben..."
+
+msgid "You can import mail aliases from a CSV file. The CSV file should have no column titles and the following columns (from left to right):"
+msgstr "Sie können Mailaliase aus einer CSV-Datei importieren. Die CSV-Datei darf keine Spaltenüberschriften besitzen und muss die folgenden Spalten besitzen (von links nach rechts):"
+
+msgid "(Only local part, without the @ and the domain)"
+msgstr "(Nur den lokalen Teil, nicht das @ und die Domain)"
+
+msgid "(Account names as a comma separated list, can be empty)"
+msgstr "(Accountnamen als kommagetrennte Liste, darf leer sein)"
+
+msgid "Enable new aliases"
+msgstr "Neue Aliase aktivieren"
+
+msgid "Disable new aliases"
+msgstr "Neue Aliase deaktivieren"
+
+msgid "Please select a CSV file for import."
+msgstr "Bitte wählen Sie eine CSV-Datei für den Import."
+
+msgid "The uploaded file is not a plain text file."
+msgstr "Die hochgeladene Textdatei ist keine Textdatei."
+
+msgid "The path of the uploaded file was not found."
+msgstr "Der Pfad der hochgeladenen Datei konnte nicht gefunden werden."
+
+msgid "The CSV file has an invalid amount of columns."
+msgstr "Die CSV-Datei hat eine ungültige Anzahl von Spalten."
+
+msgid "The CSV file has an invalid amount of columns near line %s."
+msgstr "Die CSV-Datei hat eine ungültige Anzahl von Spalten in der Zeile %s."
+
+msgid "Added alias %s@%s."
+msgstr "Alias %s@%s hinzugefügt."
+
+msgid "Added user %s as recipient for alias %s@%s."
+msgstr "Benutzer %s als Empfänger zu Alias %s@%s hinzugefügt."
+
+msgid "Added group %s as recipient for alias %s@%s."
+msgstr "Gruppe %s als Empfänger zu Alias %s@%s hinzugefügt."
+
+msgid "The alias %s does already exists! A note for it which is may defined in the CSV file was ignored."
+msgstr "Der Alias %s exisitiert bereits! Eine Notiz, welche möglicherweise in der CSV-Datei definiert wurde, ist ignoriert worden."
+
+msgid "The user %s is already assigned to the original recipient %s."
+msgstr "Der Benutzer %s ist bereits dem Originalempfänger %s zugewiesen."
+
+msgid "The group %s is already assigned to the original recipient %s."
+msgstr "Die Gruppe %s ist bereits dem Originalempfänger %s zugewiesen."
