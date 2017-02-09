@@ -2,7 +2,7 @@
 #config/*	usr/share/iserv/iservcfg/config
 db/*		usr/share/iserv/db
 iconf/*		usr/share/iserv/iconf
-#iservchk/*	usr/share/iserv/iconf/etc/iserv/chk.d
+iservchk/*	usr/share/iserv/iconf/etc/iserv/chk.d
 #lib/*		usr/lib/iserv
 priv/*		usr/share/iserv/priv
 #roles/*	usr/share/iserv/roles

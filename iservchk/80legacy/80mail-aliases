@@ -1,0 +1,3 @@
+Test "Mail aliases: Update context of old log entries"
+  "grep ^80legacy/80mail-aliases$ /var/lib/iserv/config/update.log"
+  "psql -c \"Update log SET module = 'Mail aliases' WHERE module = 'Mail redirection'\" iserv postgres && echo 80legacy/80mail-aliases >> /var/lib/iserv/config/update.log"
