@@ -1,3 +1,13 @@
+stsbl-iserv-mail-redirection (17.02.09-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Added support for importing csv files.
+  * Added iservchk script to upgrade old log entries with old module name.
+
+  iserv: Mailaliase können nun mit Hilfe einer CSV-Datei importiert werden.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Thu, 09 Feb 2017 12:28:10 +0100
+
 stsbl-iserv-mail-redirection (17.02.07-1) experimental; urgency=medium
 
   [ Felix Jacobi ]
