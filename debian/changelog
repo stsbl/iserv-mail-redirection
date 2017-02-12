@@ -1,3 +1,14 @@
+stsbl-iserv-mail-redirection (17.02.12-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Increased importer performance by decreasing the csv file reading loops to one.
+  * Renamed MailRedirectionBundle to MailAliasBundle which is a more suitable name.
+  * Updated dependency injection container for new bundle name.
+  * Fixed undefined class constant.
+  * Fixed typo.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Sun, 12 Feb 2017 05:48:01 +0100
+
 stsbl-iserv-mail-redirection (17.02.09-0) experimental; urgency=medium
 
   [ Felix Jacobi ]
