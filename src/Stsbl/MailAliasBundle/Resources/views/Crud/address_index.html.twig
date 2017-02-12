@@ -1,0 +1,27 @@
+{# src/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig #}
+{% extends 'IServCrudBundle:Crud:index.html.twig' %}
+
+{% block crud_actions %}
+    {% if admin.isAllowedToAdd() %}
+        <div class="list-actions">
+            {{ m.linkButton(admin.generateUrl('add'), _('Add'), 'plus') }}
+            <a class="btn btn-default" data-toggle="toggle" data-target="#import-list" href="{{ path('admin_mail_aliases_import') }}">{{ icon('upload') }} {{ _('Import') }}</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block crud_table %}
+    <div id="import-list" class="well hidden mb0">
+        <div class="alert alert-info">
+            {{ admin.getImportExplanation() }}
+            {% for text in admin.getImportExplanationFieldList() %}
+                <ul>
+                    <li>{{ text }}</li>
+                </ul>
+            {% endfor %}
+        </div>
+        {{ form(importForm, {'style': 'inline'}) }}
+    </div>
+
+    {{ parent() }}
+{% endblock %}

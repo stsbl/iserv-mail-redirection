@@ -1,0 +1,38 @@
+# src/Stsbl/MailAliasBundle/Resources/config/services.yml
+services:
+    stsbl.mailalias.admin:
+        class: Stsbl\MailAliasBundle\Admin\AddressAdmin # Our CRUD class
+        arguments: [Stsbl\MailAliasBundle\Entity\Address]  # Sets the controlled entity class
+        tags:
+            - { name: iserv.crud } # Tells IServ about our CRUD
+        calls:
+            - [ setLogger, ["@iserv.logger"]]
+            - [ setConfig, ["@iserv.config"]]
+            
+    stsbl.mailalias.menu:
+        class: Stsbl\MailAliasBundle\EventListener\MenuListener # Out MenuListener Class
+        tags:
+        #  - { name: kernel.event_listener, event: iserv_portal.menu_main, method: onBuildMainMenu } # Tells IServ about the main menu method
+          - { name: kernel.event_listener, event: iserv_portal.menu_admin, method: onBuildAdminMenu } # Tells IServ about the admin menu method
+          
+    stsbl.mailalias.form.group_recipient:
+        class: Stsbl\MailAliasBundle\Form\Type\GroupRecipientType
+        arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
+        tags:
+            - {name: form.type }
+            
+    stsbl.mailalias.form.user_recipient:
+        class: Stsbl\MailAliasBundle\Form\Type\UserRecipientType
+        arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
+        tags:
+            - {name: form.type }
+            
+    stsbl.mailalias.validator.address:
+        class: Stsbl\MailAliasBundle\Validator\Constraints\AddressValidator
+        arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
+        tags:
+            - { name: validator.constraint_validator, alias: stsbl_mailalias_address_validator }
+            
+    stsbl.mailalias.service.importer:
+        class: Stsbl\MailAliasBundle\Service\Importer
+        arguments: ["@doctrine.orm.entity_manager"]

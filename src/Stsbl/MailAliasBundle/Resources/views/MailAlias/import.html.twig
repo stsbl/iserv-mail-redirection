@@ -1,0 +1,20 @@
+{# src/Stsbl/MailAliasBundle/Resources/views/MailAlias/import.html.twig #}
+{% extends "IServAdminBundle::page.html.twig" %}
+
+{% block page_title %}
+    {{ _('Import') }} -
+    {{ _('Mail aliases') }} -
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+        <div class="alert alert-info">
+            {{ importExplanation }}
+            {% for text in importExplanationFieldList %}
+                <ul>
+                    <li>{{ text }}</li>
+                </ul>
+            {% endfor %}
+        </div>
+    {{ form(importForm, {'style': 'inline'}) }}
+{% endblock %}

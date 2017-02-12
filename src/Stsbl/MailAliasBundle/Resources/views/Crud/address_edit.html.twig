@@ -1,0 +1,16 @@
+{# src/Stsbl/MailAliasBundle/Resources/views/Crud/address_edit.html.twig #}
+{% extends 'IServCrudBundle:Crud:edit.html.twig' %}
+{% import 'StsblJavaScriptLibraryBundle::jquery.initialize.html.twig' as jqi %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+    {{ jqi.integrate() }}
+
+    {% if app.environment != 'prod' %}
+	<!-- {{ _self }} => mailaliases.js -->
+	{% endif %}
+    {% javascripts output='js/compiled/mailaliases.js' filter='?uglifyjs2' '@StsblMailAliasBundle/Resources/public/js/mailaliases_autocomplete.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
