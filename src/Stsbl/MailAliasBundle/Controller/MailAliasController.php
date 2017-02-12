@@ -264,7 +264,7 @@ class MailAliasController extends CrudController
                 /* @var $newUserRecipients \Stsbl\MailAliasBundle\Entity\UserRecipient[] */
                 $newUserRecipients = $importer->getNewUserRecipients();
                 foreach ($newUserRecipients as $u) {
-                    $logger->writeForModule(sprintf(AddressAdmin::LOG_USER_RECIPEINT_ADDED, (string)$u, (string)$u->getOriginalRecipient(), $servername), $module);
+                    $logger->writeForModule(sprintf(AddressAdmin::LOG_USER_RECIPIENT_ADDED, (string)$u, (string)$u->getOriginalRecipient(), $servername), $module);
                     $messages[] = __('Added user %s as recipient for alias %s@%s.', (string)$u, (string)$u->getOriginalRecipient(), $servername);
                 }
                 

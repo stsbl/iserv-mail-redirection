@@ -54,7 +54,7 @@ class AddressAdmin extends AbstractAdmin
     
     const LOG_ALIAS_ADDED = 'Alias %s@%s hinzugefügt';
     
-    const LOG_USER_RECIPEINT_ADDED = 'Benutzer %s als Empfänger von Alias %s@%s hinzugefügt';
+    const LOG_USER_RECIPIENT_ADDED = 'Benutzer %s als Empfänger von Alias %s@%s hinzugefügt';
     
     const LOG_GROUP_RECIPIENT_ADDED = 'Gruppe %s als Empfänger von Alias %s@%s hinzugefügt';
     
@@ -288,7 +288,7 @@ class AddressAdmin extends AbstractAdmin
         
         // log added user recipients
         foreach ($addedUserRecipients as $added) {
-            $this->log(sprintf(self::LOG_USER_RECIPEINT_ADDED, (string)$added->getRecipient(), (string)$object, $servername));
+            $this->log(sprintf(self::LOG_USER_RECIPIENT_ADDED, (string)$added->getRecipient(), (string)$object, $servername));
         }
         
         // log removed group recipients
