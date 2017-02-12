@@ -55,6 +55,6 @@ class StsblMailAliasExtension extends Extension
     
     public function getAlias()
     {
-        return 'stsbl_mail_redirection';
+        return 'stsbl_mail_aliases';
     }
 }
