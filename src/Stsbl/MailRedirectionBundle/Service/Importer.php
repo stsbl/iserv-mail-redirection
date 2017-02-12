@@ -88,6 +88,11 @@ class Importer
     private $enableNewAliases = true;
     
     /**
+     * @var array
+     */
+    private $lines = [];
+    
+    /**
      * The constructor
      * 
      * @var EntityManager
@@ -135,6 +140,7 @@ class Importer
         $this->newUserRecipients = [];
         $this->newGroupRecipients = [];
         $this->warnings = [];
+        $this->lines = [];
         
         if (is_null($this->csvFile)) {
             throw ImportException::fileIsNull();
@@ -150,20 +156,23 @@ class Importer
     }
     
     /**
-     * Validates the number of columns of the csv file
+     * Validates the number of columns of the csv file and stores the lines into an array
      */
     private function validateColumnNumber()
     {
         $currentLine = 1;
         
         while ($line = $this->fileObject->fgetcsv()) {
+            // if first cell is null, we reaches the end of the csv file :UGLY
             if ($line [0] == null)
                 break;
             
-            // check if column is four (original recipient, users, groups, note) or three (without note)
+            // check if column is four (original recipient, users, groups, note) or three (without note) or two (alias and user without a group and a note)
             if (count($line) > self::COLUMN_NUMBER || count($line) < self::COLUMN_NUMBER_WITHOUT_GROUPS_NOTES) {
                 throw ImportException::invalidColumnAmount($currentLine, count($line), self::COLUMN_NUMBER_WITHOUT_GROUPS_NOTES);
             }
+            
+            $this->lines[] = $line;
             
             $currentLine++;
         }
@@ -177,10 +186,7 @@ class Importer
      */
     private function generateEntities()
     {
-        while ($line = $this->fileObject->fgetcsv()) {
-            if ($line[0] == null)
-                break;
-            
+        foreach ($this->lines as $line) {
             $originalRecipientAct = array_shift($line);
             $userActString = array_shift($line);
             $groupActString = null;
