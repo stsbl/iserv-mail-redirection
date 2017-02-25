@@ -254,7 +254,7 @@ class AddressAdmin extends AbstractAdmin
             // if there is no previous data, assume that we are called from post persist
             foreach ($userRecipients as $recipient) {
                 /* @var $recipient \Stsbl\MailAliasBundle\Entity\UserRecipient */
-                $this->log(sprintf(self::LOG_USER_RECIPEINT_ADDED, (string)$recipient->getRecipient(), (string)$object, $servername));
+                $this->log(sprintf(self::LOG_USER_RECIPIENT_ADDED, (string)$recipient->getRecipient(), (string)$object, $servername));
             }
             
             foreach ($groupRecipients as $recipient) {
