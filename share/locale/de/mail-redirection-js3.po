@@ -1,0 +1,30 @@
+msgid ""
+msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-19 16:21+0100\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/Stsbl/MailAliasBundle/Resources/translation/messages.js:2
+msgid "Too much results, please enter more specific term."
+msgstr "Zu viele Ergebnisse, bitte spezifischeren Suchbegriff eingeben."
+
+#: src/Stsbl/MailAliasBundle/Resources/translation/messages.js:3
+msgid "Group"
+msgstr "Gruppe"
+
+#: src/Stsbl/MailAliasBundle/Resources/translation/messages.js:4
+msgid "Teacher"
+msgstr "Lehrer"
+
+#: src/Stsbl/MailAliasBundle/Resources/translation/messages.js:5
+msgid "User"
+msgstr "Benutzer"
+
+#: src/Stsbl/MailAliasBundle/Resources/translation/messages.js:6
+msgid "Student"
+msgstr "Schüler"
+
+#: src/Stsbl/MailAliasBundle/Resources/translation/messages.js:7
+msgid "Administrator"
+msgstr "Administrator"
