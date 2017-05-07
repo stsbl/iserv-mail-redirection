@@ -161,11 +161,12 @@ class Importer
     private function validateColumnNumber()
     {
         $currentLine = 1;
-        
+        $next = 0;
         while ($line = $this->fileObject->fgetcsv()) {
-            // if first cell is null, we reaches the end of the csv file :UGLY
-            if ($line [0] == null)
+            // if first cells is null and nothing else is set we either have an invalid CSV file or we reached the file end.
+            if ($line[0] == null && !isset($line[1]) && !isset($line[self::COLUMN_NUMBER_WITHOUT_GROUPS_NOTES])) {
                 break;
+            }
             
             // check if column is four (original recipient, users, groups, note) or three (without note) or two (alias and user without a group and a note)
             if (count($line) > self::COLUMN_NUMBER || count($line) < self::COLUMN_NUMBER_WITHOUT_GROUPS_NOTES) {
