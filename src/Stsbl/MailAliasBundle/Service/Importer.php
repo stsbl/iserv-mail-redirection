@@ -192,6 +192,11 @@ class Importer
             $userActString = array_shift($line);
             $groupActString = null;
             $note = null;
+            
+            if (empty($originalRecipientAct)) {
+                $this->warnings[] = _('A line with an empty original recipient was ignored. The listed users and groups wasn\'t assigned to this recipient.');
+                continue;
+            }
            
             if (count($line) > 0) {
                 $groupActString = array_shift($line);
