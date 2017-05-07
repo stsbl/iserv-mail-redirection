@@ -134,10 +134,13 @@ class AddressAdmin extends AbstractAdmin
     {
         $formMapper->add('recipient', null, [
             'label' => _('Original recipient'), 
-            'attr' => 
-                ['help_text' => _('The local part of the e-mail address which you want to redirect.')]
+            'attr' => [
+                'help_text' => _('The local part of the e-mail address which you want to redirect.'),
+                'input_group' => [
+                    'append' => '@'.$this->config->get('Domain')
+                ],
             ]
-        );
+        ]);
         $formMapper->add('userRecipients', BootstrapCollectionType::class, [
             'required' => false,
             'label' => _('Users'),
@@ -385,7 +388,7 @@ class AddressAdmin extends AbstractAdmin
     /**
      * Injects config into class, so that we can read servername from it
      * 
-     * @param $config Config
+     * @param Config $config
      */
     public function setConfig(Config $config)
     {
