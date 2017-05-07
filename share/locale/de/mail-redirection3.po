@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-19 16:13+0100\n"
+"POT-Creation-Date: 2017-05-07 22:32+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: /tmp/mail-redirection-StsblMailAliasBundle.twig.php:55
 #: /tmp/mail-redirection-StsblMailAliasBundle.twig.php:235
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:305
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:339
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:220
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:254
 msgid "Import"
 msgstr "Importieren"
 
 #: /tmp/mail-redirection-StsblMailAliasBundle.twig.php:59
 #: src/Stsbl/MailAliasBundle/EventListener/MenuListener.php:55
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:304
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:219
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:96
 msgid "Mail aliases"
 msgstr "Mailaliase"
@@ -23,7 +23,15 @@ msgstr "Mailaliase"
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: src/Stsbl/MailAliasBundle/Service/Importer.php:217
+#: src/Stsbl/MailAliasBundle/Service/Importer.php:197
+msgid ""
+"A line with an empty original recipient was ignored. The listed users and "
+"groups wasn't assigned to this recipient."
+msgstr ""
+"Eine Zeile mit einem leeren Originalempfänger wurde ignoriert. Die "
+"aufgelisteten Benutzer und Gruppen wurden diesem Empfänger nicht zugewiesen."
+
+#: src/Stsbl/MailAliasBundle/Service/Importer.php:223
 #, php-format
 msgid ""
 "The alias %s does already exists! A note for it which is may defined in the "
@@ -32,48 +40,48 @@ msgstr ""
 "Der Alias %s exisitiert bereits! Eine Notiz, welche möglicherweise in der "
 "CSV-Datei definiert wurde, ist ignoriert worden."
 
-#: src/Stsbl/MailAliasBundle/Service/Importer.php:232
+#: src/Stsbl/MailAliasBundle/Service/Importer.php:238
 #, php-format
 msgid "A user with the account %s was not found."
 msgstr "Ein Benutzer mit dem Account %s konnte nicht gefunden werden."
 
-#: src/Stsbl/MailAliasBundle/Service/Importer.php:237
+#: src/Stsbl/MailAliasBundle/Service/Importer.php:243
 #, php-format
 msgid "The user %s is already assigned to the original recipient %s."
 msgstr "Der Benutzer %s ist bereits dem Originalempfänger %s zugewiesen."
 
-#: src/Stsbl/MailAliasBundle/Service/Importer.php:256
+#: src/Stsbl/MailAliasBundle/Service/Importer.php:262
 #, php-format
 msgid "A group with the account %s was not found."
-msgstr ""
+msgstr "Eine Gruppe mir dem Account %s konnte nicht gefunden werden."
 
-#: src/Stsbl/MailAliasBundle/Service/Importer.php:261
+#: src/Stsbl/MailAliasBundle/Service/Importer.php:267
 #, php-format
 msgid "The group %s is already assigned to the original recipient %s."
 msgstr "Die Gruppe %s ist bereits dem Originalempfänger %s zugewiesen."
 
-#: src/Stsbl/MailAliasBundle/Resources/translation/messages.php:36
+#: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:36
 msgid "The uploaded file is not a plain text file."
 msgstr "Die hochgeladene Textdatei ist keine Textdatei."
 
-#: src/Stsbl/MailAliasBundle/Resources/translation/messages.php:37
+#: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:37
 msgid "The path of the uploaded file was not found."
 msgstr "Der Pfad der hochgeladenen Datei konnte nicht gefunden werden."
 
-#: src/Stsbl/MailAliasBundle/Resources/translation/messages.php:38
+#: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:38
 msgid "The CSV file has an invalid amount of columns."
 msgstr "Die CSV-Datei hat eine ungültige Anzahl von Spalten."
 
-#: src/Stsbl/MailAliasBundle/Resources/translation/messages.php:39
+#: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:39
 msgid "The uploaded file is undefined."
 msgstr "Die hochgeladene Datei ist nicht vorhanden."
 
-#: src/Stsbl/MailAliasBundle/Resources/translation/messages.php:42
+#: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:42
 #, php-format
 msgid "The CSV file has an invalid amount of columns near line %s."
 msgstr "Die CSV-Datei hat eine ungültige Anzahl von Spalten in der Zeile %s."
 
-#: src/Stsbl/MailAliasBundle/Resources/translation/messages.php:45
+#: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:45
 msgid "Manage e-mail redirections"
 msgstr "E-Mail-Weiterleitungen verwalten"
 
@@ -86,30 +94,50 @@ msgstr "Suchbegriff eingeben..."
 msgid "deleted"
 msgstr "gelöscht"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:261
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:97
+msgid "Group"
+msgstr "Gruppe"
+
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:108
+msgid "Administrator"
+msgstr "Administrator"
+
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:111
+msgid "Teacher"
+msgstr "Lehrer"
+
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:114
+msgid "Student"
+msgstr "Schüler"
+
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:117
+msgid "User"
+msgstr "Benutzer"
+
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:176
 #, php-format
 msgid "Added alias %s@%s."
 msgstr "Alias %s@%s hinzugefügt."
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:268
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:183
 #, php-format
 msgid "Added user %s as recipient for alias %s@%s."
 msgstr "Benutzer %s als Empfänger zu Alias %s@%s hinzugefügt."
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:275
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:190
 #, php-format
 msgid "Added group %s as recipient for alias %s@%s."
 msgstr "Gruppe %s als Empfänger zu Alias %s@%s hinzugefügt."
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:328
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:243
 msgid "Please select a CSV file for import."
 msgstr "Bitte wählen Sie eine CSV-Datei für den Import."
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:333
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:248
 msgid "Enable new aliases"
 msgstr "Neue Aliase aktivieren"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:334
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:249
 msgid "Disable new aliases"
 msgstr "Neue Aliase deaktivieren"
 
@@ -228,18 +256,3 @@ msgstr ""
 msgid "Here you can enter further explanation for this redirection."
 msgstr ""
 "Hier können Sie weitere Erläuterungen zu dieser Weiterleitung eingeben."
-
-#~ msgid "There is already an entry for that address."
-#~ msgstr "Es gibt bereits einen Eintrag für diese Adresse."
-
-#~ msgid ""
-#~ "This combination of group and original recipient already has an entry."
-#~ msgstr ""
-#~ "Diese Kombination von Gruppe und Originalempfänger hat bereits einen "
-#~ "Eintrag."
-
-#~ msgid ""
-#~ "This combination of user and original recipient already has an entry."
-#~ msgstr ""
-#~ "Diese Kombination von Benutzer und Originalempfänger hat bereits einen "
-#~ "Eintrag."
