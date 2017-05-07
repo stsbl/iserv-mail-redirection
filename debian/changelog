@@ -1,3 +1,17 @@
+stsbl-iserv-mail-redirection (17.05.07-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Updated i18n.
+  * Reworked autocompletion for more reliability.
+  * Removed ja translations.
+  * Fixed typo in validator headers.
+  * Improved importer.
+  * Import: Do not create aliases with empty address.
+  * Updated l10n.
+  * Display server domain as suffix of original recipient field.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Sun, 07 May 2017 23:55:28 +0200
+
 stsbl-iserv-mail-redirection (17.02.25-0) experimental; urgency=medium
 
   [ Felix Jacobi ]
