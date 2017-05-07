@@ -35,7 +35,7 @@ namespace Stsbl\MailAliasBundle\Util;
 class ArrayUtil 
 {
     /**
-     * Compare two arrays with objects by compare the returns of callables/ inside of it.
+     * Compare two arrays with objects by compare the returns of callables inside of it.
      * 
      * @param array $firstArray
      * @param array $secondArray

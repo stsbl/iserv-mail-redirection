@@ -32,7 +32,7 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 
 /**
- * Validator for GroupRecipient
+ * Validator for Address
  *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>

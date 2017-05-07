@@ -95,16 +95,12 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
                 icon = 'question-sign';
         }
         
-        if (data.label == 'Too much results, please enter more specific term.') {
-            label = '<span class="text-muted">' + _(data.label, false) + '</span>';
-        } else  {
-            label = '<h4 class="media-heading">' + data.label + '</h4>';
-        }
+        label = '<h4 class="media-heading">' + data.label + '</h4>';
         
         if (data.extra === null || data.extra === '') {
             extra = '';
         } else {
-            extra = '<span class="text-muted">' + _(data.extra, false) + '</span>';
+            extra = '<span class="text-muted">' + data.extra + '</span>';
         }
         
         var suggestion = '<div class="media autocomplete-suggestion">';

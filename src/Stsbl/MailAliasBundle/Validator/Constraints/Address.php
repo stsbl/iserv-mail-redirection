@@ -64,7 +64,7 @@ class Address extends Constraint
     }
     
     /**
-     * @returns string
+     * @return string
      */
         public function getDuplicateUserMessage()
     {

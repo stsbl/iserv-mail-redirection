@@ -1,5 +1,5 @@
 <?php
-// src/Stsbl/MailAliasBundle/Resources/translation/messages.php
+// src/Stsbl/MailAliasBundle/Resources/translations/messages.php
 
 /* 
  * The MIT License

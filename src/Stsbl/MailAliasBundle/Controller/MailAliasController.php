@@ -2,8 +2,6 @@
 // src/Stsbl/MailAliasBundle/Controler/MailAliasController.php
 namespace Stsbl\MailAliasBundle\Controller;
 
-use Doctrine\ORM\NoResultException;
-use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
 use IServ\CoreBundle\Form\Type\BooleanType;
 use IServ\CrudBundle\Controller\CrudController;
@@ -79,136 +77,53 @@ class MailAliasController extends CrudController
     {
         $type = $request->query->get('type');
         $query = $request->query->get('query');
-        $explodedQuery = explode(' ', $query);
+        $suggestions = [];
         
-        if (is_null($type)) {
+        if ($type === null) {
             throw new \InvalidArgumentException('Parameter type should not be null.');
         }
         if ($type !== 'group' && $type !== 'user') {
             throw new \InvalidArgumentException(sprintf('Invalid type %s.', $type));
         }
         
-        // require minimum string length to prevent script timeouts due to too much database results :/
-        if (strlen($query) < 3) {
-            return new JsonResponse([[
-                'label' => 'Too much results, please enter more specific term.', 
-                'value' => '', 
-                'type' => 'notice',
-                'extra' => ''
-            ]]);
-        }
-        
-        $suggestions = [];
-        if (empty($query)) {
-            if ($type == 'group') {
-                $results = $this->getDoctrine()->getRepository('IServCoreBundle:Group')->findAll();
-            } else {
-                $results = $this->getDoctrine()->getRepository('IServCoreBundle:User')->findAll();
+        $host = $this->get('iserv.config')->get('Servername');
+        if ($type === 'group') {
+            /* @var $groupRepo \IServ\CoreBundle\Entity\GroupRepository */
+            $groupRepo = $this->getDoctrine()->getManager()->getRepository('IServCoreBundle:Group');
+            
+            foreach ($groupRepo->addressLookup($query) as $group) {
+                /* @var $group \IServ\CoreBundle\Entity\Group */ 
+                $rfc822string = imap_rfc822_write_address($group->getAccount(), $host, $group->getName());
+                $suggestions[] = ['label' => $group->getName(), 'value' => $rfc822string, 'type' => $type, 'extra' => _('Group')];
             }
-        } else {
-            if ($type == 'group') {
-                /* @var $qb \Doctrine\ORM\QueryBuilder */
-                $qb = $this->getDoctrine()->getRepository('IServCoreBundle:Group')->createQueryBuilder(self::class);
+        } else if ($type === 'user') {
+            $users = $this->userAddressLookup($query);
+            
+            foreach ($users as $user) {
+                /* @var $user \IServ\CoreBundle\Entity\User */ 
+                $rfc822string = imap_rfc822_write_address($user->getUsername(), $host, $user->getName());
                 
-                $qb
-                    ->select('p')
-                    ->from('IServCoreBundle:Group', 'p')
-                    ->where('p.name LIKE :query')
-                    ->setParameter('query', '%'.$query.'%')
-                ;
-                
-                try {
-                    $results = $qb->getQuery()->getResult();
-                } catch (NoResultException $e) {
-                    // just ignore no results \o/
-                    $results = [];
-                }
-            } else {
-                /* @var $qb \Doctrine\ORM\QueryBuilder */
-                $qb = $this->getDoctrine()->getRepository('IServCoreBundle:User')->createQueryBuilder(self::class);
-                
-                $qb
-                    ->select('p')
-                    ->from('IServCoreBundle:User', 'p')
-                    ->where('p.firstname LIKE :queryOriginal')
-                    ->orWhere('p.lastname LIKE :queryOriginal')
-                    ->orWhere('p.username LIKE :queryAct')
-                ;
-                
-                $i = 0;
-                $length = count($explodedQuery);
-                $halfLengthUp = round($length / 2, 0, PHP_ROUND_HALF_UP);
-                $halfLengthDown = round($length / 2, 0, PHP_ROUND_HALF_DOWN);
-                
-                foreach ($explodedQuery as $q) {
-                    // ignore empty strings, this would to that the search condition is %%, which means
-                    // ALL entries in database and that usually lead to a scricpt execution timeout and 
-                    // makes the JSON Backend slow!
-                    if (!empty($q)) {
-                        // assume that the first half of the query is the first name, the second one
-                        // account name, thjis should work for almost all cases.
-                        if ($i < $halfLengthUp) {
-                            $qb->orWhere(sprintf('p.firstname LIKE :query%s', $i));
-                        } else {
-                            $qb->orWhere(sprintf('p.lastname LIKE :query%s', $i));
-                        }
-                        
-                        if ($i < $halfLengthDown) {
-                            $qb->orWhere(sprintf('p.firstname LIKE :query%s', $i));
-                        } else {
-                            $qb->orWhere(sprintf('p.lastname LIKE :query%s', $i));
-                        }
-                        
-                        $qb->setParameter(sprintf('query%s', $i), '%'.$q.'%');
-                    }
-                    
-                    $i++;
-                }
-                
-                $qb->setParameter('queryOriginal', '%'.$query.'%');
-                
-                // transform full name into an account
-                $act = strtolower(str_replace(' ', '.', $query));
-                $qb->setParameter('queryAct', '%'.$act.'%');
-                
-                try {
-                    $results = $qb->getQuery()->getResult();
-                } catch (NoResultException $e) {
-                    // just ignore no results \o/
-                    $results = [];
-                }
-            }
-        }
-
-        foreach ($results as $result) {
-            $personal = $result->getName();
-            $label = $personal;
-            if ($result instanceof Group) {
-                $mailbox = $result->getAccount();
-                $extra = 'Group';
-            } else if ($result instanceof User) {
-                $mailbox = $result->getUsername();
-                if ($result->hasRole('ROLE_ADMIN')) {
+                // determine extra + type
+                if ($user->isAdmin()) {
+                    $extra = _('Administrator');
                     $type = 'admin';
-                    $extra = 'Administrator';
-                } else if ($result->hasRole('ROLE_TEACHER')) {
+                } else if ($user->hasRole('ROLE_TEACHER')) {
+                    $extra = _('Teacher');
                     $type = 'teacher';
-                    $extra = 'Teacher';
-                } else if($result->hasRole('ROLE_STUDENT')) {
+                } else if ($user->hasRole ('ROLE_STUDENT')) {
+                    $extra = _('Student');
                     $type = 'student';
-                    $extra = 'Student';
                 } else {
-                    $extra = 'User';
+                    $extra = _('User');
+                    $type = 'user';
                 }
                 
-                if(!empty($result->getAuxInfo())) {
-                    $label .= sprintf(' (%s)', $result->getAuxInfo());
+                $label = $user->getName();
+                if ($user->getAuxInfo() != null) {
+                    $label .= ' ('.$user->getAuxInfo().')';
                 }
+                $suggestions[] = ['label' => $label, 'value' => $rfc822string, 'type' => $type, 'extra' => $extra];
             }
-
-            $host = $this->get('iserv.config')->get('Servername');
-            $rfc822string = imap_rfc822_write_address($mailbox, $host, $personal);
-            $suggestions[] = ['label' => $label, 'value' => $rfc822string, 'type' => $type, 'extra' => $extra];
         }
         
         return new JsonResponse($suggestions);
@@ -343,5 +258,39 @@ class MailAliasController extends CrudController
         ;
         
         return $builder->getForm();
+    }
+    
+    /**
+     * Finds users for address lookup
+     * Inspired by the function in GroupRepository,
+     * but User has no similar function and also
+     * seems to does not have even a repository.
+     * 
+     * So, we have to implement the functions here.
+     * 
+     * @param string $query
+     * @return User[]
+     */
+    protected function userAddressLookup($query)
+    {
+        $qb = $this->getDoctrine()->getManager()->createQueryBuilder('u');
+
+        $terms = preg_split("/\s+/", trim($query));
+        foreach($terms as $i => $term) {
+            $qb
+                ->select('u')
+                ->from('IServCoreBundle:User', 'u')
+                ->andWhere(
+                    'LOWER(u.username) LIKE :adra'.$i.' OR LOWER(u.username) LIKE :adr_mail'.$i.' OR ' .
+                    'LOWER(u.firstname) LIKE :adra'.$i.' OR LOWER(u.firstname) LIKE :adrb'.$i.' OR ' .
+                    'LOWER(u.lastname) LIKE :adra'.$i.' OR LOWER(u.lastname) LIKE :adrb'.$i
+                )
+                ->setParameter('adra'.$i, strtolower($term).'%')
+                ->setParameter('adrb'.$i, '% '.strtolower($term).'%')
+                ->setParameter('adr_mail'.$i, '%.'.strtolower($term).'%')
+            ;
+        }
+
+        return $qb->getQuery()->setMaxResults(10)->getResult();
     }
 }
