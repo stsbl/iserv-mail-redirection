@@ -1,5 +1,5 @@
 <?php
-// src/Stsbl/MailAliasBundle/Validator/Constraints/GroupRecipientValidator.php
+// src/Stsbl/MailAliasBundle/Validator/Constraints/AddressValidiator.php
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
 use Doctrine\ORM\EntityManager;

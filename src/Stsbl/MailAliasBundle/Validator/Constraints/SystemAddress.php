@@ -1,5 +1,5 @@
 <?php
-// src/Stsbl/MailAliasBundle/Validator/Contraints/SystemAddress.php
+// src/Stsbl/MailAliasBundle/Validator/Constraints/SystemAddress.php
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
