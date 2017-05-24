@@ -1,3 +1,10 @@
+stsbl-iserv-mail-redirection (17.05.24-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Removed highlighted tag.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Wed, 24 May 2017 06:44:08 +0200
+
 stsbl-iserv-mail-redirection (17.05.07-0) experimental; urgency=medium
 
   [ Felix Jacobi ]
