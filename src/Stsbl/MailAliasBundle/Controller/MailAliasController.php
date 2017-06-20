@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /*
@@ -150,7 +151,7 @@ class MailAliasController extends CrudController
             $importer = $this->get('stsbl.mailalias.service.importer');
             
             try {
-                $importer->setEnableNewAliases((bool)$data['enable']);
+                $importer->setEnableNewAliases((boolean)$data['enable']);
                 $importer->setUploadedFile($data['file']);
                 $importer->transform();
                 
@@ -245,10 +246,10 @@ class MailAliasController extends CrudController
             ->add('enable', BooleanType::class, [
                 'label' => false,
                 'choices' => [
-                    _('Enable new aliases') => '1',
-                    _('Disable new aliases') => '0',
+                    _('Enable new aliases') => 1,
+                    _('Disable new aliases') => 0,
                 ],
-                'constraints' => [new NotBlank()]
+                'constraints' => [new NotBlank(), new Choice(['message' => _('Please select a valid value'), 'choices' => [1, 0]])]
             ])
             ->add('submit', SubmitType::class, [
                 'label' => _('Import'),
