@@ -61,6 +61,7 @@ class Address implements CrudInterface
      * @Assert\NotBlank()
      * @StsblAssert\SystemAddress()
      * @StsblAssert\LocalPart()
+     * @StsblAssert\NotAccount()
      * @ORM\Column(name="recipient", type="text")
      * 
      * @var string

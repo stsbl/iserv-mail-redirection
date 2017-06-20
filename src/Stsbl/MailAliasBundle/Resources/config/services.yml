@@ -32,7 +32,13 @@ services:
         arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
         tags:
             - { name: validator.constraint_validator, alias: stsbl_mailalias_address_validator }
+
+    stsbl.mailalias.validator.not_account:
+        class: Stsbl\MailAliasBundle\Validator\Constraints\NotAccountValidator
+        arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
+        tags:
+            - { name: validator.constraint_validator, alias: stsbl_mailalias_not_account_validator }
             
     stsbl.mailalias.service.importer:
         class: Stsbl\MailAliasBundle\Service\Importer
-        arguments: ["@doctrine.orm.entity_manager"]
+        arguments: ["@doctrine.orm.entity_manager", "@validator"]

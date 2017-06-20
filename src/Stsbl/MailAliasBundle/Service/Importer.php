@@ -8,6 +8,7 @@ use Stsbl\MailAliasBundle\Entity\Address;
 use Stsbl\MailAliasBundle\Entity\UserRecipient;
 use Stsbl\MailAliasBundle\Entity\GroupRecipient;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Validator\RecursiveValidator;
 
 /*
  * The MIT License
@@ -56,7 +57,12 @@ class Importer
      * @var EntityManager
      */
     private $em;
-    
+
+    /**
+     * @var RecursiveValidator
+     */
+    private $validator;
+
     /**
      * @var \SplFileObject
      */
@@ -95,15 +101,13 @@ class Importer
     /**
      * The constructor
      * 
-     * @var EntityManager
+     * @var EntityManager $em
+     * @var RecursiveValidator $validation
      */
-    public function __construct(EntityManager $em = null) 
+    public function __construct(EntityManager $em, RecursiveValidator $validator)
     {
-        if (is_null($em)) {
-            throw new \InvalidArgumentException('No instance of EntityManager passed.');
-        }
-        
         $this->em = $em;
+        $this->validator = $validator;
     }
     
     /**
@@ -214,7 +218,15 @@ class Importer
                 if ($note != null) {
                     $originalRecipient->setComment($note);
                 }
-         
+
+                $errors = $this->validator->validate($originalRecipient);
+                if (count($errors) > 0) {
+                    foreach ($errors as $error) {
+                        $this->warnings[] = $error->getMessage();
+                    }
+                    // skip this entity
+                    continue;
+                }
                 $this->em->persist($originalRecipient);
                 $this->em->flush();
                 $this->newAddresses[] = $originalRecipient;
@@ -247,7 +259,16 @@ class Importer
                     $userRecipient = new UserRecipient();
                     $userRecipient->setOriginalRecipient($originalRecipient);
                     $userRecipient->setRecipient($user);
-                
+
+                    $errors = $this->validator->validate($$userRecipient);
+                    if (count($errors) > 0) {
+                        foreach ($errors as $error) {
+                            $this->warnings[] = $error->getMessage();
+                        }
+                        // skip this entity
+                        continue;
+                    }
+
                     $this->em->persist($userRecipient);
                     $this->em->flush();
                     $this->newUserRecipients[] = $userRecipient;
@@ -271,7 +292,16 @@ class Importer
                     $groupRecipient = new GroupRecipient();
                     $groupRecipient->setOriginalRecipient($originalRecipient);
                     $groupRecipient->setRecipient($group);
-                
+
+                    $errors = $this->validator->validate($groupRecipient);
+                    if (count($errors) > 0) {
+                        foreach ($errors as $error) {
+                            $this->warnings[] = $error->getMessage();
+                        }
+                        // skip this entity
+                        continue;
+                    }
+
                     $this->em->persist($groupRecipient);
                     $this->em->flush();
                     $this->newGroupRecipients[] = $groupRecipient;
