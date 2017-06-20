@@ -249,7 +249,7 @@ class MailAliasController extends CrudController
                     _('Enable new aliases') => 1,
                     _('Disable new aliases') => 0,
                 ],
-                'constraints' => [new NotBlank(), new Choice(['message' => _('Please select a valid value'), 'choices' => [1, 0]])]
+                'constraints' => [new NotBlank(), new Choice(['message' => _('Please select a valid value.'), 'choices' => [1, 0]])]
             ])
             ->add('submit', SubmitType::class, [
                 'label' => _('Import'),
