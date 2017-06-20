@@ -161,20 +161,18 @@ class Importer
     private function validateColumnNumber()
     {
         $currentLine = 1;
-        $next = 0;
         while ($line = $this->fileObject->fgetcsv()) {
-            // if first cells is null and nothing else is set we either have an invalid CSV file or we reached the file end.
-            if ($line[0] == null && !isset($line[1]) && !isset($line[self::COLUMN_NUMBER_WITHOUT_GROUPS_NOTES])) {
+            if ($this->fileObject->eof()) {
                 break;
             }
-            
+
             // check if column is four (original recipient, users, groups, note) or three (without note) or two (alias and user without a group and a note)
             if (count($line) > self::COLUMN_NUMBER || count($line) < self::COLUMN_NUMBER_WITHOUT_GROUPS_NOTES) {
                 throw ImportException::invalidColumnAmount($currentLine, count($line), self::COLUMN_NUMBER_WITHOUT_GROUPS_NOTES);
             }
-            
+
             $this->lines[] = $line;
-            
+
             $currentLine++;
         }
         
@@ -209,11 +207,13 @@ class Importer
             $addrRepo = $this->em->getRepository('StsblMailAliasBundle:Address');
             $originalRecipient = $addrRepo->findOneBy(['recipient' => $originalRecipientAct]);
             
-            if ($originalRecipient == null) {
+            if ($originalRecipient === null) {
                 $originalRecipient = new Address();
                 $originalRecipient->setRecipient($originalRecipientAct);
                 $originalRecipient->setEnabled($this->enableNewAliases);
-                if ($note !== null) $originalRecipient->setComment($note);
+                if ($note != null) {
+                    $originalRecipient->setComment($note);
+                }
          
                 $this->em->persist($originalRecipient);
                 $this->em->flush();
@@ -291,7 +291,7 @@ class Importer
     }
     
     /**
-     * Get new <tt>Address</tt> entities, generated during import
+     * Get new Address entities generated during import
      * 
      * @return array<Address>
      */
@@ -301,7 +301,7 @@ class Importer
     }
     
     /**
-     * Get new <tt>UserRecipient</tt> entities, generated during import
+     * Get new UserRecipient entities, generated during import
      * 
      * @return array<UserRecipient>
      */
@@ -311,7 +311,7 @@ class Importer
     }
     
     /**
-     * Get new <tt>GroupRecipient</tt> entities, generated during import
+     * Get new GroupRecipient entities, generated during import
      * 
      * @return array<GroupRecipient>
      */

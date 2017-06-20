@@ -63,7 +63,7 @@ class ImportException extends \RuntimeException implements CsvFileExceptionInter
      * @param string $message
      * @param integer $code
      * @param \Throwable $previous
-     * @param integer $lineLine
+     * @param integer $fileLine
      * @param integer $columnAmount
      * @param integer $expected
      */
