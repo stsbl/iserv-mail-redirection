@@ -1,28 +1,34 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-20 20:59+0200\n"
+"POT-Creation-Date: 2017-06-20 23:28+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: /tmp/mail-redirection-StsblMailAliasBundle.twig.php:55
-#: /tmp/mail-redirection-StsblMailAliasBundle.twig.php:235
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:221
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:255
+#: /tmp/mail-redirection-StsblMailAliasBundle.twig.php:236
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:221
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:255
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:238
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:272
 msgid "Import"
 msgstr "Importieren"
 
 #: /tmp/mail-redirection-StsblMailAliasBundle.twig.php:59
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/EventListener/MenuListener.php:55
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:220
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:96
 #: src/Stsbl/MailAliasBundle/EventListener/MenuListener.php:55
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:220
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:237
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:96
 msgid "Mail aliases"
 msgstr "Mailaliase"
 
-#: /tmp/mail-redirection-StsblMailAliasBundle.twig.php:227
+#: /tmp/mail-redirection-StsblMailAliasBundle.twig.php:228
 msgid "Add"
 msgstr "Hinzufügen"
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Service/Importer.php:199
 #: src/Stsbl/MailAliasBundle/Service/Importer.php:199
 msgid ""
 "A line with an empty original recipient was ignored. The listed users and "
@@ -31,6 +37,7 @@ msgstr ""
 "Eine Zeile mit einem leeren Originalempfänger wurde ignoriert. Die "
 "aufgelisteten Benutzer und Gruppen wurden diesem Empfänger nicht zugewiesen."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Service/Importer.php:235
 #: src/Stsbl/MailAliasBundle/Service/Importer.php:235
 #, php-format
 msgid ""
@@ -40,111 +47,137 @@ msgstr ""
 "Der Alias %s exisitiert bereits! Eine Notiz, welche möglicherweise in der "
 "CSV-Datei definiert wurde, ist ignoriert worden."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Service/Importer.php:250
 #: src/Stsbl/MailAliasBundle/Service/Importer.php:250
 #, php-format
 msgid "A user with the account %s was not found."
 msgstr "Ein Benutzer mit dem Account %s konnte nicht gefunden werden."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Service/Importer.php:255
 #: src/Stsbl/MailAliasBundle/Service/Importer.php:255
 #, php-format
 msgid "The user %s is already assigned to the original recipient %s."
 msgstr "Der Benutzer %s ist bereits dem Originalempfänger %s zugewiesen."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Service/Importer.php:283
 #: src/Stsbl/MailAliasBundle/Service/Importer.php:283
 #, php-format
 msgid "A group with the account %s was not found."
 msgstr "Eine Gruppe mir dem Account %s konnte nicht gefunden werden."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Service/Importer.php:288
 #: src/Stsbl/MailAliasBundle/Service/Importer.php:288
 #, php-format
 msgid "The group %s is already assigned to the original recipient %s."
 msgstr "Die Gruppe %s ist bereits dem Originalempfänger %s zugewiesen."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Resources/translations/messages.php:36
 #: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:36
 msgid "The uploaded file is not a plain text file."
 msgstr "Die hochgeladene Textdatei ist keine Textdatei."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Resources/translations/messages.php:37
 #: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:37
 msgid "The path of the uploaded file was not found."
 msgstr "Der Pfad der hochgeladenen Datei konnte nicht gefunden werden."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Resources/translations/messages.php:38
 #: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:38
 msgid "The CSV file has an invalid amount of columns."
 msgstr "Die CSV-Datei hat eine ungültige Anzahl von Spalten."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Resources/translations/messages.php:39
 #: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:39
 msgid "The uploaded file is undefined."
 msgstr "Die hochgeladene Datei ist nicht vorhanden."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Resources/translations/messages.php:42
 #: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:42
 #, php-format
 msgid "The CSV file has an invalid amount of columns near line %s."
 msgstr "Die CSV-Datei hat eine ungültige Anzahl von Spalten in der Zeile %s."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Resources/translations/messages.php:45
 #: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:45
 msgid "Manage e-mail redirections"
 msgstr "E-Mail-Weiterleitungen verwalten"
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Form/Type/GroupRecipientType.php:80
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Form/Type/UserRecipientType.php:80
 #: src/Stsbl/MailAliasBundle/Form/Type/GroupRecipientType.php:80
 #: src/Stsbl/MailAliasBundle/Form/Type/UserRecipientType.php:80
 msgid "Enter a search term..."
 msgstr "Suchbegriff eingeben..."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Form/DataTransformer/GroupToRfc822Transformer.php:85
 #: src/Stsbl/MailAliasBundle/Form/DataTransformer/GroupToRfc822Transformer.php:85
 msgid "deleted"
 msgstr "gelöscht"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:98
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:98
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:114
 msgid "Group"
 msgstr "Gruppe"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:109
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:109
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:125
 msgid "Administrator"
 msgstr "Administrator"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:112
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:112
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:128
 msgid "Teacher"
 msgstr "Lehrer"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:115
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:115
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:131
 msgid "Student"
 msgstr "Schüler"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:118
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:118
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:134
 msgid "User"
 msgstr "Benutzer"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:177
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:177
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:193
 #, php-format
 msgid "Added alias %s@%s."
 msgstr "Alias %s@%s hinzugefügt."
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:184
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:184
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:200
 #, php-format
 msgid "Added user %s as recipient for alias %s@%s."
 msgstr "Benutzer %s als Empfänger zu Alias %s@%s hinzugefügt."
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:191
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:191
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:207
 #, php-format
 msgid "Added group %s as recipient for alias %s@%s."
 msgstr "Gruppe %s als Empfänger zu Alias %s@%s hinzugefügt."
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:244
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:244
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:261
 msgid "Please select a CSV file for import."
 msgstr "Bitte wählen Sie eine CSV-Datei für den Import."
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:249
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:249
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:266
 msgid "Enable new aliases"
 msgstr "Neue Aliase aktivieren"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:250
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:250
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:267
 msgid "Disable new aliases"
 msgstr "Neue Aliase deaktivieren"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:252
-msgid "Please select a valid value"
-msgstr ""
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:252
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:269
+msgid "Please select a valid value."
+msgstr "Bitte wählen Sie einen gültigen Wert."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Validator/Constraints/Address.php:63
 #: src/Stsbl/MailAliasBundle/Validator/Constraints/Address.php:63
 #, php-format
 msgid "Group \"%s\" can not added multiple times to the original recipient %s."
@@ -152,6 +185,7 @@ msgstr ""
 "Gruppe \"%s\" kann nicht mehrmals zum Originalempfänger %s hinzugefügt "
 "werden."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Validator/Constraints/Address.php:71
 #: src/Stsbl/MailAliasBundle/Validator/Constraints/Address.php:71
 #, php-format
 msgid "User \"%s\" can not added multiple times to the original recipient %s."
@@ -159,18 +193,22 @@ msgstr ""
 "Benutzer \"%s\" kann nicht mehrmals zum Originalempfänger %s hinzugefügt "
 "werden."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Validator/Constraints/LocalPart.php:47
 #: src/Stsbl/MailAliasBundle/Validator/Constraints/LocalPart.php:47
 msgid "This is not a valid local part of an e-mail address."
 msgstr "Dies ist kein gültiger lokaler Teil einer E-Mail-Adresse."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Validator/Constraints/LocalPart.php:57
 #: src/Stsbl/MailAliasBundle/Validator/Constraints/LocalPart.php:57
 msgid "Enter only the address part before the @."
 msgstr "Geben Sie nur den Adressteil, der vor dem @ steht, ein."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Validator/Constraints/LocalPart.php:67
 #: src/Stsbl/MailAliasBundle/Validator/Constraints/LocalPart.php:67
 msgid "Umlauts are not allowed as part of it."
 msgstr "Umlaute dürfen nicht enthalten sein."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Validator/Constraints/SystemAddress.php:47
 #: src/Stsbl/MailAliasBundle/Validator/Constraints/SystemAddress.php:47
 msgid ""
 "This is a system e-mail address, you are not allowed to create redirections "
@@ -179,21 +217,25 @@ msgstr ""
 "Dies ist eine System E-Mail-Adresse, es ist Ihnen nicht erlaubt, "
 "Weiterleitungen dafür zu erstellen."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Validator/Constraints/NotAccount.php:61
 #: src/Stsbl/MailAliasBundle/Validator/Constraints/NotAccount.php:61
 #, php-format
 msgid "A user with the e-mail address %s does already exists."
 msgstr "Es existiert bereits ein Benutzer mit der E-Mail-Adresse %s."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Validator/Constraints/NotAccount.php:69
 #: src/Stsbl/MailAliasBundle/Validator/Constraints/NotAccount.php:69
 #, php-format
 msgid "A group with the e-mail address %s does already exists."
 msgstr "Ex existiert bereits eine Gruppe mit der E-Mail-Adress %s."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Validator/Constraints/NotAccount.php:77
 #: src/Stsbl/MailAliasBundle/Validator/Constraints/NotAccount.php:77
 #, php-format
 msgid "A system account %s does already exists."
 msgstr "Es existiert bereits ein System-Account %s."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:68
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:68
 msgid ""
 "You can import mail aliases from a CSV file. The CSV file should have no "
@@ -203,6 +245,10 @@ msgstr ""
 "keine Spaltenüberschriften besitzen und muss die folgenden Spalten besitzen "
 "(von links nach rechts):"
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:79
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:136
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:196
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:198
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:79
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:136
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:196
@@ -210,58 +256,78 @@ msgstr ""
 msgid "Original recipient"
 msgstr "Originalempfänger"
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:79
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:79
 msgid "(Only local part, without the @ and the domain)"
 msgstr "(Nur den lokalen Teil, nicht das @ und die Domain)"
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:80
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:146
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:204
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:80
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:146
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:204
 msgid "Users"
 msgstr "Benutzer"
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:80
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:81
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:80
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:81
 msgid "(Account names as a comma separated list, can be empty)"
 msgstr "(Accountnamen als kommagetrennte Liste, darf leer sein)"
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:81
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:161
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:205
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:81
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:161
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:205
 msgid "Groups"
 msgstr "Gruppen"
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:82
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:182
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:207
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:82
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:182
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:207
 msgid "Note"
 msgstr "Notiz"
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:82
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:82
 msgid "optional"
 msgstr "optional"
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:97
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:97
 msgid "Mail alias"
 msgstr "Mailalias"
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:138
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:138
 msgid "The local part of the e-mail address which you want to redirect."
 msgstr "Der lokale Teil der E-Mail-Adresse, die Sie weiterleiten möchten."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:150
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:150
 msgid "The users who should receive the e-mails to that address."
 msgstr "Die Benutzer, welche die E-Mails an diese Adresse erhalten sollen."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:165
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:165
 msgid "The groups which should receive the e-mails to that address."
 msgstr "Die Gruppen, welche die E-Mails an diese Adresse erhalten sollen."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:176
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:206
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:176
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:206
 msgid "Enabled"
 msgstr "Aktiviert"
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:178
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:178
 msgid ""
 "You can enable or disable this redirection. If it is disabled all assigned "
@@ -271,10 +337,8 @@ msgstr ""
 "deaktiviert ist, werden zugewiesene Benutzer und Gruppen die Mails an diese "
 "Adresse nicht mehr erhalten."
 
+#: debian/stsbl-iserv-mail-redirection/usr/share/iserv/src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:184
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:184
 msgid "Here you can enter further explanation for this redirection."
 msgstr ""
 "Hier können Sie weitere Erläuterungen zu dieser Weiterleitung eingeben."
-
-#~ msgid "Please select a valid value."
-#~ msgstr "Bitte wählen Sie einen gültigen Wert."
