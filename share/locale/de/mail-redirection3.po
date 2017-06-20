@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-20 21:00+0200\n"
+"POT-Creation-Date: 2017-06-20 20:59+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
@@ -142,8 +142,8 @@ msgid "Disable new aliases"
 msgstr "Neue Aliase deaktivieren"
 
 #: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:252
-msgid "Please select a valid value."
-msgstr "Bitte wählen Sie einen gültigen Wert."
+msgid "Please select a valid value"
+msgstr ""
 
 #: src/Stsbl/MailAliasBundle/Validator/Constraints/Address.php:63
 #, php-format
@@ -275,3 +275,6 @@ msgstr ""
 msgid "Here you can enter further explanation for this redirection."
 msgstr ""
 "Hier können Sie weitere Erläuterungen zu dieser Weiterleitung eingeben."
+
+#~ msgid "Please select a valid value."
+#~ msgstr "Bitte wählen Sie einen gültigen Wert."

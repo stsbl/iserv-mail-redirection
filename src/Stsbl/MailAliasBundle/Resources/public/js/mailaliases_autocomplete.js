@@ -31,14 +31,14 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
         highlight: false
     };
     var thSourceUser = {
-    	remote: IServ.Routing.generate('admin_mail_aliases_recipients') + '?type=user&query=%QUERY',
+    	remote: IServ.Routing.generate('admin_mailalias_recipients') + '?type=user&query=%QUERY',
         templates: {
             suggestion: renderSuggestion
         }
     };
 
     var thSourceGroup = {
-        remote: IServ.Routing.generate('admin_mail_aliases_recipients') + '?type=group&query=%QUERY',
+        remote: IServ.Routing.generate('admin_mailalias_recipients') + '?type=group&query=%QUERY',
         templates: {
             suggestion: renderSuggestion
         }

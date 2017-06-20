@@ -60,6 +60,22 @@ class MailAliasController extends CrudController
         
         if (is_array($ret)) {
             $ret['importForm'] = $this->getImportForm()->createView();
+
+            $importMsg = $this->get('session')->has('mailalias_import_msg');
+            $ret['displayImportMessages'] = $importMsg;
+
+            if ($importMsg) {
+                $ret['importMessages'] = $this->get('session')->get('mailalias_import_msg');
+                $this->get('session')->remove('mailalias_import_msg');
+            }
+
+            $importWarn = $this->get('session')->has('mailalias_import_warnings');
+            $ret['displayImportWarnings'] = $importWarn;
+
+            if ($importWarn) {
+                $ret['importWarnings'] = $this->get('session')->get('mailalias_import_warnings');
+                $this->get('session')->remove('mailalias_import_warnings');
+            }
         }
         
         return $ret;
@@ -69,7 +85,7 @@ class MailAliasController extends CrudController
      * Get auto-completion suggestions for users and groups
      * 
      * @Method("GET")
-     * @Route("admin/mailaliases/recipients", name="admin_mail_aliases_recipients", options={"expose"=true})
+     * @Route("admin/mailaliases/recipients", name="admin_mailalias_recipients", options={"expose"=true})
      * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
      * @param Request $request
      * @return JsonResponse
@@ -135,7 +151,7 @@ class MailAliasController extends CrudController
      * 
      * @param Request $request
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
-     * @Route("admin/mailaliases/import", name="admin_mail_aliases_import")
+     * @Route("admin/mailaliases/import", name="admin_mailalias_import")
      * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
      * @Template()
      */
@@ -161,7 +177,7 @@ class MailAliasController extends CrudController
                 }
                 
                 if (count($warnings) > 0) {
-                    $this->get('iserv.flash')->alert(implode("\n", $warnings));
+                    $this->get('session')->set('mailalias_import_warnings', implode("\n", $warnings));
                 }
                 
                 /* @var $logger \IServ\CoreBundle\Service\Logger */
@@ -191,10 +207,11 @@ class MailAliasController extends CrudController
                     $messages[] = __('Added group %s as recipient for alias %s@%s.', (string)$g, (string)$g->getOriginalRecipient(), $servername);
                 }
                 
-                if (count($messages) > 0) 
-                    $this->get('iserv.flash')->success(implode("\n", $messages));
-                
-                return new RedirectResponse($this->generateUrl('admin_mail_aliases_index'));
+                if (count($messages) > 0) {
+                    $this->get('session')->set('mailalias_import_msg', implode("\n", $messages));
+                }
+
+                return new RedirectResponse($this->generateUrl('admin_mailalias_index'));
             } catch (ImportException $e) {
                 $message = $e->getMessage();
                 $line = $e->getFileLine();
@@ -217,7 +234,7 @@ class MailAliasController extends CrudController
         }
         
         // track path
-        $this->addBreadcrumb(_('Mail aliases'), $this->generateUrl('admin_mail_aliases_index'));
+        $this->addBreadcrumb(_('Mail aliases'), $this->generateUrl('admin_mailalias_index'));
         $this->addBreadcrumb(_('Import'));
         
         return [
@@ -235,10 +252,10 @@ class MailAliasController extends CrudController
     private function getImportForm()
     {
         /* @var $builder \Symfony\Component\Form\FormBuilder */
-        $builder = $this->get('form.factory')->createNamedBuilder('mail_alias_import');
+        $builder = $this->get('form.factory')->createNamedBuilder('mailalias_import');
         
         $builder
-            ->setAction($this->generateUrl('admin_mail_aliases_import'))
+            ->setAction($this->generateUrl('admin_mailalias_import'))
             ->add('file', FileType::class, [
                 'label' => false,
                 'constraints' => [new NotBlank(['message' => _('Please select a CSV file for import.')])]

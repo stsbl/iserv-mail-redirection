@@ -95,8 +95,8 @@ class AddressAdmin extends AbstractAdmin
     {
         $this->title = _('Mail aliases');
         $this->itemTitle = _('Mail alias');
-        $this->id = 'mail_aliases';
-        $this->routesPrefix = 'admin/mailaliases';
+        $this->id = 'mailalias';
+        //$this->routesPrefix = 'admin/mailalias';
         $this->options['help'] = 'https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection';
         $this->templates['crud_index'] = 'StsblMailAliasBundle:Crud:address_index.html.twig';
         $this->templates['crud_add'] = 'StsblMailAliasBundle:Crud:address_add.html.twig';
@@ -214,22 +214,12 @@ class AddressAdmin extends AbstractAdmin
      */
     public function getRoutePattern($action, $id, $entityBased = true)
     {
-        // Overwrite broken route generation of Crud (WHY? =()
+        // Overwrite route generation of Crud which struggles with id
         if ('index' === $action) {
-            return sprintf('%s', $this->routesPrefix);
-        } else if ('add' === $action) {
-            return sprintf('%s/%s', $this->routesPrefix, $action);
-        } else if ('batch' === $action) {
-            return sprintf('%s/%s', $this->routesPrefix, $action);
-        } else if ('batch/confirm' === $action) {
-            return sprintf('%s%s/%s', $this->routesPrefix, 'batch', 'confirm');
-        } else if ('show' === $action) {
-            return sprintf('%s/%s/%s', $this->routesPrefix, $action, '{id}');
-        } else if ('edit' === $action) {
-            return sprintf('%s/%s/%s', $this->routesPrefix, $action, '{id}');
-        } else if ('delete' === $action) {
-           return sprintf('%s/%s/%s', $this->routesPrefix, $action, '{id}');
+            return sprintf('%s%s%s', $this->routesPrefix, $this->id, 'es');
         }
+
+        return parent::getRoutePattern($action, $id, $entityBased);
     }
     
     /**

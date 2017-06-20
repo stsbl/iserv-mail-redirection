@@ -5,7 +5,7 @@
     {% if admin.isAllowedToAdd() %}
         <div class="list-actions">
             {{ m.linkButton(admin.generateUrl('add'), _('Add'), 'plus') }}
-            <a class="btn btn-default" data-toggle="toggle" data-target="#import-list" href="{{ path('admin_mail_aliases_import') }}">{{ icon('upload') }} {{ _('Import') }}</a>
+            <a class="btn btn-default" data-toggle="toggle" data-target="#import-list" href="{{ path('admin_mailalias_import') }}">{{ icon('upload') }} {{ _('Import') }}</a>
         </div>
     {% endif %}
 {% endblock %}
@@ -25,3 +25,24 @@
 
     {{ parent() }}
 {% endblock %}
+
+{%  block content %}
+    {% if displayImportMessages %}
+        <div class="alert alert-dismissible alert-success" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{  importMessages|nl2br }}
+        </div>
+    {%  endif %}
+    {%  if displayImportWarnings %}
+        <div class="alert alert-dismissible alert-warning" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{  importWarnings|nl2br }}
+        </div>
+    {%  endif %}
+
+    {{ parent() }}
+{%  endblock %}
