@@ -1,3 +1,21 @@
+stsbl-iserv-mail-redirection (17.06.20-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Exim: Ignore aliases, if an equivalent IServ {account,group} exists.
+  * Updated build deps and rules.
+  * Fixed build deps.
+  * Improved Importer.
+  * Improved form validator.
+  * Improved validation on import.
+  * Added constraint to prevent aliases where already is an account.
+  * Udpated l10n.
+
+  iserv: Mit dem neuen Update können keine E-Mail-Aliase mehr angelegt werden,
+    wenn schon ein Benutzer oder eine Gruppe, die diese E-Mail-Adresse
+    besitzt, existiert.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Tue, 20 Jun 2017 21:05:45 +0200
+
 stsbl-iserv-mail-redirection (17.05.24-0) experimental; urgency=medium
 
   [ Felix Jacobi ]
