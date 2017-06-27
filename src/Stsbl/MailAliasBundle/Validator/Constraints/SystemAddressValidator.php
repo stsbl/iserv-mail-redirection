@@ -33,7 +33,7 @@ use Symfony\Component\Validator\ConstraintValidator;
  * Validate that given address is not a system mail address.
  *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
- * @license MIT license <https://opensource.org/licneses/MIT>
+ * @license MIT license <https://opensource.org/licenses/MIT>
  */
 class SystemAddressValidator extends ConstraintValidator
 {

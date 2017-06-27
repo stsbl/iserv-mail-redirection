@@ -101,6 +101,9 @@ class AddressAdmin extends AbstractAdmin
         $this->templates['crud_index'] = 'StsblMailAliasBundle:Crud:address_index.html.twig';
         $this->templates['crud_add'] = 'StsblMailAliasBundle:Crud:address_add.html.twig';
         $this->templates['crud_edit'] = 'StsblMailAliasBundle:Crud:address_edit.html.twig';
+        $this->templates['crud_multi_edit'] = 'StsblMailAliasBundle:Crud:address_multi_edit.html.twig';
+        $this->options['json'] = true;
+        $this->options['multi_edit'] = true;
     }
     
     /**
@@ -146,6 +149,7 @@ class AddressAdmin extends AbstractAdmin
             'label' => _('Users'),
             'entry_type' => UserRecipientType::class,
             'prototype_name' => 'proto-entry',
+            'multi_edit' => true,
             'attr' => [
                 'help_text' => _('The users who should receive the e-mails to that address.')
             ],
@@ -161,6 +165,7 @@ class AddressAdmin extends AbstractAdmin
             'label' => _('Groups'),
             'entry_type' => GroupRecipientType::class,
             'prototype_name' => 'proto-entry',
+            'multi_edit' => true,
             'attr' => [
                 'help_text' => _('The groups which should receive the e-mails to that address.')
             ],
@@ -173,13 +178,15 @@ class AddressAdmin extends AbstractAdmin
             ]);
         $formMapper->add('enabled', BooleanType::class, [
             'required' => true, 
-            'label' => _('Enabled'), 
+            'label' => _('Enabled'),
+            'multi_edit' => true,
             'attr' =>
                 ['help_text' => _('You can enable or disable this redirection. If it is disabled all assigned users and groups will stop receiving the mails of this address.')]
             ]);
         $formMapper->add('comment', TextareaType::class, [
             'required' => false, 
-            'label' => _('Note'), 
+            'label' => _('Note'),
+            'multi_edit' => true,
             'attr' =>
                 ['help_text' => _('Here you can enter further explanation for this redirection.')]
             ]);
@@ -198,7 +205,7 @@ class AddressAdmin extends AbstractAdmin
             $mapper->add('recipient', null, ['label' => _('Original recipient')]);
         }
         
-        // explicity block FormMapper
+        // explicitly block FormMapper
         // the method will also called when building form
         if (!$mapper instanceof FormMapper) {
             $mapper->add('userRecipients', null, ['label' => _('Users')]);
@@ -347,7 +354,7 @@ class AddressAdmin extends AbstractAdmin
             if(empty($object->getComment())) {
                 $text = 'gelöscht';
             } else if (empty($previousData['comment'])) {
-                // german grammatic: "Notiz von Alias xy hinzugefügt" sounds ugly.
+                // german grammar: "Notiz von Alias xy hinzugefügt" sounds ugly.
                 $prePosition = 'für';
                 $text = 'hinzugefügt';
             } else {

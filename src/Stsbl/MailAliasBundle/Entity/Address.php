@@ -217,6 +217,14 @@ class Address implements CrudInterface
         if(is_array($userRecipient) || $userRecipient instanceof \Traversable) {
             $this->addUserRecipients($userRecipient);
         } else {
+            // Clone user recipient to support multiple edits.
+            // Otherwise the same UserRecipient entity would get through
+            // the addUserRecipient method of all Address entities and
+            // they would overwrite the reference to the previous entity,
+            // which would lead that at the end only one Address entity will
+            // have the new UserRecipient.
+            $userRecipient = clone $userRecipient;
+
             /* @var $userRecipient UserRecipient */
             $userRecipient->setOriginalRecipient($this);
             $this->userRecipients->add($userRecipient);
@@ -309,6 +317,14 @@ class Address implements CrudInterface
         if(is_array($groupRecipient) || $groupRecipient instanceof \Traversable) {
             $this->addGroupRecipients($groupRecipient);
         } else {
+            // Clone group recipient to support multiple edits.
+            // Otherwise the same GroupRecipient entity would get through
+            // the addGroupRecipient method of all Address entities and
+            // they would overwrite the reference to the previous entity,
+            // which would lead that at the end only one Address entity will
+            // have the new GroupRecipient.
+            $groupRecipient = clone $groupRecipient;
+
             /* @var $groupRecipient GroupRecipient */
             $groupRecipient->setOriginalRecipient($this);
             $this->groupRecipients->add($groupRecipient);

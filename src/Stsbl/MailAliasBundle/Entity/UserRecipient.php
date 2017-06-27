@@ -86,6 +86,16 @@ class UserRecipient implements CrudInterface
         
         return (string)$this->recipient;
     }
+
+    /**
+     * Respect doctrine requirements for cloning.
+     */
+    public function __clone()
+    {
+        if ($this->id != null) {
+            $this->id = null;
+        }
+    }
     
     /**
      * {@inheritdoc}

@@ -55,16 +55,8 @@ class AddressValidator extends ConstraintValidator
      * @param Config $config
      * @param EntityManager $em
      */
-    public function __construct(Config $config = null, EntityManager $em = null)
+    public function __construct(Config $config, EntityManager $em)
     {
-        if (!isset($config)) {
-            throw new \InvalidArgumentException('config is empty, did you forget to pass it to the constructor?');
-        }
-        
-        if (!isset($em)) {
-            throw new \InvalidArgumentException('em is empty, did you forget to pass it to the constructor?');
-        }
-        
         $this->config = $config;
         $this->em = $em;
     }

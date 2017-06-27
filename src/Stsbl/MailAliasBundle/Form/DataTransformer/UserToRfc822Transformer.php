@@ -42,7 +42,7 @@ class UserToRfc822Transformer implements DataTransformerInterface
     use ConstructorTrait;
     
     /**
-     * Transforms the rfc822 string back to a object
+     * Transforms the rfc822 string back to an object
      * 
      * @param string $addr
      * 
@@ -65,7 +65,7 @@ class UserToRfc822Transformer implements DataTransformerInterface
 
             return $objects;
         } catch (NoResultException $e) {
-            // tell Smyfony that we are failed to tranform the string
+            // tell Smyfony that we are failed to s the string
             throw new TransformationFailedException('No user was found for that rfc822 string.');
         }
     }
@@ -85,7 +85,7 @@ class UserToRfc822Transformer implements DataTransformerInterface
             $host = $this->config->get('Servername');
         
             $object->setUserRecipient(imap_rfc822_write_address($localPart, $host, $fullName));
-            
+
             return $object;
         }
     }

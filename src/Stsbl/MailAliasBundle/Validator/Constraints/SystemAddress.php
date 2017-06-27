@@ -44,7 +44,7 @@ class SystemAddress extends Constraint
      */
     public function getMessage()
     {
-        return _('This is a system e-mail address, you are not allowed to create redirections for it.');
+        return _('This is a system e-mail address, you are not allowed to create redirects for it.');
     }
     
     /**

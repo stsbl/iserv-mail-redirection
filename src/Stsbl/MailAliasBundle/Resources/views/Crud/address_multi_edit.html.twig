@@ -1,0 +1,24 @@
+{# src/Stsbl/MailAliasBundle/Resources/views/Crud/address_multi_edit.html.twig #}
+{% extends 'IServCrudBundle:Crud:multi_edit.html.twig' %}
+{% import 'StsblJavaScriptLibraryBundle::jquery.initialize.html.twig' as jqi %}
+
+{%  block content %}
+    <div class="alert alert-warning">
+        {{ _('The current recipients will never displayed. To change the recipients for all selected aliases, you can select the checkboxes and enter the desired recipients.') }}
+    </div>
+
+    {{  parent() }}
+{%  endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {{ jqi.integrate() }}
+
+    {% if app.environment != 'prod' %}
+        <!-- {{ _self }} => mailaliases.js -->
+    {% endif %}
+    {% javascripts output='js/compiled/mailaliases.js' filter='?uglifyjs2' '@StsblMailAliasBundle/Resources/public/js/mailaliases_autocomplete.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

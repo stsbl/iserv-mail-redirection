@@ -57,6 +57,7 @@ class GroupRecipientType extends AbstractType
      * The constructor
      * 
      * @param Config $config
+     * @param ObjectManager $om
      */
     public function __construct(Config $config, ObjectManager $om) 
     {

@@ -61,6 +61,11 @@ class NotAccountValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
+        // ignore null values
+        if ($value === null) {
+            return;
+        }
+
         /* @var $constraint NotAccount */
         if ($this->em->find('IServCoreBundle:User', $value) != null) {
             $this->context->addViolation(sprintf($constraint->getUserMessage(), $value.'@'.$this->config->get('Servername')));

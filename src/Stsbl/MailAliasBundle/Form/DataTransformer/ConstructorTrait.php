@@ -53,16 +53,8 @@ trait ConstructorTrait
      * @param Config $config
      * @param ObjectManager $om
      */
-    public function __construct(Config $config = null, ObjectManager $om = null)
+    public function __construct(Config $config, ObjectManager $om)
     {
-        if (!isset($config)) {
-            throw new \RuntimeException('config is empty, did you forget to pass it to the constructor?');
-        }
-        
-        if (!isset($om)) {
-            throw new \RuntimeException('om is empty, did you forget to pass it to the constructor?');
-        }
-        
         $this->config = $config;
         $this->om = $om;
     }
