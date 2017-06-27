@@ -102,6 +102,7 @@ class AddressAdmin extends AbstractAdmin
         $this->templates['crud_add'] = 'StsblMailAliasBundle:Crud:address_add.html.twig';
         $this->templates['crud_edit'] = 'StsblMailAliasBundle:Crud:address_edit.html.twig';
         $this->templates['crud_multi_edit'] = 'StsblMailAliasBundle:Crud:address_multi_edit.html.twig';
+        $this->templates['crud_show'] = 'StsblMailAliasBundle:Crud:address_show.html.twig';
         $this->options['json'] = true;
         $this->options['multi_edit'] = true;
     }
