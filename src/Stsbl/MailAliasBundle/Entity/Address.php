@@ -48,6 +48,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Address implements CrudInterface
 {
+    const CRUD_ICON = 'message-forward';
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id

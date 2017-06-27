@@ -1,0 +1,7 @@
+{# src/Stsbl/MailAliasBundle/Resources/views/List/field_recipient.html.twig #}
+{% extends admin.getTemplate('list_field_base') %}
+
+{%- block field -%}
+    {{ icon('pro-message-forward') }}
+    {{- value -}}@{{- admin.config.get('Servername') -}}
+{%- endblock -%}

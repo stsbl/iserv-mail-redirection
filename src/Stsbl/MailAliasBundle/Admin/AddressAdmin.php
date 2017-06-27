@@ -102,7 +102,7 @@ class AddressAdmin extends AbstractAdmin
         $this->templates['crud_add'] = 'StsblMailAliasBundle:Crud:address_add.html.twig';
         $this->templates['crud_edit'] = 'StsblMailAliasBundle:Crud:address_edit.html.twig';
         $this->templates['crud_multi_edit'] = 'StsblMailAliasBundle:Crud:address_multi_edit.html.twig';
-        $this->options['json'] = true;
+        //$this->options['json'] = true;
         $this->options['multi_edit'] = true;
     }
     
@@ -200,9 +200,9 @@ class AddressAdmin extends AbstractAdmin
     public function configureFields(AbstractBaseMapper $mapper)
     {
         if ($mapper instanceof ListMapper) {
-            $mapper->addIdentifier('recipient', null, ['label' => _('Original recipient')]);
+            $mapper->addIdentifier('recipient', null, ['label' => _('Original recipient'), 'template' => 'StsblMailAliasBundle:List:field_recipient.html.twig']);
         } else if ($mapper instanceof ShowMapper) {
-            $mapper->add('recipient', null, ['label' => _('Original recipient')]);
+            $mapper->add('recipient', null, ['label' => _('Original recipient'), 'template' => 'StsblMailAliasBundle:Show:field_recipient.html.twig']);
         }
         
         // explicitly block FormMapper
@@ -390,5 +390,15 @@ class AddressAdmin extends AbstractAdmin
     public function setConfig(Config $config)
     {
         $this->config = $config;
+    }
+
+    /**
+     * Get config
+     *
+     * @return Config $config
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 }
