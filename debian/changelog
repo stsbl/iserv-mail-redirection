@@ -1,3 +1,18 @@
+stsbl-iserv-mail-redirection (17.06.28-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Added basic support for multiple edits.
+  * Updated l10n.
+  * Added servername in recipient field in index and show action.
+  * Reenabled json mode for AddressAdmin.
+  * Display full e-mail address in title of show and edit action.
+  * Updated l10n.
+
+  iserv: Die Mailalias-Verwaltung unterstützt nun zum größten Teil die neuen
+    Mehrfachbearbeitungen in IServ 3.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Wed, 28 Jun 2017 21:38:00 +0200
+
 stsbl-iserv-mail-redirection (17.06.20-1) experimental; urgency=medium
 
   [ Felix Jacobi ]
