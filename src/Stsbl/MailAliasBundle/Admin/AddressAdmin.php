@@ -1,5 +1,5 @@
 <?php
-// src/Stsbl/MailAliasBundle/Admin/MailAliasAdmin.php
+// src/Stsbl/MailAliasBundle/Profile/MailAliasAdmin.php
 namespace Stsbl\MailAliasBundle\Admin;
 
 use Braincrafted\Bundle\BootstrapBundle\Form\Type\BootstrapCollectionType;
@@ -93,6 +93,9 @@ class AddressAdmin extends AbstractAdmin
      */
     protected function configure()
     {
+        // set module context for logging
+        $this->logModule = 'Mail aliases';
+
         $this->title = _('Mail aliases');
         $this->itemTitle = _('Mail alias');
         $this->id = 'mailalias';
@@ -118,17 +121,6 @@ class AddressAdmin extends AbstractAdmin
         $this->routes[self::ACTION_ADD]['_controller'] = 'StsblMailAliasBundle:MailAlias:add';
         $this->routes[self::ACTION_SHOW]['_controller'] = 'StsblMailAliasBundle:MailAlias:show';
         $this->routes[self::ACTION_EDIT]['_controller'] = 'StsblMailAliasBundle:MailAlias:edit';
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct($class, $title = null, $itemTitle = null) 
-    {
-        // set module context for logging
-        $this->logModule = 'Mail aliases';
-        
-        return parent::__construct($class, $title, $itemTitle);
     }
 
     /**
