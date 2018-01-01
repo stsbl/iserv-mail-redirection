@@ -8,7 +8,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 /*
  * The MIT License
  *
- * Copyright 2017 Felix jacobi.
+ * Copyright 2018 Felix jacobi.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
