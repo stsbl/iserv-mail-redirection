@@ -28,30 +28,28 @@ CREATE TABLE mailredirection_addresses (
 
 CREATE TABLE mailredirection_recipient_users (
     id                      SERIAL          PRIMARY KEY,
-    recipient               VARCHAR(255)    NOT NULL 
+    recipient               TEXT            NOT NULL 
                                             REFERENCES users(act)
                                             ON UPDATE CASCADE
                                             ON DELETE CASCADE,
-    original_recipient_id   INT             REFERENCES mailredirection_addresses(id)
+    original_recipient_id   INTEGER         REFERENCES mailredirection_addresses(id)
                                             ON UPDATE CASCADE
                                             ON DELETE CASCADE
 );
 
 CREATE TABLE mailredirection_recipient_groups (
     id                      SERIAL          PRIMARY KEY,
-    recipient               VARCHAR(255)    NOT NULL 
+    recipient               TEXT            NOT NULL 
                                             REFERENCES groups(act)
                                             ON UPDATE CASCADE
                                             ON DELETE CASCADE,
-    original_recipient_id   INT             REFERENCES mailredirection_addresses(id)
+    original_recipient_id   INTEGER         REFERENCES mailredirection_addresses(id)
                                             ON UPDATE CASCADE
                                             ON DELETE CASCADE
 );
 
--- disallow to enter the same recipient and original_recipient twice
--- Disabled, now handled by Constraint on Symfony Side.
--- CREATE UNIQUE INDEX mailredirection_recipient_users_key ON mailredirection_recipient_users (recipient, original_recipient_id);
--- CREATE UNIQUE INDEX mailredirection_recipient_groups_key ON mailredirection_recipient_groups (recipient, original_recipient_id);
+CREATE UNIQUE INDEX mailredirection_recipient_users_key ON mailredirection_recipient_users (recipient, original_recipient_id);
+CREATE UNIQUE INDEX mailredirection_recipient_groups_key ON mailredirection_recipient_groups (recipient, original_recipient_id);
 
 -- permissions
 GRANT SELECT, USAGE ON "mailredirection_recipient_users_id_seq", "mailredirection_recipient_groups_id_seq", 
