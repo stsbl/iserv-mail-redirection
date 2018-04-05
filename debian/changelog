@@ -1,3 +1,9 @@
+stsbl-iserv-mail-redirection (18.04.05-2) experimental; urgency=medium
+
+  * Updated control
+
+ -- Felix Jacobi <felix.jacobi@stsbl.de>  Thu, 05 Apr 2018 04:38:51 +0200
+
 stsbl-iserv-mail-redirection (18.04.05-1) experimental; urgency=medium
 
   * Added license
