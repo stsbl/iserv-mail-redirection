@@ -16,10 +16,13 @@ Depends: ${misc:Depends},
   stsbl-iserv3-maintenance
 Xb-Private-IServ-Revision: ${iserv:Revision}
 Description: E-Mail-Weiterleitungs-Modul für IServ
- Dieses Modul bringt die Möglichkeit mit, E-Mail-Weiterleitungen (auch Alias genannt) über den IDesk einzurichten.
+ Dieses Modul bringt die Möglichkeit mit, E-Mail-Weiterleitungen (auch Alias
+ genannt) über den IDesk einzurichten.
  .
- Diese verhalten sich ähnlich, wie diejenigen, die sich als root über die /etc/aliases definieren lassen.
- Der Vorteil dieses Moduls ist, dass diese nun einfach über den IDesk einzurichten sind und dafür nicht mehr das Root-Konto verwendet werden muss.
+ Diese verhalten sich ähnlich, wie diejenigen, die sich als root über die
+ /etc/aliases definieren lassen. Der Vorteil dieses Moduls ist, dass
+ diese nun einfach über den IDesk einzurichten sind und dafür nicht
+ mehr das Root-Konto verwendet werden muss.
  .
  https://it.stsbl.de/wp-content/uploads/2016/12/stsbl-iserv-mail-redirection.png
  .
