@@ -4,6 +4,8 @@ namespace Stsbl\MailAliasBundle\Admin;
 
 use Braincrafted\Bundle\BootstrapBundle\Form\Type\BootstrapCollectionType;
 use IServ\AdminBundle\Admin\AbstractAdmin;
+use IServ\CoreBundle\Entity\Group;
+use IServ\CoreBundle\Entity\User;
 use IServ\CoreBundle\Form\Type\BooleanType;
 use IServ\CoreBundle\Service\Config;
 use IServ\CoreBundle\Traits\LoggerTrait;
@@ -99,7 +101,6 @@ class AddressAdmin extends AbstractAdmin
         $this->title = _('Mail aliases');
         $this->itemTitle = _('Mail alias');
         $this->id = 'mailalias';
-        //$this->routesPrefix = 'admin/mailalias';
         $this->options['help'] = 'https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection';
         $this->templates['crud_index'] = 'StsblMailAliasBundle:Crud:address_index.html.twig';
         $this->templates['crud_add'] = 'StsblMailAliasBundle:Crud:address_add.html.twig';
@@ -133,11 +134,11 @@ class AddressAdmin extends AbstractAdmin
             'attr' => [
                 'help_text' => _('The local part of the e-mail address which you want to redirect.'),
                 'input_group' => [
-                    'append' => '@'.$this->config->get('Domain')
+                    'append' => '@'.$this->config->get('Servername')
                 ],
             ]
         ]);
-        $formMapper->add('userRecipients', BootstrapCollectionType::class, [
+        $formMapper->add('users', BootstrapCollectionType::class, [
             'required' => false,
             'label' => _('Users'),
             'entry_type' => UserRecipientType::class,
@@ -153,7 +154,7 @@ class AddressAdmin extends AbstractAdmin
                     ],
                 ],
             ]);
-        $formMapper->add('groupRecipients', BootstrapCollectionType::class, [
+        $formMapper->add('groups', BootstrapCollectionType::class, [
             'required' => false,
             'label' => _('Groups'),
             'entry_type' => GroupRecipientType::class,
@@ -201,8 +202,8 @@ class AddressAdmin extends AbstractAdmin
         // explicitly block FormMapper
         // the method will also called when building form
         if (!$mapper instanceof FormMapper) {
-            $mapper->add('userRecipients', null, ['label' => _('Users')]);
-            $mapper->add('groupRecipients', null, ['label' => _('Groups')]);
+            $mapper->add('users', null, ['label' => _('Users')]);
+            $mapper->add('groups', null, ['label' => _('Groups')]);
             $mapper->add('enabled', 'boolean', ['label' => _('Enabled')]);
             $mapper->add('comment', null, ['label' => _('Note'), 'responsive' => 'desktop']);
         }
@@ -227,7 +228,7 @@ class AddressAdmin extends AbstractAdmin
      */
     public function isAuthorized() 
     {
-        return $this->isGranted(Privilege::Admin);
+        return $this->isGranted(Privilege::ADMIN);
     }
     
     /**
@@ -239,8 +240,8 @@ class AddressAdmin extends AbstractAdmin
     private function logRecipients(CrudInterface $object, array $previousData = null)
     {
         /* @var $object \Stsbl\MailAliasBundle\Entity\Address */
-        $userRecipients = $object->getUserRecipients()->toArray();
-        $groupRecipients = $object->getGroupRecipients()->toArray();
+        $userRecipients = $object->getUsers()->toArray();
+        $groupRecipients = $object->getGroups()->toArray();
         $servername = $this->config->get('Servername');
         
         if (is_null($previousData)) {
@@ -260,38 +261,38 @@ class AddressAdmin extends AbstractAdmin
         }
         
         $previousUserRecipients = [];
-        foreach ($previousData['userRecipients'] as $recipientId) {
-            $previousUserRecipients[] = $this->getObjectManager()->findOneBy('StsblMailAliasBundle:UserRecipient', ['id' => $recipientId]);
+        foreach ($previousData['users'] as $recipientId) {
+            $previousUserRecipients[] = $this->getObjectManager()->findOneBy(User::class, ['username' => $recipientId]);
         }
         
         $previousGroupRecipients = [];
-        foreach ($previousData['groupRecipients'] as $recipientId) {
-            $previousGroupRecipients[] = $this->getObjectManager()->findOneBy('StsblMailAliasBundle:GroupRecipient', ['id' => $recipientId]);
+        foreach ($previousData['groups'] as $recipientId) {
+            $previousGroupRecipients[] = $this->getObjectManager()->findOneBy(Group::class, ['account' => $recipientId]);
         }
         
-        $removedUserRecipients = ArrayUtil::getArrayDifferenceByCallables($previousUserRecipients, $userRecipients, 'getRecipient', 'getRecipient');
-        $addedUserRecipients = ArrayUtil::getArrayDifferenceByCallables($userRecipients, $previousUserRecipients, 'getRecipient', 'getRecipient');
-        $removedGroupRecipients = ArrayUtil::getArrayDifferenceByCallables($previousGroupRecipients, $groupRecipients, 'getRecipient', 'getRecipient');     
-        $addedGroupRecipients = ArrayUtil::getArrayDifferenceByCallables($groupRecipients, $previousGroupRecipients, 'getRecipient', 'getRecipient');
+        $removedUserRecipients = array_diff($previousUserRecipients, $userRecipients);
+        $addedUserRecipients = array_diff($userRecipients, $previousUserRecipients);
+        $removedGroupRecipients = array_diff($previousGroupRecipients, $groupRecipients);
+        $addedGroupRecipients = array_diff($groupRecipients, $previousGroupRecipients);
         
         // log removed user recipients
         foreach ($removedUserRecipients as $removed) {
-            $this->log(sprintf('Benutzer %s als Empfänger von Alias %s@%s entfernt', (string)$removed->getRecipient(), (string)$object, $servername));
+            $this->log(sprintf('Benutzer %s als Empfänger von Alias %s@%s entfernt', (string)$removed, (string)$object, $servername));
         }
         
         // log added user recipients
         foreach ($addedUserRecipients as $added) {
-            $this->log(sprintf(self::LOG_USER_RECIPIENT_ADDED, (string)$added->getRecipient(), (string)$object, $servername));
+            $this->log(sprintf(self::LOG_USER_RECIPIENT_ADDED, (string)$added, (string)$object, $servername));
         }
         
         // log removed group recipients
         foreach ($removedGroupRecipients as $removed) {
-            $this->log(sprintf('Gruppe %s als Empfänger von Alias %s@%s entfernt', (string)$removed->getRecipient(), (string)$object, $servername));
+            $this->log(sprintf('Gruppe %s als Empfänger von Alias %s@%s entfernt', (string)$removed, (string)$object, $servername));
         }
         
         // log added group recipients
         foreach ($addedGroupRecipients as $added) {
-            $this->log(sprintf(self::LOG_GROUP_RECIPIENT_ADDED, (string)$added->getRecipient(), (string)$object, $servername));
+            $this->log(sprintf(self::LOG_GROUP_RECIPIENT_ADDED, (string)$added, (string)$object, $servername));
         }
     }
     

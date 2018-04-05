@@ -45,7 +45,7 @@ class MenuListener implements AdminMenuListenerInterface
     public function onBuildAdminMenu(MenuEvent $event)
     {
         // check if user is privileged
-        if ($event->getAuthorizationChecker()->isGranted(Privilege::Admin))
+        if ($event->getAuthorizationChecker()->isGranted(Privilege::ADMIN))
         {
             $menu = $event->getMenu();
             $block = $menu->getChild('users');

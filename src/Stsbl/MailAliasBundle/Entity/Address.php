@@ -6,6 +6,8 @@ namespace Stsbl\MailAliasBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\EventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use IServ\CoreBundle\Entity\Group;
+use IServ\CoreBundle\Entity\User;
 use IServ\CrudBundle\Entity\CrudInterface;
 use Stsbl\MailAliasBundle\Validator\Constraints as StsblAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -36,7 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 
 /**
- * StsblMailAliasBundle:Recipient
+ * StsblMailAliasBundle:Address
  *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenes/MIT>
@@ -82,26 +84,34 @@ class Address implements CrudInterface
     private $comment;
 
     /**
-     * @ORM\OneToMany(targetEntity="UserRecipient", mappedBy="originalRecipient", cascade={"all"}, orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity="IServ\CoreBundle\Entity\User")
+     * @ORM\JoinTable(name="mailredirection_recipient_users",
+     *      joinColumns={@ORM\JoinColumn(name="original_recipient_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="recipient", referencedColumnName="act", unique=true)}
+     * )
      *
-     * @var ArrayCollection
+     * @var User[]
      */
-    private $userRecipients;
+    private $users;
 
     /**
-     * @ORM\OneToMany(targetEntity="GroupRecipient", mappedBy="originalRecipient", cascade={"all"}, orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity="IServ\CoreBundle\Entity\Group")
+     * @ORM\JoinTable(name="mailredirection_recipient_groups",
+     *      joinColumns={@ORM\JoinColumn(name="original_recipient_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="recipient", referencedColumnName="act", unique=true)}
+     * )
      *
-     * @var ArrayCollection
+     * @var Group[]
      */
-    private $groupRecipients;
+    private $groups;
     
     /**
      * The constructor
      */
     public function __construct() 
     {
-        $this->groupRecipients = new ArrayCollection();
-        $this->userRecipients = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
     
     /**
@@ -153,21 +163,21 @@ class Address implements CrudInterface
     /**
      * Get userRecipients
      * 
-     * @return ArrayCollection
+     * @return User[]
      */
-    public function getUserRecipients()
+    public function getUsers()
     {
-        return $this->userRecipients;
+        return $this->users;
     }
 
     /**
      * Get groupRecipients
      * 
-     * @return ArrayCollection
+     * @return Group[]
      */
-    public function getGroupRecipients()
+    public function getGroups()
     {
-        return $this->groupRecipients;
+        return $this->groups;
     }
     
     /**
@@ -208,204 +218,74 @@ class Address implements CrudInterface
         
         return $this;
     }
-    
-    /**
-     * Adds one or more user recipients to this original recipient
-     * 
-     * @param array|UserRecipient $userRecipient
-     */
-    public function addUserRecipient($userRecipient)
-    {
-        if(is_array($userRecipient) || $userRecipient instanceof \Traversable) {
-            $this->addUserRecipients($userRecipient);
-        } else {
-            // Clone user recipient to support multiple edits.
-            // Otherwise the same UserRecipient entity would get through
-            // the addUserRecipient method of all Address entities and
-            // they would overwrite the reference to the previous entity,
-            // which would lead that at the end only one Address entity will
-            // have the new UserRecipient.
-            $userRecipient = clone $userRecipient;
 
-            /* @var $userRecipient UserRecipient */
-            $userRecipient->setOriginalRecipient($this);
-            $this->userRecipients->add($userRecipient);
-        }
-    }
-    
     /**
-     * Adds multiple user recipients to this original recipient
-     * 
-     * @param array $userRecipients
+     * Adds one user to this original recipient
+     *
+     * @param User $user
+     * @return Address
      */
-    public function addUserRecipients($userRecipients)
+    public function addUser(User $user)
     {
-        foreach ($userRecipients as $userRecipient) {
-            /* @var $userRecipient UserRecipient */
-            $this->addUserRecipient($userRecipient);
-        }
-    }
-    
-    /**
-     * Set userRecipients
-     * 
-     * @param array $userRecipients
-     * @return array
-     */
-    public function setUserRecipients($userRecipients)
-    {
-        if (!is_array($userRecipients) && !$userRecipients instanceof \Traversable) {
-            throw new \InvalidArgumentException(sprintf('setUserRecipients: Expected %s, got %s.', \Traversable::class, gettype($userRecipients)));
-        }
-        
-        $oldUserRecipients = $this->getUserRecipients()->toArray();
-        $this->removeUserRecipients($oldUserRecipients);
-        
-        foreach ($userRecipients as $userRecipient) {
-            if(!$userRecipient instanceof UserRecipient) {
-                throw new \InvalidArgumentException(sprintf('setUserRecipients: Expected only instances of type %s in array elements, got %s.', UserRecipient::class, gettype($userRecipient)));
-            }
-            $this->addUserRecipient($userRecipient);
-        }
-        
-        return array_udiff($oldUserRecipients, $this->getUserRecipients()->toArray(), 
-            function (UserRecipient $userRecipient1, UserRecipient $userRecipient2) {
-                $id1 = $userRecipient1->getId();
-                $id2 = $userRecipient2->getId();
-                if ($id1 < $id2) {
-                    return -1;
-                } else if ($id1 > $id2) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        );
+        $this->users->add($user);
+
+        return $this;
     }
 
     /**
-     * removes one or multiple user recipient for original recipient
-     * 
-     * @param UserRecipient|array $userRecipient
+     * removes one user recipient from this original recipient
+     *
+     * @param User $user
+     * @return Address
      */
-    public function removeUserRecipient($userRecipient)
+    public function removeUser(User $user)
     {
-        if (is_array($userRecipient) || $userRecipient instanceof \Traversable) {
-            $this->removeUserRecipients($userRecipient);
-        } else {
-            $this->userRecipients->removeElement($userRecipient);
-        }
+        $this->users->removeElement($user);
+
+        return $this;
     }
 
     /**
-     * removes multiple user recipients from the original recipient
-     * 
-     * @param array $userRecipients
+     * @param User $user
+     * @return bool
      */
-    public function removeUserRecipients($userRecipients)
+    public function hasUser(User $user)
     {
-        foreach ($userRecipients as $userRecipient) {
-            $this->removeUserRecipient($userRecipient);
-        }
+        return $this->users->contains($user);
     }
 
     /**
-     * Adds one or more group recipients to this original recipient
-     * 
-     * @param array|GroupRecipient $groupRecipient
+     * Adds one user to this original recipient
+     *
+     * @param Group $group
+     * @return Address
      */
-    public function addGroupRecipient($groupRecipient)
+    public function addGroup(Group $group)
     {
-        if(is_array($groupRecipient) || $groupRecipient instanceof \Traversable) {
-            $this->addGroupRecipients($groupRecipient);
-        } else {
-            // Clone group recipient to support multiple edits.
-            // Otherwise the same GroupRecipient entity would get through
-            // the addGroupRecipient method of all Address entities and
-            // they would overwrite the reference to the previous entity,
-            // which would lead that at the end only one Address entity will
-            // have the new GroupRecipient.
-            $groupRecipient = clone $groupRecipient;
+        $this->groups->add($group);
 
-            /* @var $groupRecipient GroupRecipient */
-            $groupRecipient->setOriginalRecipient($this);
-            $this->groupRecipients->add($groupRecipient);
-        }
-    }
-    
-    /**
-     * Adds multiple group recipients to this original recipient
-     * 
-     * @param array $groupRecipients
-     */
-    public function addGroupRecipients($groupRecipients)
-    {
-        foreach ($groupRecipients as $groupRecipient) {
-            /* @var $groupRecipient GroupRecipient */
-            $this->addGroupRecipient($groupRecipient);
-        }
-    }
-    
-    /**
-     * Set groupRecipients
-     * 
-     * @param array $groupRecipients
-     * @return array
-     */
-    public function setGroupRecipients($groupRecipients)
-    {
-        if (!is_array($groupRecipients) && !$groupRecipients instanceof \Traversable) {
-            throw new \InvalidArgumentException(sprintf('setGroupRecipients: Expected %s, got %s.', \Traversable::class, gettype($groupRecipients)));
-        }
-        
-        $oldGroupRecipients = $this->getGroupRecipients()->toArray();
-        $this->removeGroupRecipients($oldGroupRecipients);
-        
-        foreach ($groupRecipients as $groupRecipient) {
-            if(!$groupRecipient instanceof GroupRecipient) {
-                throw new \InvalidArgumentException(sprintf('setGroupRecipients: Expected only instances of type %s in array elements, got %s.', GroupRecipient::class, gettype($groupRecipient)));
-            }
-            $this->addGroupRecipient($groupRecipient);
-        }
-        
-        return array_udiff($oldGroupRecipients, $this->getGroupRecipients()->toArray(), 
-            function (GroupRecipient $groupRecipient1, GroupRecipient $groupRecipient2) {
-                $id1 = $groupRecipient1->getId();
-                $id2 = $groupRecipient2->getId();
-                if ($id1 < $id2) {
-                    return -1;
-                } else if ($id1 > $id2) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        );
-    }
-    
-    /**
-     * removes one or multiple group recipient for original recipient
-     * 
-     * @param GroupRecipient|array $groupRecipient
-     */
-    public function removeGroupRecipient($groupRecipient)
-    {
-        if (is_array($groupRecipient) || $groupRecipient instanceof \Traversable) {
-            $this->removeGroupRecipients($groupRecipient);
-        } else {
-            $this->groupRecipients->removeElement($groupRecipient);
-        }
+        return $this;
     }
 
     /**
-     * removes multiple group recipients from the original recipient
-     * 
-     * @param array $groupRecipients
+     * removes one group recipient from this original recipient
+     *
+     * @param Group $group
+     * @return Address
      */
-    public function removeGroupRecipients($groupRecipients)
+    public function removeGroup(Group $group)
     {
-        foreach ($groupRecipients as $groupRecipient) {
-            $this->removeGroupRecipient($groupRecipient);
-        }
+        $this->groups->removeElement($group);
+
+        return $this;
+    }
+
+    /**
+     * @param Group $group
+     * @return bool
+     */
+    public function hasGroup(Group $group)
+    {
+        return $this->groups->contains($group);
     }
 }

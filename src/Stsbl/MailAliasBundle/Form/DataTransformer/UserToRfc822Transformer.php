@@ -2,8 +2,7 @@
 // src/Stsbl/MailAliasBundle/Form/DataTransformer/UserToRfc822Transformer.php
 namespace Stsbl\MailAliasBundle\Form\DataTransformer;
 
-use Doctrine\ORM\NoResultException;
-use Stsbl\MailAliasBundle\Entity\UserRecipient;
+use IServ\CoreBundle\Entity\User;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
@@ -44,49 +43,46 @@ class UserToRfc822Transformer implements DataTransformerInterface
     /**
      * Transforms the rfc822 string back to an object
      * 
-     * @param string $addr
+     * @param array $value
      * 
-     * @return array<UserRecipient>|null
+     * @return User|null
      */
-    public function reverseTransform($addr) 
+    public function reverseTransform($value)
     {
-        try {
-            $objects = [];
-            $addr = imap_rfc822_parse_adrlist($addr, $this->config->get('Servername'));
+        $domain = $this->config->get('Domain');
+        $value = imap_rfc822_parse_adrlist($value['userRecipient'], $domain);
 
-            foreach ($addr as $a) {
-                $object = new UserRecipient();
-                $repository = $this->om->getRepository('IServCoreBundle:User');
-                $user = $repository->findOneByUsername($a->mailbox);
-                $object->setRecipient($user);
-            
-                $objects[] = $object;
+        foreach ($value as $address) {
+            $repository = $this->om->getRepository(User::class);
+            $user = $repository->findOneBy(['username' => $address->mailbox]);
+
+            if (null === $user) {
+                throw new TransformationFailedException('No user was found for that rfc822 string.');
             }
 
-            return $objects;
-        } catch (NoResultException $e) {
-            // tell Smyfony that we are failed to s the string
-            throw new TransformationFailedException('No user was found for that rfc822 string.');
+            if ($address->host !== $domain) {
+                throw new TransformationFailedException('Invalid domain in rfc822 string.');
+            }
+
+            return $user;
         }
     }
     
     /**
      * Transforms the object to an rfc822 string
      * 
-     * @param UserRecipient|null $object
+     * @param User|null $object
      * 
-     * @return UserRecipient|null
+     * @return array|null
      */
     public function transform($object) 
     {
-        if (isset($object)) {
-            $fullName = $object->getRecipient()->getName();
-            $localPart = $object->getRecipient()->getUsername();
-            $host = $this->config->get('Servername');
-        
-            $object->setUserRecipient(imap_rfc822_write_address($localPart, $host, $fullName));
+        if (null !== $object) {
+            $fullName = $object->getName();
+            $localPart = $object->getUsername();
+            $host = $this->config->get('Domain');
 
-            return $object;
+            return ['userRecipient' => imap_rfc822_write_address($localPart, $host, $fullName)];
         }
     }
 

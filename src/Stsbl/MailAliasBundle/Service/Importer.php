@@ -3,12 +3,14 @@
 namespace Stsbl\MailAliasBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use IServ\CoreBundle\Entity\Group;
+use IServ\CoreBundle\Entity\User;
 use Stsbl\MailAliasBundle\Exception\ImportException;
 use Stsbl\MailAliasBundle\Entity\Address;
 use Stsbl\MailAliasBundle\Entity\UserRecipient;
 use Stsbl\MailAliasBundle\Entity\GroupRecipient;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Validator\Validator\RecursiveValidator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /*
  * The MIT License
@@ -59,7 +61,7 @@ class Importer
     private $em;
 
     /**
-     * @var RecursiveValidator
+     * @var ValidatorInterface
      */
     private $validator;
 
@@ -69,19 +71,9 @@ class Importer
     private $fileObject;
     
     /**
-     * @var array<Address>
+     * @var Address[]
      */
     private $newAddresses = [];
-    
-    /**
-     * @var array<UserRecipient>
-     */
-    private $newUserRecipients = [];
-    
-    /**
-     * @var array<GroupRecipient>
-     */
-    private $newGroupRecipients = [];
     
     /**
      * @var array<string>
@@ -97,14 +89,14 @@ class Importer
      * @var array
      */
     private $lines = [];
-    
+
     /**
      * The constructor
-     * 
+     *
      * @var EntityManager $em
-     * @var RecursiveValidator $validation
+     * @param ValidatorInterface $validator
      */
-    public function __construct(EntityManager $em, RecursiveValidator $validator)
+    public function __construct(EntityManager $em, ValidatorInterface $validator)
     {
         $this->em = $em;
         $this->validator = $validator;
@@ -141,8 +133,8 @@ class Importer
     {
         // reset everything
         $this->newAddresses = [];
-        $this->newUserRecipients = [];
-        $this->newGroupRecipients = [];
+        $this->newUsers = [];
+        $this->newGroups = [];
         $this->warnings = [];
         $this->lines = [];
         
@@ -237,41 +229,27 @@ class Importer
             
             $userActs = explode(',', $userActString);
             $groupActs = explode(',', $groupActString);
-            $userRepo = $this->em->getRepository('IServCoreBundle:User');
-            $groupRepo = $this->em->getRepository('IServCoreBundle:Group');
-            $groupRecipientRepo = $this->em->getRepository('StsblMailAliasBundle:GroupRecipient');
-            $userRecipientRepo = $this->em->getRepository('StsblMailAliasBundle:UserRecipient');
+            $userRepo = $this->em->getRepository(User::class);
+            $groupRepo = $this->em->getRepository(Group::class);
            
             if (!empty($userActString)) {
-                foreach ($userActs as $u) {
-                    $user = $userRepo->find($u);
+                foreach ($userActs as $account) {
+                    $user = $userRepo->find($account);
                 
                     if (null === $user) {
-                        $this->warnings[] = __('A user with the account %s was not found.', $u);
+                        $this->warnings[] = __('A user with the account %s was not found.', $account);
                         continue;
                     }
                 
-                    if (null !== $userRecipientRepo->findOneBy(['recipient' => $user, 'originalRecipient' => $originalRecipient])) {
+                    if ($originalRecipient->hasUser($user)) {
                         $this->warnings[] = __('The user %s is already assigned to the original recipient %s.', (string)$user, (string)$originalRecipient);
                         continue;
                     }
                 
-                    $userRecipient = new UserRecipient();
-                    $userRecipient->setOriginalRecipient($originalRecipient);
-                    $userRecipient->setRecipient($user);
+                    $originalRecipient->addUser($user);
 
-                    $errors = $this->validator->validate($$userRecipient);
-                    if (count($errors) > 0) {
-                        foreach ($errors as $error) {
-                            $this->warnings[] = $error->getMessage();
-                        }
-                        // skip this entity
-                        continue;
-                    }
-
-                    $this->em->persist($userRecipient);
+                    $this->em->persist($originalRecipient);
                     $this->em->flush();
-                    $this->newUserRecipients[] = $userRecipient;
                 }
             }
             
@@ -284,27 +262,15 @@ class Importer
                         continue;
                     }
                 
-                    if (null !== $groupRecipientRepo->findOneBy(['recipient' => $group, 'originalRecipient' => $originalRecipient])) {
+                    if ($originalRecipient->hasGroup($group)) {
                         $this->warnings[] = __('The group %s is already assigned to the original recipient %s.', (string)$group, (string)$originalRecipient);
                         continue;
                     }
-                
-                    $groupRecipient = new GroupRecipient();
-                    $groupRecipient->setOriginalRecipient($originalRecipient);
-                    $groupRecipient->setRecipient($group);
 
-                    $errors = $this->validator->validate($groupRecipient);
-                    if (count($errors) > 0) {
-                        foreach ($errors as $error) {
-                            $this->warnings[] = $error->getMessage();
-                        }
-                        // skip this entity
-                        continue;
-                    }
+                    $originalRecipient->addGroup($group);
 
-                    $this->em->persist($groupRecipient);
+                    $this->em->persist($originalRecipient);
                     $this->em->flush();
-                    $this->newGroupRecipients[] = $groupRecipient;
                 }
             }
         }
@@ -313,7 +279,7 @@ class Importer
     /**
      * Get warnings thrown during import
      * 
-     * @return array<string>
+     * @return string[]
      */
     public function getWarnings()
     {
@@ -323,30 +289,10 @@ class Importer
     /**
      * Get new Address entities generated during import
      * 
-     * @return array<Address>
+     * @return Address[]
      */
     public function getNewAddresses()
     {
         return $this->newAddresses;
-    }
-    
-    /**
-     * Get new UserRecipient entities, generated during import
-     * 
-     * @return array<UserRecipient>
-     */
-    public function getNewUserRecipients()
-    {
-        return $this->newUserRecipients;
-    }
-    
-    /**
-     * Get new GroupRecipient entities, generated during import
-     * 
-     * @return array<GroupRecipient>
-     */
-    public function getNewGroupRecipients()
-    {
-        return $this->newGroupRecipients;
     }
 }

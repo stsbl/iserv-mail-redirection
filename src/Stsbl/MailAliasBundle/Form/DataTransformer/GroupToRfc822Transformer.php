@@ -2,8 +2,7 @@
 // src/Stsbl/MailAliasBundle/Form/DataTransformer/GroupToRfc822Transformer.php
 namespace Stsbl\MailAliasBundle\Form\DataTransformer;
 
-use Doctrine\ORM\NoResultException;
-use Stsbl\MailAliasBundle\Entity\GroupRecipient;
+use IServ\CoreBundle\Entity\Group;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
@@ -44,52 +43,51 @@ class GroupToRfc822Transformer implements DataTransformerInterface
     /**
      * Transforms the rfc822 string back to an object
      * 
-     * @param string $addr
+     * @param array $value
      * 
-     * @return array<GroupRecipient>|null
+     * @return Group|null
      */
-    public function reverseTransform($addr) 
+    public function reverseTransform($value)
     {
-        try {
-            $objects = [];
-            $addr = imap_rfc822_parse_adrlist($addr, $this->config->get('Servername'));
+        $domain = $this->config->get('Domain');
+        $value = imap_rfc822_parse_adrlist($value['groupRecipient'], $domain);
 
-            foreach ($addr as $a) {
-                $object = new GroupRecipient();
-                $repository = $this->om->getRepository('IServCoreBundle:Group');
-                $group = $repository->findOneByAccount($a->mailbox);
-                $object->setRecipient($group);
-            
-                $objects[] = $object;
+        foreach ($value as $address) {
+            $repository = $this->om->getRepository(Group::class);
+            $group = $repository->findOneBy(['account' => $address->mailbox]);
+
+            if (null === $group) {
+                throw new TransformationFailedException('No group was found for that rfc822 string.');
             }
-            
-            return $objects;
-        } catch (NoResultException $e) {
-            // tell Smyfony that we are failed to transform the string
-            throw new TransformationFailedException('No group was found for that rfc822 string.');
+
+            if ($address->host !== $domain) {
+                throw new TransformationFailedException('Invalid domain in rfc822 string.');
+            }
+
+            return $group;
         }
     }
     
     /**
      * Transforms the object to an rfc822 string
      * 
-     * @param GroupRecipient|null $object
+     * @param Group|null $object
      * 
-     * @return string|null
+     * @return array|null
      */
-    public function transform($object) 
+    public function transform($object)
     {
-        if (isset($object)) {
-            $fullName = $object->getRecipient()->getName();
-            if ($object->getRecipient()->getDeleted() !== null) {
+        if (null !== $object) {
+            $fullName = $object->getName();
+
+            if ($object->getDeleted() !== null) {
                 $fullName .= sprintf(' (%s)', _('deleted'));
             }
-            $localPart = $object->getRecipient()->getAccount();
-            $host = $this->config->get('Servername');
-        
-            $object->setGroupRecipient(imap_rfc822_write_address($localPart, $host, $fullName));
 
-            return $object;
+            $localPart = $object->getAccount();
+            $host = $this->config->get('Domain');
+
+            return ['groupRecipient' => imap_rfc822_write_address($localPart, $host, $fullName)];
         }
     }
 

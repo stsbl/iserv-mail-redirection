@@ -45,7 +45,7 @@ class LocalPartValidator extends ConstraintValidator
         // use random domain, it does matter, which one is behind the local part.
         if (!filter_var($value. '@example.com', \FILTER_VALIDATE_EMAIL)) {
             $customMsg = false;
-            if (strpos($value, '@')) {
+            if (false !== strpos($value, '@')) {
                 $customMsg = true;
                 $this->context->buildViolation($constraint->getMessageForAt())
                     ->addViolation();

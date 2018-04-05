@@ -44,7 +44,7 @@ class SystemAddress extends Constraint
      */
     public function getMessage()
     {
-        return _('This is a system e-mail address, you are not allowed to create redirects for it.');
+        return _('%s is a system e-mail address, you are not allowed to create aliases for it.');
     }
     
     /**
@@ -52,7 +52,7 @@ class SystemAddress extends Constraint
      */
     public function validatedBy()
     {
-        return get_class($this).'Validator';
+        return 'stsbl_mailalias_system_address_validator';
     }
     
     /**

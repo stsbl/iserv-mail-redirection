@@ -37,5 +37,5 @@ final class Privilege
     /**
      * Privilege that allows users to edit the mail aliases (admin password required)
      */
-    const Admin = 'PRIV_MAIL_REDIRECTION_ADMIN';
+    const ADMIN = 'PRIV_MAIL_REDIRECTION_ADMIN';
 }

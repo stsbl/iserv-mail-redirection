@@ -2,6 +2,7 @@
 // src/Stsbl/MailAliasBundle/Validator/Contraints/SystemAddressValidator.php
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
+use IServ\CoreBundle\Service\Config;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -38,6 +39,21 @@ use Symfony\Component\Validator\ConstraintValidator;
 class SystemAddressValidator extends ConstraintValidator
 {
     /**
+     * @var Config
+     */
+    private $config;
+
+    /**
+     * The constructor
+     * 
+     * @param Config $config
+     */
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+    }
+    
+    /**
      * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
@@ -45,7 +61,7 @@ class SystemAddressValidator extends ConstraintValidator
         /* @var $constraint SystemAddress */
         // disallow redirection of system mails, this must be done via /etc/aliases.
         if (preg_match('(root|postmaster|mailer-daemon|nobody|hostmaster|usenet|news|webmaster|ftp|abuse|noc|security|monit|clamav|www-data)', $value)) {
-            $this->context->buildViolation($constraint->getMessage())
+            $this->context->buildViolation(sprintf($constraint->getMessage(), $value . '@' . $this->config->get('Servername')))
                 ->addViolation();
         }
     }

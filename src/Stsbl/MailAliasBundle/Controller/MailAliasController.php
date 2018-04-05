@@ -90,7 +90,7 @@ class MailAliasController extends CrudController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getRecipientsAutocomplete(Request $request)
+    public function getRecipientsAutocompleteAction(Request $request)
     {
         $type = $request->query->get('type');
         $query = $request->query->get('query');
@@ -188,23 +188,19 @@ class MailAliasController extends CrudController
                 
                 /* @var $newAddresses \Stsbl\MailAliasBundle\Entity\Address[] */
                 $newAddresses = $importer->getNewAddresses();
-                foreach ($newAddresses as $a) {
-                    $logger->writeForModule(sprintf(AddressAdmin::LOG_ALIAS_ADDED, (string)$a, $servername), $module);
-                    $messages[] = __('Added alias %s@%s.', (string)$a, $servername);
-                }
-                
-                /* @var $newUserRecipients \Stsbl\MailAliasBundle\Entity\UserRecipient[] */
-                $newUserRecipients = $importer->getNewUserRecipients();
-                foreach ($newUserRecipients as $u) {
-                    $logger->writeForModule(sprintf(AddressAdmin::LOG_USER_RECIPIENT_ADDED, (string)$u, (string)$u->getOriginalRecipient(), $servername), $module);
-                    $messages[] = __('Added user %s as recipient for alias %s@%s.', (string)$u, (string)$u->getOriginalRecipient(), $servername);
-                }
-                
-                /* @var $newGroupRecipients \Stsbl\MailAliasBundle\Entity\GroupRecipient[] */
-                $newGroupRecipients = $importer->getNewGroupRecipients();
-                foreach ($newGroupRecipients as $g) {
-                    $logger->writeForModule(sprintf(AddressAdmin::LOG_GROUP_RECIPIENT_ADDED, (string)$g, (string)$g->getOriginalRecipient(), $servername), $module);
-                    $messages[] = __('Added group %s as recipient for alias %s@%s.', (string)$g, (string)$g->getOriginalRecipient(), $servername);
+                foreach ($newAddresses as $address) {
+                    $logger->writeForModule(sprintf(AddressAdmin::LOG_ALIAS_ADDED, (string)$address, $servername), $module);
+                    $messages[] = __('Added alias %s@%s.', (string)$address, $servername);
+
+                    foreach ($address->getUsers() as $user) {
+                        $logger->writeForModule(sprintf(AddressAdmin::LOG_USER_RECIPIENT_ADDED, (string)$user, (string)$address, $servername), $module);
+                        $messages[] = __('Added user %s as recipient for alias %s@%s.', (string)$user, (string)$address, $servername);
+                    }
+
+                    foreach ($address->getGroups() as $group) {
+                        $logger->writeForModule(sprintf(AddressAdmin::LOG_GROUP_RECIPIENT_ADDED, (string)$group, (string)$address, $servername), $module);
+                        $messages[] = __('Added group %s as recipient for alias %s@%s.', (string)$group, (string)$address, $servername);
+                    }
                 }
                 
                 if (count($messages) > 0) {

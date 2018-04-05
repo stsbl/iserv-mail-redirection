@@ -86,17 +86,6 @@ class UserRecipientType extends AbstractType
     }
     
     /**
-     * @see \Symfony\Component\Form\AbstractType::configureOptions()
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-           'data_class' => 'Stsbl\MailAliasBundle\Entity\UserRecipient' 
-        ]);
-    }
-    
-    /**
      * @see \Symfony\Component\Form\FormTypeInterface::getName()
      */
     public function getBlockPrefix()

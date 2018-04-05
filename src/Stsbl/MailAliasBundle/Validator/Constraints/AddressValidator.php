@@ -69,14 +69,14 @@ class AddressValidator extends ConstraintValidator
         /* @var $address \Stsbl\MailAliasBundle\Entity\Address */
         /* @var $constraint Address */
         
-        $groupRecipients = $address->getGroupRecipients()->toArray();
+        $groupRecipients = $address->getGroups()->toArray();
         $duplicatedGroupRecipients = array_unique(array_diff_assoc($groupRecipients, array_unique($groupRecipients)));
         
         foreach ($duplicatedGroupRecipients as $duplicate) {
             $this->context->buildViolation(sprintf($constraint->getDuplicateGroupMessage(), $duplicate, $address->getRecipient()))->atPath('recipient')->addViolation();
         }
         
-        $userRecipients = $address->getUserRecipients()->toArray();
+        $userRecipients = $address->getUsers()->toArray();
         $duplicatedUserRecipients = array_unique(array_diff_assoc($userRecipients, array_unique($userRecipients)));
         
         foreach ($duplicatedUserRecipients as $duplicate) {

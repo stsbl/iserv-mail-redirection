@@ -3,6 +3,8 @@
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
 use Doctrine\ORM\EntityManager;
+use IServ\ApiBundle\Entity\User;
+use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Service\Config;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -49,6 +51,8 @@ class NotAccountValidator extends ConstraintValidator
 
     /**
      * The constructor
+     * @param Config $config
+     * @param EntityManager $em
      */
     public function __construct(Config $config, EntityManager $em)
     {
@@ -67,12 +71,12 @@ class NotAccountValidator extends ConstraintValidator
         }
 
         /* @var $constraint NotAccount */
-        if ($this->em->find('IServCoreBundle:User', $value) != null) {
+        if ($this->em->find(User::class, $value) !== null) {
             $this->context->addViolation(sprintf($constraint->getUserMessage(), $value.'@'.$this->config->get('Servername')));
             return;
         }
 
-        if ($this->em->find('IServCoreBundle:Group', $value) != null) {
+        if ($this->em->find(Group::class, $value) !== null) {
             $this->context->addViolation(sprintf($constraint->getGroupMessage(), $value.'@'.$this->config->get('Servername')));
             return;
         }
