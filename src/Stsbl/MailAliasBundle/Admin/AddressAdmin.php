@@ -158,7 +158,7 @@ class AddressAdmin extends AbstractAdmin
             ->add('groups', BootstrapCollectionType::class, [
                 'required' => false,
                 'label' => _('Groups'),
-                'multi_edit' => true,*
+                'multi_edit' => true,
                 'entry_type' => GroupRecipientType::class,
                 'prototype_name' => 'proto-entry',
                 'attr' => [
