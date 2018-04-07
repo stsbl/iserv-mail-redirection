@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-05 04:30+0200\n"
+"POT-Creation-Date: 2018-04-07 19:34+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
@@ -104,6 +104,10 @@ msgstr "Die CSV-Datei hat eine ungültige Anzahl von Spalten in der Zeile %s."
 #: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:45
 msgid "Manage e-mail redirections"
 msgstr "E-Mail-Weiterleitungen verwalten"
+
+#: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:48
+msgid "There is already an entry for that address."
+msgstr "Für diese Adresse existiert bereits ein Eintrag."
 
 #: src/Stsbl/MailAliasBundle/Form/Type/GroupRecipientType.php:81
 #: src/Stsbl/MailAliasBundle/Form/Type/UserRecipientType.php:81

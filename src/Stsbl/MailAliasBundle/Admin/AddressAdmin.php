@@ -129,61 +129,65 @@ class AddressAdmin extends AbstractAdmin
      */
     public function configureFormFields(FormMapper $formMapper)
     {
-        $formMapper->add('recipient', null, [
-            'label' => _('Original recipient'), 
-            'attr' => [
-                'help_text' => _('The local part of the e-mail address which you want to redirect.'),
-                'input_group' => [
-                    'append' => '@'.$this->config->get('Servername')
+        $formMapper
+            ->add('recipient', null, [
+                'label' => _('Original recipient'),
+                'attr' => [
+                    'help_text' => _('The local part of the e-mail address which you want to redirect.'),
+                    'input_group' => [
+                        'append' => '@'.$this->config->get('Servername')
+                    ],
+                ]
+            ])
+            ->add('users', BootstrapCollectionType::class, [
+                'required' => false,
+                'label' => _('Users'),
+                'multi_edit' => true,
+                'entry_type' => UserRecipientType::class,
+                'prototype_name' => 'proto-entry',
+                'attr' => [
+                    'help_text' => _('The users who should receive the e-mails to that address.')
                 ],
-            ]
-        ]);
-        $formMapper->add('users', BootstrapCollectionType::class, [
-            'required' => false,
-            'label' => _('Users'),
-            'entry_type' => UserRecipientType::class,
-            'prototype_name' => 'proto-entry',
-            'multi_edit' => true,
-            'attr' => [
-                'help_text' => _('The users who should receive the e-mails to that address.')
-            ],
-            // Child options
-            'entry_options' => [
+                // Child options
+                'entry_options' => [
                     'attr' => [
                         'widget_col' => 12, // Single child field w/o label col
                     ],
                 ],
-            ]);
-        $formMapper->add('groups', BootstrapCollectionType::class, [
-            'required' => false,
-            'label' => _('Groups'),
-            'entry_type' => GroupRecipientType::class,
-            'prototype_name' => 'proto-entry',
-            'multi_edit' => true,
-            'attr' => [
-                'help_text' => _('The groups which should receive the e-mails to that address.')
-            ],
-            // Child options
-            'entry_options' => [
+            ])
+            ->add('groups', BootstrapCollectionType::class, [
+                'required' => false,
+                'label' => _('Groups'),
+                'multi_edit' => true,*
+                'entry_type' => GroupRecipientType::class,
+                'prototype_name' => 'proto-entry',
+                'attr' => [
+                    'help_text' => _('The groups which should receive the e-mails to that address.')
+                ],
+                // Child options
+                'entry_options' => [
                     'attr' => [
                         'widget_col' => 12, // Single child field w/o label col
                     ],
                 ],
-            ]);
-        $formMapper->add('enabled', BooleanType::class, [
-            'required' => true, 
-            'label' => _('Enabled'),
-            'multi_edit' => true,
-            'attr' =>
-                ['help_text' => _('You can enable or disable this redirection. If it is disabled all assigned users and groups will stop receiving the mails of this address.')]
-            ]);
-        $formMapper->add('comment', TextareaType::class, [
-            'required' => false, 
-            'label' => _('Note'),
-            'multi_edit' => true,
-            'attr' =>
-                ['help_text' => _('Here you can enter further explanation for this redirection.')]
-            ]);
+            ])
+            ->add('enabled', BooleanType::class, [
+                'required' => true,
+                'label' => _('Enabled'),
+                'multi_edit' => true,
+                'attr' => [
+                    'help_text' => _('You can enable or disable this redirection. If it is disabled all assigned users and groups will stop receiving the mails of this address.')
+                ]
+            ])
+            ->add('comment', TextareaType::class, [
+                'required' => false,
+                'label' => _('Note'),
+                'multi_edit' => true,
+                'attr' => [
+                    'help_text' => _('Here you can enter further explanation for this redirection.')
+                ]
+            ])
+        ;
     }
     
     /**
@@ -244,16 +248,16 @@ class AddressAdmin extends AbstractAdmin
         $groupRecipients = $object->getGroups()->toArray();
         $servername = $this->config->get('Servername');
         
-        if (is_null($previousData)) {
+        if (null === $previousData) {
             // if there is no previous data, assume that we are called from post persist
             foreach ($userRecipients as $recipient) {
                 /* @var $recipient \Stsbl\MailAliasBundle\Entity\UserRecipient */
-                $this->log(sprintf(self::LOG_USER_RECIPIENT_ADDED, (string)$recipient->getRecipient(), (string)$object, $servername));
+                $this->log(sprintf(self::LOG_USER_RECIPIENT_ADDED, (string)$recipient, (string)$object, $servername));
             }
             
             foreach ($groupRecipients as $recipient) {
                 /* @var $recipient \Stsbl\MailAliasBundle\Entity\GroupRecipient */
-                $this->log(sprintf(self::LOG_GROUP_RECIPIENT_ADDED, (string)$recipient->getRecipient(), (string)$object, $servername));
+                $this->log(sprintf(self::LOG_GROUP_RECIPIENT_ADDED, (string)$recipient, (string)$object, $servername));
             }
             
             // stop here
@@ -320,46 +324,45 @@ class AddressAdmin extends AbstractAdmin
         if ((string)$object->getRecipient() == (string)$previousData['recipient']
             && (string)$object->getComment() == (string)$previousData['comment'] 
             && (bool)$object->getEnabled() == (bool)$previousData['enabled']) {
-            // nothing changed, skip next sections and go directly to recipient log
-            goto recipientLog;
-        }
-        
-        $servername = $this->config->get('Servername');
-        
-        if ((string)$object->getRecipient() !== (string)$previousData['recipient']) {
-            // write log
-            $this->log(sprintf('Alias %s@%s geändert nach %s@%s', $previousData['recipient'], $servername, (string)$object, $servername));
+            // if nothing is changed, skip next sections and go directly to recipient log
+        } else {
+            $servername = $this->config->get('Servername');
+
+            if ((string)$object->getRecipient() !== (string)$previousData['recipient']) {
+                // write log
+                $this->log(sprintf('Alias %s@%s geändert nach %s@%s', $previousData['recipient'], $servername, (string)$object, $servername));
+            }
+
+            if ((bool)$object->getEnabled() !== (bool)$previousData['enabled']) {
+                // write log
+                if ($object->getEnabled()) {
+                    $text = 'aktiviert';
+                } else {
+                    $text = 'deaktiviert';
+                }
+
+                // write log*
+                $this->log(sprintf('Alias %s@%s %s', (string)$object, $servername, $text));
+            }
+
+            if ((string)$object->getComment() !== (string)$previousData['comment']) {
+                $prePosition = 'von';
+                if (empty($object->getComment())) {
+                    $text = 'gelöscht';
+                } else if (empty($previousData['comment'])) {
+                    // german grammar: "Notiz von Alias xy hinzugefügt" sounds ugly.
+                    $prePosition = 'für';
+                    $text = 'hinzugefügt';
+                } else {
+                    $text = 'geändert';
+                }
+
+                // write log
+                $this->log(sprintf('Notiz %s Alias %s@%s %s', $prePosition, (string)$object, $servername, $text));
+            }
+
         }
 
-        if ((bool)$object->getEnabled() !== (bool)$previousData['enabled']) {
-            // write log
-            if ($object->getEnabled()) {
-                $text = 'aktiviert';
-            } else {
-                $text = 'deaktiviert';
-            }
-            
-            // write log*
-            $this->log(sprintf('Alias %s@%s %s', (string)$object, $servername, $text));
-        }
-        
-        if((string)$object->getComment() !== (string)$previousData['comment']) {
-            $prePosition = 'von';
-            if(empty($object->getComment())) {
-                $text = 'gelöscht';
-            } else if (empty($previousData['comment'])) {
-                // german grammar: "Notiz von Alias xy hinzugefügt" sounds ugly.
-                $prePosition = 'für';
-                $text = 'hinzugefügt';
-            } else {
-                $text = 'geändert';
-            }
-            
-            // write log
-            $this->log(sprintf('Notiz %s Alias %s@%s %s', $prePosition, (string)$object, $servername, $text));
-        }
-        
-        recipientLog:
         // log recipient changes
         $this->logRecipients($object, $previousData);
     }

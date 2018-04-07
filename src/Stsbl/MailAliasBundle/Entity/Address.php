@@ -4,7 +4,6 @@ namespace Stsbl\MailAliasBundle\Entity;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\EventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
@@ -44,7 +43,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @license MIT license <https://opensource.org/licenes/MIT>
  * @ORM\Entity
  * @ORM\Table(name="mailredirection_addresses")
- * //@ORM\HasLifecycleCallbacks()
  * @DoctrineAssert\UniqueEntity(fields="recipient", message="There is already an entry for that address.")
  * @StsblAssert\Address()
  */

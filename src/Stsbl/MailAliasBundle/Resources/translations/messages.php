@@ -43,3 +43,6 @@ _('The CSV file has an invalid amount of columns near line %s.');
 
 // Privilege
 _('Manage e-mail redirections');
+
+// Constraint
+_('There is already an entry for that address.');
