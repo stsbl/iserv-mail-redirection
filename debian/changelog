@@ -1,3 +1,11 @@
+stsbl-iserv-mail-redirection (18.04.07-1) experimental; urgency=medium
+
+  * Fixed bug during logging
+
+  iserv: Ein Fehler während des Erstellen von neuen Mailaliasen wurde behoben.
+
+ -- Felix Jacobi <felix.jacobi@stsbl.de>  Sat, 07 Apr 2018 19:46:38 +0200
+
 stsbl-iserv-mail-redirection (18.04.05-2) experimental; urgency=medium
 
   * Updated control
