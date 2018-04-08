@@ -53,7 +53,7 @@ class UserToRfc822Transformer implements DataTransformerInterface
         $value = imap_rfc822_parse_adrlist($value['userRecipient'], $domain);
 
         foreach ($value as $address) {
-            $repository = $this->om->getRepository(User::class);
+            $repository = $this->em->getRepository(User::class);
             $user = $repository->findOneBy(['username' => $address->mailbox]);
 
             if (null === $user) {

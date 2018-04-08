@@ -2,7 +2,6 @@
 // src/Stsbl/MailAlias/Bundle/Enity/Recipient.php
 namespace Stsbl\MailAliasBundle\Entity;
 
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use IServ\CoreBundle\Entity\Group;

@@ -2,7 +2,7 @@
 // src/Stsbl/MailAliasBundle/Validator/Constraints/NotAccountValidator.php
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use IServ\ApiBundle\Entity\User;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Service\Config;
@@ -45,16 +45,16 @@ class NotAccountValidator extends ConstraintValidator
     private $config;
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $em;
 
     /**
      * The constructor
      * @param Config $config
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      */
-    public function __construct(Config $config, EntityManager $em)
+    public function __construct(Config $config, EntityManagerInterface $em)
     {
         $this->config = $config;
         $this->em = $em;
@@ -72,12 +72,12 @@ class NotAccountValidator extends ConstraintValidator
 
         /* @var $constraint NotAccount */
         if ($this->em->find(User::class, $value) !== null) {
-            $this->context->addViolation(sprintf($constraint->getUserMessage(), $value.'@'.$this->config->get('Servername')));
+            $this->context->addViolation(sprintf($constraint->getUserMessage(), $value.'@'.$this->config->get('Domain')));
             return;
         }
 
         if ($this->em->find(Group::class, $value) !== null) {
-            $this->context->addViolation(sprintf($constraint->getGroupMessage(), $value.'@'.$this->config->get('Servername')));
+            $this->context->addViolation(sprintf($constraint->getGroupMessage(), $value.'@'.$this->config->get('Domain')));
             return;
         }
 

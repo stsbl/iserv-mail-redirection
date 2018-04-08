@@ -2,8 +2,12 @@
 // src/Stsbl/MailAliasBundle/Controler/MailAliasController.php
 namespace Stsbl\MailAliasBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use IServ\CoreBundle\Entity\User;
 use IServ\CoreBundle\Form\Type\BooleanType;
+use IServ\CoreBundle\Service\Config;
+use IServ\CoreBundle\Service\Logger;
 use IServ\CrudBundle\Controller\CrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -11,11 +15,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Stsbl\MailAliasBundle\Admin\AddressAdmin;
 use Stsbl\MailAliasBundle\Exception\ImportException;
+use Stsbl\MailAliasBundle\Service\Importer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -52,28 +59,51 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class MailAliasController extends CrudController 
 {
     /**
+     * @var Config
+     */
+    private $config;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
      * {@inheritdoc}
      */
     public function indexAction(Request $request) 
     {
+        $session = $this->getSession();
+
         $ret = parent::indexAction($request);
         
         if (is_array($ret)) {
             $ret['importForm'] = $this->getImportForm()->createView();
 
-            $importMsg = $this->get('session')->has('mailalias_import_msg');
+            $importMsg = $session->has('mailalias_import_msg');
             $ret['displayImportMessages'] = $importMsg;
 
             if ($importMsg) {
-                $ret['importMessages'] = $this->get('session')->get('mailalias_import_msg');
-                $this->get('session')->remove('mailalias_import_msg');
+                $ret['importMessages'] = $session->get('mailalias_import_msg');
+                $session->remove('mailalias_import_msg');
             }
 
-            $importWarn = $this->get('session')->has('mailalias_import_warnings');
+            $importWarn = $session->has('mailalias_import_warnings');
             $ret['displayImportWarnings'] = $importWarn;
 
             if ($importWarn) {
-                $ret['importWarnings'] = $this->get('session')->get('mailalias_import_warnings');
+                $ret['importWarnings'] = $session->get('mailalias_import_warnings');
                 $this->get('session')->remove('mailalias_import_warnings');
             }
         }
@@ -92,6 +122,8 @@ class MailAliasController extends CrudController
      */
     public function getRecipientsAutocompleteAction(Request $request)
     {
+        $config = $this->getConfig();
+
         $type = $request->query->get('type');
         $query = $request->query->get('query');
         $suggestions = [];
@@ -103,10 +135,10 @@ class MailAliasController extends CrudController
             throw new \InvalidArgumentException(sprintf('Invalid type %s.', $type));
         }
         
-        $host = $this->get('iserv.config')->get('Servername');
+        $host = $config->get('Domain');
         if ($type === 'group') {
             /* @var $groupRepo \IServ\CoreBundle\Entity\GroupRepository */
-            $groupRepo = $this->getDoctrine()->getManager()->getRepository('IServCoreBundle:Group');
+            $groupRepo = $this->getEntityManager()->getRepository('IServCoreBundle:Group');
             
             foreach ($groupRepo->addressLookup($query) as $group) {
                 /* @var $group \IServ\CoreBundle\Entity\Group */ 
@@ -145,26 +177,29 @@ class MailAliasController extends CrudController
         
         return new JsonResponse($suggestions);
     }
-    
+
     /**
      * Imports a submitted csv file
-     * 
-     * @param Request $request
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @Route("admin/mailaliases/import", name="admin_mailalias_import")
      * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
      * @Template()
+     *
+     * @param Importer $importer
+     * @param Logger $logger
+     * @param Request $request
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function importAction(Request $request)
+    public function importAction(Importer $importer, Logger $logger, Request $request)
     {
+        $config = $this->getConfig();
+        $session = $this->getSession();
+
         $form = $this->getImportForm();
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            
-            /* @var $importer \Stsbl\MailAliasBundle\Service\Importer */
-            $importer = $this->get('stsbl.mailalias.service.importer');
             
             try {
                 $importer->setEnableNewAliases((boolean)$data['enable']);
@@ -177,12 +212,10 @@ class MailAliasController extends CrudController
                 }
                 
                 if (count($warnings) > 0) {
-                    $this->get('session')->set('mailalias_import_warnings', implode("\n", $warnings));
+                    $session->set('mailalias_import_warnings', implode("\n", $warnings));
                 }
-                
-                /* @var $logger \IServ\CoreBundle\Service\Logger */
-                $logger = $this->get('iserv.logger');
-                $servername = $this->get('iserv.config')->get('Servername');
+
+                $servername = $config->get('Domain');
                 $module = 'Mail aliases';
                 $messages = [];
                 
@@ -204,7 +237,7 @@ class MailAliasController extends CrudController
                 }
                 
                 if (count($messages) > 0) {
-                    $this->get('session')->set('mailalias_import_msg', implode("\n", $messages));
+                    $session->set('mailalias_import_msg', implode("\n", $messages));
                 }
 
                 return new RedirectResponse($this->generateUrl('admin_mailalias_index'));
@@ -214,7 +247,7 @@ class MailAliasController extends CrudController
                 
                 if ($message === ImportException::MESSAGE_INVALID_COLUMN_AMOUNT) {
                     $message = str_replace('.', '', $message);
-                    if (!is_null($line)) {
+                    if (null !== $line) {
                         $message .= ' near line %s.';
                     } else {
                         $message .= '.';
@@ -248,7 +281,7 @@ class MailAliasController extends CrudController
     private function getImportForm()
     {
         /* @var $builder \Symfony\Component\Form\FormBuilder */
-        $builder = $this->get('form.factory')->createNamedBuilder('mailalias_import');
+        $builder = $this->getFormFactory()->createNamedBuilder('mailalias_import');
         
         $builder
             ->setAction($this->generateUrl('admin_mailalias_import'))
@@ -287,14 +320,14 @@ class MailAliasController extends CrudController
      */
     protected function userAddressLookup($query)
     {
-        $qb = $this->getDoctrine()->getManager()->createQueryBuilder('u');
+        /** @var QueryBuilder $qb */
+        $qb = $this->getEntityManager()->getRepository(User::class)->createQueryBuilder('u');
 
         $terms = preg_split("/\s+/", trim($query));
         foreach($terms as $i => $term) {
             $qb
                 ->select('u')
-                ->from('IServCoreBundle:User', 'u')
-                ->andWhere(
+                ->where(
                     'LOWER(u.username) LIKE :adra'.$i.' OR LOWER(u.username) LIKE :adr_mail'.$i.' OR ' .
                     'LOWER(u.firstname) LIKE :adra'.$i.' OR LOWER(u.firstname) LIKE :adrb'.$i.' OR ' .
                     'LOWER(u.lastname) LIKE :adra'.$i.' OR LOWER(u.lastname) LIKE :adrb'.$i
@@ -306,5 +339,73 @@ class MailAliasController extends CrudController
         }
 
         return $qb->getQuery()->setMaxResults(10)->getResult();
+    }
+
+    /**
+     * @return FormFactoryInterface
+     */
+    public function getFormFactory()
+    {
+        return $this->formFactory;
+    }
+
+    /**
+     * @param FormFactoryInterface $formFactory
+     * @required
+     */
+    public function setFormFactory(FormFactoryInterface $formFactory)
+    {
+        $this->formFactory = $formFactory;
+    }
+
+    /**
+     * @return EntityManagerInterface
+     */
+    public function getEntityManager()
+    {
+        return $this->em;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @required
+     */
+    public function setEntityManager(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
+    /**
+     * @return SessionInterface
+     */
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    /**
+     * @param SessionInterface $session
+     * @required
+     */
+    public function setSession(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
+
+    /**
+     * @return Config
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param Config $config
+     * @required
+     */
+    public function setConfig(Config $config)
+    {
+        $this->config = $config;
     }
 }

@@ -2,7 +2,7 @@
 // src/Stsbl/MailAliasBundle/Validator/Constraints/AddressValidiator.php
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use IServ\CoreBundle\Service\Config;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -45,17 +45,17 @@ class AddressValidator extends ConstraintValidator
     protected $config;
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     protected $em;
-    
+
     /**
      * Constructor to inject required classes
-     * 
+     *
      * @param Config $config
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      */
-    public function __construct(Config $config, EntityManager $em)
+    public function __construct(Config $config, EntityManagerInterface $em)
     {
         $this->config = $config;
         $this->em = $em;

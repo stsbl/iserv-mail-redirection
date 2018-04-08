@@ -135,7 +135,7 @@ class AddressAdmin extends AbstractAdmin
                 'attr' => [
                     'help_text' => _('The local part of the e-mail address which you want to redirect.'),
                     'input_group' => [
-                        'append' => '@'.$this->config->get('Servername')
+                        'append' => '@'.$this->config->get('Domain')
                     ],
                 ]
             ])
@@ -246,7 +246,7 @@ class AddressAdmin extends AbstractAdmin
         /* @var $object \Stsbl\MailAliasBundle\Entity\Address */
         $userRecipients = $object->getUsers()->toArray();
         $groupRecipients = $object->getGroups()->toArray();
-        $servername = $this->config->get('Servername');
+        $servername = $this->config->get('Domain');
         
         if (null === $previousData) {
             // if there is no previous data, assume that we are called from post persist
@@ -307,7 +307,7 @@ class AddressAdmin extends AbstractAdmin
     {
         /* @var $object \Stsbl\MailAliasBundle\Entity\Address */
         // write log
-        $servername = $this->config->get('Servername');
+        $servername = $this->config->get('Domain');
         $this->log(sprintf(self::LOG_ALIAS_ADDED, $object->getRecipient(), $servername));
         
         $this->logRecipients($object);
@@ -326,7 +326,7 @@ class AddressAdmin extends AbstractAdmin
             && (bool)$object->getEnabled() == (bool)$previousData['enabled']) {
             // if nothing is changed, skip next sections and go directly to recipient log
         } else {
-            $servername = $this->config->get('Servername');
+            $servername = $this->config->get('Domain');
 
             if ((string)$object->getRecipient() !== (string)$previousData['recipient']) {
                 // write log
@@ -373,16 +373,15 @@ class AddressAdmin extends AbstractAdmin
     public function postRemove(CrudInterface $object) 
     {
         /* @var $object \Stsbl\MailAliasBundle\Entity\Address */
-        $servername = $this->config->get('Servername');
+        $servername = $this->config->get('Domain');
         
         // write log
         $this->log(sprintf('Alias %s@%s gelöscht', (string)$object, $servername));       
     }
     
     /**
-     * Injects config into class, so that we can read servername from it
-     * 
      * @param Config $config
+     * @required
      */
     public function setConfig(Config $config)
     {

@@ -2,13 +2,11 @@
 // src/Stsbl/MailAliasBundle/Service/ImportService.php
 namespace Stsbl\MailAliasBundle\Service;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
 use Stsbl\MailAliasBundle\Exception\ImportException;
 use Stsbl\MailAliasBundle\Entity\Address;
-use Stsbl\MailAliasBundle\Entity\UserRecipient;
-use Stsbl\MailAliasBundle\Entity\GroupRecipient;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -56,7 +54,7 @@ class Importer
     private $csvFile;
     
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $em;
 
@@ -93,10 +91,10 @@ class Importer
     /**
      * The constructor
      *
-     * @var EntityManager $em
+     * @param EntityManagerInterface $em
      * @param ValidatorInterface $validator
      */
-    public function __construct(EntityManager $em, ValidatorInterface $validator)
+    public function __construct(EntityManagerInterface $em, ValidatorInterface $validator)
     {
         $this->em = $em;
         $this->validator = $validator;

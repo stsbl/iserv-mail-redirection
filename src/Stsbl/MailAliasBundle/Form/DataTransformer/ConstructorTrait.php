@@ -2,7 +2,7 @@
 // src/Stsbl/MailAliasBundle/Form/DataTransformer/ContructorTrait.php
 namespace Stsbl\MailAliasBundle\Form\DataTransformer;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use IServ\CoreBundle\Service\Config;
 
 /*
@@ -43,19 +43,19 @@ trait ConstructorTrait
     protected $config;
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
-    protected $om;
-    
+    protected $em;
+
     /**
-     * Constructor to inject required classes
-     * 
+     * The constructor
+     *
      * @param Config $config
-     * @param ObjectManager $om
+     * @param EntityManagerInterface $em
      */
-    public function __construct(Config $config, ObjectManager $om)
+    public function __construct(Config $config, EntityManagerInterface $em)
     {
         $this->config = $config;
-        $this->om = $om;
+        $this->em = $em;
     }
 }

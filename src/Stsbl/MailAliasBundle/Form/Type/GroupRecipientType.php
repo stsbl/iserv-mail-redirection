@@ -2,14 +2,12 @@
 // src/Stsbl/MailAliasBundle/Form/Type/GroupRecipientType.php
 namespace Stsbl\MailAliasBundle\Form\Type;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use IServ\CoreBundle\Service\Config;
 use Stsbl\MailAliasBundle\Form\DataTransformer\GroupToRfc822Transformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /*
  * The MIT License
@@ -49,20 +47,20 @@ class GroupRecipientType extends AbstractType
     private $config;
     
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
-    private $om;
-    
+    private $em;
+
     /**
      * The constructor
-     * 
+     *
      * @param Config $config
-     * @param ObjectManager $om
+     * @param EntityManagerInterface $em
      */
-    public function __construct(Config $config, ObjectManager $om) 
+    public function __construct(Config $config, EntityManagerInterface $em)
     {
         $this->config = $config;
-        $this->om = $om;
+        $this->em = $em;
     }
 
     /**
@@ -72,7 +70,7 @@ class GroupRecipientType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options) 
     {
-        $transformer = new GroupToRfc822Transformer($this->config, $this->om);
+        $transformer = new GroupToRfc822Transformer($this->config, $this->em);
         
         $builder->add('groupRecipient', TextType::class, [
             'label' => false,

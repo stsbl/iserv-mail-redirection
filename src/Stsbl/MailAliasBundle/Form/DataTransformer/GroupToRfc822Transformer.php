@@ -53,7 +53,7 @@ class GroupToRfc822Transformer implements DataTransformerInterface
         $value = imap_rfc822_parse_adrlist($value['groupRecipient'], $domain);
 
         foreach ($value as $address) {
-            $repository = $this->om->getRepository(Group::class);
+            $repository = $this->em->getRepository(Group::class);
             $group = $repository->findOneBy(['account' => $address->mailbox]);
 
             if (null === $group) {

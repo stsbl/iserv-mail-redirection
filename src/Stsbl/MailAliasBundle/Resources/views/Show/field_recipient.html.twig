@@ -2,5 +2,5 @@
 {% extends admin.getTemplate('show_field_base') %}
 
 {%- block field -%}
-    {{- value -}}@{{- admin.config.get('Servername') -}}
+    {{- value -}}@{{- admin.config.get('Domain') -}}
 {%- endblock -%}

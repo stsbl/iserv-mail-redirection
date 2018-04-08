@@ -1,50 +1,43 @@
 # src/Stsbl/MailAliasBundle/Resources/config/services.yml
 services:
-    stsbl.mailalias.admin:
-        class: Stsbl\MailAliasBundle\Admin\AddressAdmin # Our CRUD class
-        arguments: [Stsbl\MailAliasBundle\Entity\Address]  # Sets the controlled entity class
-        tags:
-            - { name: iserv.crud } # Tells IServ about our CRUD
+    _defaults:
+        autoconfigure: true
+        autowire: true
+
+    _instanceof:
+        IServ\AdminBundle\EventListener\AdminMenuListenerInterface:
+            tags:
+              - { name: kernel.event_listener, event: iserv_portal.menu_admin, method: onBuildAdminMenu }
+
+        IServ\CrudBundle\Crud\AbstractCrud:
+            tags:
+                - { name: iserv.crud }
+
+        Symfony\Component\Form\FormTypeInterface:
+            tags:
+                - {name: form.type }
+
+    Stsbl\MailAliasBundle\:
+        resource: '../../'
+        exclude: '../../{DependencyInjection,Exception,Form/DataTransformer,Resources}'
+
+    Stsbl\MailAliasBundle\Admin\AddressAdmin:
+        arguments: [Stsbl\MailAliasBundle\Entity\Address]
         calls:
-            - [ setLogger, ["@iserv.logger"]]
-            - [ setConfig, ["@iserv.config"]]
+            - [setLogger] # LoggerTrait has no @required annotation on setter for now
+
+    Stsbl\MailAliasBundle\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']
             
-    stsbl.mailalias.menu:
-        class: Stsbl\MailAliasBundle\EventListener\MenuListener # Out MenuListener Class
-        tags:
-        #  - { name: kernel.event_listener, event: iserv_portal.menu_main, method: onBuildMainMenu } # Tells IServ about the main menu method
-          - { name: kernel.event_listener, event: iserv_portal.menu_admin, method: onBuildAdminMenu } # Tells IServ about the admin menu method
-          
-    stsbl.mailalias.form.group_recipient:
-        class: Stsbl\MailAliasBundle\Form\Type\GroupRecipientType
-        arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
-        tags:
-            - {name: form.type }
-            
-    stsbl.mailalias.form.user_recipient:
-        class: Stsbl\MailAliasBundle\Form\Type\UserRecipientType
-        arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
-        tags:
-            - {name: form.type }
-            
-    stsbl.mailalias.validator.address:
-        class: Stsbl\MailAliasBundle\Validator\Constraints\AddressValidator
-        arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
+    Stsbl\MailAliasBundle\Validator\Constraints\AddressValidator:
         tags:
             - { name: validator.constraint_validator, alias: stsbl_mailalias_address_validator }
 
-    stsbl.mailalias.validator.not_account:
-        class: Stsbl\MailAliasBundle\Validator\Constraints\NotAccountValidator
-        arguments: ["@iserv.config", "@doctrine.orm.entity_manager"]
+    Stsbl\MailAliasBundle\Validator\Constraints\NotAccountValidator:
         tags:
             - { name: validator.constraint_validator, alias: stsbl_mailalias_not_account_validator }
 
-    stsbl.mailalias.validator.system_address:
-        class: Stsbl\MailAliasBundle\Validator\Constraints\SystemAddressValidator
-        arguments: ["@iserv.config"]
+    Stsbl\MailAliasBundle\Validator\Constraints\SystemAddressValidator:
         tags:
             - { name: validator.constraint_validator, alias: stsbl_mailalias_system_address_validator }
-            
-    stsbl.mailalias.service.importer:
-        class: Stsbl\MailAliasBundle\Service\Importer
-        arguments: ["@doctrine.orm.entity_manager", "@validator"]

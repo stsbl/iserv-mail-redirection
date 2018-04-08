@@ -61,7 +61,7 @@ class SystemAddressValidator extends ConstraintValidator
         /* @var $constraint SystemAddress */
         // disallow redirection of system mails, this must be done via /etc/aliases.
         if (preg_match('(root|postmaster|mailer-daemon|nobody|hostmaster|usenet|news|webmaster|ftp|abuse|noc|security|monit|clamav|www-data)', $value)) {
-            $this->context->buildViolation(sprintf($constraint->getMessage(), $value . '@' . $this->config->get('Servername')))
+            $this->context->buildViolation(sprintf($constraint->getMessage(), $value . '@' . $this->config->get('Domain')))
                 ->addViolation();
         }
     }
