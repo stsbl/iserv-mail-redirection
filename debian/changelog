@@ -1,3 +1,9 @@
+stsbl-iserv-mail-redirection (18.04.10-1) experimental; urgency=medium
+
+  * Refactored bundle for Symfony 4
+
+ -- Felix Jacobi <felix.jacobi@stsbl.de>  Tue, 10 Apr 2018 02:17:05 +0200
+
 stsbl-iserv-mail-redirection (18.04.07-2) experimental; urgency=medium
 
   * Fixed typo
