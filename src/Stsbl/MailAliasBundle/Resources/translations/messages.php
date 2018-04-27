@@ -42,7 +42,7 @@ _('The uploaded file is undefined.');
 _('The CSV file has an invalid amount of columns near line %s.');
 
 // Privilege
-_('Manage e-mail redirections');
+_('Manage e-mail redirects');
 
 // Constraint
 _('There is already an entry for that address.');

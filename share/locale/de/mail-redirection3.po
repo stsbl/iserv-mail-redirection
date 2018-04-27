@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-07 19:34+0200\n"
+"POT-Creation-Date: 2018-04-27 03:36+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: /tmp/mail-redirection-StsblMailAliasBundle.twig.php:55
 #: /tmp/mail-redirection-StsblMailAliasBundle.twig.php:704
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:234
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:268
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:267
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:301
 msgid "Import"
 msgstr "Importieren"
 
 #: /tmp/mail-redirection-StsblMailAliasBundle.twig.php:59
 #: src/Stsbl/MailAliasBundle/EventListener/MenuListener.php:55
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:233
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:266
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:101
 msgid "Mail aliases"
 msgstr "Mailaliase"
@@ -43,7 +43,7 @@ msgstr "Hinzufügen"
 msgid "Edit %s@%s"
 msgstr "%s@%s bearbeiten"
 
-#: src/Stsbl/MailAliasBundle/Service/Importer.php:191
+#: src/Stsbl/MailAliasBundle/Service/Importer.php:189
 msgid ""
 "A line with an empty original recipient was ignored. The listed users and "
 "groups wasn't assigned to this recipient."
@@ -51,7 +51,7 @@ msgstr ""
 "Eine Zeile mit einem leeren Originalempfänger wurde ignoriert. Die "
 "aufgelisteten Benutzer und Gruppen wurden diesem Empfänger nicht zugewiesen."
 
-#: src/Stsbl/MailAliasBundle/Service/Importer.php:227
+#: src/Stsbl/MailAliasBundle/Service/Importer.php:225
 #, php-format
 msgid ""
 "The alias %s does already exists! A note for it which is may defined in the "
@@ -60,22 +60,22 @@ msgstr ""
 "Der Alias %s exisitiert bereits! Eine Notiz, welche möglicherweise in der "
 "CSV-Datei definiert wurde, ist ignoriert worden."
 
-#: src/Stsbl/MailAliasBundle/Service/Importer.php:240
+#: src/Stsbl/MailAliasBundle/Service/Importer.php:238
 #, php-format
 msgid "A user with the account %s was not found."
 msgstr "Ein Benutzer mit dem Account %s konnte nicht gefunden werden."
 
-#: src/Stsbl/MailAliasBundle/Service/Importer.php:245
+#: src/Stsbl/MailAliasBundle/Service/Importer.php:243
 #, php-format
 msgid "The user %s is already assigned to the original recipient %s."
 msgstr "Der Benutzer %s ist bereits dem Originalempfänger %s zugewiesen."
 
-#: src/Stsbl/MailAliasBundle/Service/Importer.php:261
+#: src/Stsbl/MailAliasBundle/Service/Importer.php:259
 #, php-format
 msgid "A group with the account %s was not found."
 msgstr "Eine Gruppe mir dem Account %s konnte nicht gefunden werden."
 
-#: src/Stsbl/MailAliasBundle/Service/Importer.php:266
+#: src/Stsbl/MailAliasBundle/Service/Importer.php:264
 #, php-format
 msgid "The group %s is already assigned to the original recipient %s."
 msgstr "Die Gruppe %s ist bereits dem Originalempfänger %s zugewiesen."
@@ -102,15 +102,15 @@ msgid "The CSV file has an invalid amount of columns near line %s."
 msgstr "Die CSV-Datei hat eine ungültige Anzahl von Spalten in der Zeile %s."
 
 #: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:45
-msgid "Manage e-mail redirections"
+msgid "Manage e-mail redirects"
 msgstr "E-Mail-Weiterleitungen verwalten"
 
 #: src/Stsbl/MailAliasBundle/Resources/translations/messages.php:48
 msgid "There is already an entry for that address."
 msgstr "Für diese Adresse existiert bereits ein Eintrag."
 
-#: src/Stsbl/MailAliasBundle/Form/Type/GroupRecipientType.php:81
-#: src/Stsbl/MailAliasBundle/Form/Type/UserRecipientType.php:81
+#: src/Stsbl/MailAliasBundle/Form/Type/GroupRecipientType.php:79
+#: src/Stsbl/MailAliasBundle/Form/Type/UserRecipientType.php:79
 msgid "Enter a search term..."
 msgstr "Suchbegriff eingeben..."
 
@@ -118,54 +118,54 @@ msgstr "Suchbegriff eingeben..."
 msgid "deleted"
 msgstr "gelöscht"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:114
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:146
 msgid "Group"
 msgstr "Gruppe"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:125
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:157
 msgid "Administrator"
 msgstr "Administrator"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:128
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:160
 msgid "Teacher"
 msgstr "Lehrer"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:131
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:163
 msgid "Student"
 msgstr "Schüler"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:134
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:166
 msgid "User"
 msgstr "Benutzer"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:193
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:226
 #, php-format
 msgid "Added alias %s@%s."
 msgstr "Alias %s@%s hinzugefügt."
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:197
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:230
 #, php-format
 msgid "Added user %s as recipient for alias %s@%s."
 msgstr "Benutzer %s als Empfänger zu Alias %s@%s hinzugefügt."
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:202
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:235
 #, php-format
 msgid "Added group %s as recipient for alias %s@%s."
 msgstr "Gruppe %s als Empfänger zu Alias %s@%s hinzugefügt."
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:257
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:290
 msgid "Please select a CSV file for import."
 msgstr "Bitte wählen Sie eine CSV-Datei für den Import."
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:262
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:295
 msgid "Enable new aliases"
 msgstr "Neue Aliase aktivieren"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:263
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:296
 msgid "Disable new aliases"
 msgstr "Neue Aliase deaktivieren"
 
-#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:265
+#: src/Stsbl/MailAliasBundle/Controller/MailAliasController.php:298
 msgid "Please select a valid value."
 msgstr "Bitte wählen Sie einen gültigen Wert."
 
@@ -228,9 +228,9 @@ msgstr ""
 "(von links nach rechts):"
 
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:81
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:133
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:197
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:199
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:134
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:201
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:203
 msgid "Original recipient"
 msgstr "Originalempfänger"
 
@@ -239,8 +239,8 @@ msgid "(Only local part, without the @ and the domain)"
 msgstr "(Nur den lokalen Teil, nicht das @ und die Domain)"
 
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:82
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:143
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:205
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:144
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:209
 msgid "Users"
 msgstr "Benutzer"
 
@@ -250,14 +250,14 @@ msgid "(Account names as a comma separated list, can be empty)"
 msgstr "(Accountnamen als kommagetrennte Liste, darf leer sein)"
 
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:83
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:159
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:206
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:160
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:210
 msgid "Groups"
 msgstr "Gruppen"
 
 #: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:84
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:182
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:208
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:184
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:212
 msgid "Note"
 msgstr "Notiz"
 
@@ -269,24 +269,24 @@ msgstr "optional"
 msgid "Mail alias"
 msgstr "Mailalias"
 
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:135
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:136
 msgid "The local part of the e-mail address which you want to redirect."
 msgstr "Der lokale Teil der E-Mail-Adresse, die Sie weiterleiten möchten."
 
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:148
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:149
 msgid "The users who should receive the e-mails to that address."
 msgstr "Die Benutzer, welche die E-Mails an diese Adresse erhalten sollen."
 
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:164
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:165
 msgid "The groups which should receive the e-mails to that address."
 msgstr "Die Gruppen, welche die E-Mails an diese Adresse erhalten sollen."
 
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:175
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:207
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:176
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:211
 msgid "Enabled"
 msgstr "Aktiviert"
 
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:178
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:179
 msgid ""
 "You can enable or disable this redirection. If it is disabled all assigned "
 "users and groups will stop receiving the mails of this address."
@@ -295,21 +295,7 @@ msgstr ""
 "deaktiviert ist, werden zugewiesene Benutzer und Gruppen die Mails an diese "
 "Adresse nicht mehr erhalten."
 
-#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:185
+#: src/Stsbl/MailAliasBundle/Admin/AddressAdmin.php:187
 msgid "Here you can enter further explanation for this redirection."
 msgstr ""
 "Hier können Sie weitere Erläuterungen zu dieser Weiterleitung eingeben."
-
-#~ msgid ""
-#~ "This is a system e-mail address, you are not allowed to create redirects "
-#~ "for it."
-#~ msgstr ""
-#~ "Dies ist eine System-E-Mail-Adresse, Sie dürfen keine Weiterleitungen für "
-#~ "Sie erstellen."
-
-#~ msgid ""
-#~ "This is a system e-mail address, you are not allowed to create "
-#~ "redirections for it."
-#~ msgstr ""
-#~ "Dies ist eine System E-Mail-Adresse, es ist Ihnen nicht erlaubt, "
-#~ "Weiterleitungen dafür zu erstellen."
