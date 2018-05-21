@@ -1,3 +1,10 @@
+stsbl-iserv-mail-redirection (18.05.21-1) experimental; urgency=medium
+
+  * Updated privilege description
+  * General code improvements
+
+ -- Felix Jacobi <felix.jacobi@stsbl.de>  Mon, 21 May 2018 18:52:00 +0200
+
 stsbl-iserv-mail-redirection (18.04.10-1) experimental; urgency=medium
 
   * Refactored bundle for Symfony 4
