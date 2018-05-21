@@ -13,10 +13,6 @@ services:
             tags:
                 - { name: iserv.crud }
 
-        Symfony\Component\Form\FormTypeInterface:
-            tags:
-                - {name: form.type }
-
     Stsbl\MailAliasBundle\:
         resource: '../../'
         exclude: '../../{DependencyInjection,Exception,Form/DataTransformer,Resources}'
@@ -24,7 +20,7 @@ services:
     Stsbl\MailAliasBundle\Admin\AddressAdmin:
         arguments: [Stsbl\MailAliasBundle\Entity\Address]
         calls:
-            - [setLogger] # LoggerTrait has no @required annotation on setter for now
+            - [setLogger, ["@iserv.logger"]] # LoggerTrait has no @required annotation on setter for now
 
     Stsbl\MailAliasBundle\Controller\:
         resource: '../../Controller'

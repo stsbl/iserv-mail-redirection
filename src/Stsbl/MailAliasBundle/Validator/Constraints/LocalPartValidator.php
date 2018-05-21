@@ -4,6 +4,7 @@ namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /*
  * The MIT License
@@ -40,25 +41,23 @@ class LocalPartValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint) {
-        /* @var $constraint LocalPart */
+    public function validate($value, Constraint $constraint)
+    {
+        if (!$constraint instanceof LocalPart) {
+            throw new UnexpectedTypeException($constraint, LocalPart::class);
+        }
+
         // use random domain, it does matter, which one is behind the local part.
-        if (!filter_var($value. '@example.com', \FILTER_VALIDATE_EMAIL)) {
-            $customMsg = false;
+        if (!filter_var($value . '@example.com', \FILTER_VALIDATE_EMAIL)) {
             if (false !== strpos($value, '@')) {
-                $customMsg = true;
                 $this->context->buildViolation($constraint->getMessageForAt())
                     ->addViolation();
-            }
-            
-            if (preg_match('/(.*)[äöüß](.*)/i', $value)) {
-                $customMsg = true;
+            } elseif (preg_match('/(.*)[äöüß](.*)/i', $value)) {
                 $this->context->buildViolation($constraint->getMessageForUmlauts())
                     ->addViolation();                
             } 
-            
             // show generic message if there is no custom message
-            if (!$customMsg) {
+            else {
                 $this->context->buildViolation($constraint->getMessage())
                     ->addViolation();
             }

@@ -2,10 +2,11 @@
 // src/Stsbl/MailAliasBundle/Validator/Constraints/AddressValidiator.php
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
-use Doctrine\ORM\EntityManagerInterface;
 use IServ\CoreBundle\Service\Config;
+use Stsbl\MailAliasBundle\Entity\Address as AddressEntity;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /*
  * The MIT License
@@ -42,45 +43,43 @@ class AddressValidator extends ConstraintValidator
     /**
      * @var Config
      */
-    protected $config;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
+    private $config;
 
     /**
      * Constructor to inject required classes
      *
      * @param Config $config
-     * @param EntityManagerInterface $em
      */
-    public function __construct(Config $config, EntityManagerInterface $em)
+    public function __construct(Config $config)
     {
         $this->config = $config;
-        $this->em = $em;
     }
     
     /**
      * {@inheritdoc}
      */
-    public function validate($address, Constraint $constraint) 
+    public function validate($value, Constraint $constraint)
     {
-        /* @var $address \Stsbl\MailAliasBundle\Entity\Address */
-        /* @var $constraint Address */
+        if (!$constraint instanceof Address) {
+            throw new UnexpectedTypeException($constraint, Address::class);
+        }
+
+        if (!$value instanceof AddressEntity) {
+            throw new UnexpectedTypeException($value, AddressEntity::class);
+        }
         
-        $groupRecipients = $address->getGroups()->toArray();
+        $groupRecipients = $value->getGroups()->toArray();
         $duplicatedGroupRecipients = array_unique(array_diff_assoc($groupRecipients, array_unique($groupRecipients)));
         
         foreach ($duplicatedGroupRecipients as $duplicate) {
-            $this->context->buildViolation(sprintf($constraint->getDuplicateGroupMessage(), $duplicate, $address->getRecipient()))->atPath('recipient')->addViolation();
+            $this->context->buildViolation(sprintf($constraint->getDuplicateGroupMessage(), $duplicate, $value->getRecipient()))->atPath('recipient')->addViolation();
         }
         
-        $userRecipients = $address->getUsers()->toArray();
+        $userRecipients = $value->getUsers()->toArray();
         $duplicatedUserRecipients = array_unique(array_diff_assoc($userRecipients, array_unique($userRecipients)));
         
         foreach ($duplicatedUserRecipients as $duplicate) {
-            $this->context->buildViolation(sprintf($constraint->getDuplicateUserMessage(), $duplicate, $address->getRecipient()))->atPath('recipient')->addViolation();
+            $this->context->buildViolation(sprintf($constraint->getDuplicateUserMessage(), $duplicate, $value->getRecipient()))->atPath('recipient')->addViolation();
         }
     }
 

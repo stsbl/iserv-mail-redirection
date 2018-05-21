@@ -5,6 +5,7 @@ namespace Stsbl\MailAliasBundle\Validator\Constraints;
 use IServ\CoreBundle\Service\Config;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /*
  * The MIT License
@@ -58,9 +59,12 @@ class SystemAddressValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        /* @var $constraint SystemAddress */
+        if (!$constraint instanceof SystemAddress) {
+            throw new UnexpectedTypeException($constraint, SystemAddress::class);
+        }
+
         // disallow redirection of system mails, this must be done via /etc/aliases.
-        if (preg_match('(root|postmaster|mailer-daemon|nobody|hostmaster|usenet|news|webmaster|ftp|abuse|noc|security|monit|clamav|www-data)', $value)) {
+        if (preg_match('/^(root|postmaster|mailer-daemon|nobody|hostmaster|usenet|news|webmaster|ftp|abuse|noc|security|monit|clamav|www-data)$/', $value)) {
             $this->context->buildViolation(sprintf($constraint->getMessage(), $value . '@' . $this->config->get('Domain')))
                 ->addViolation();
         }

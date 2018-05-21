@@ -8,6 +8,7 @@ use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Service\Config;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /*
  * The MIT License
@@ -66,11 +67,14 @@ class NotAccountValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         // ignore null values
-        if ($value === null) {
+        if (null === $value) {
             return;
         }
 
-        /* @var $constraint NotAccount */
+        if (!$constraint instanceof NotAccount) {
+            throw new UnexpectedTypeException($constraint, NotAccount::class);
+        }
+
         if ($this->em->find(User::class, $value) !== null) {
             $this->context->addViolation(sprintf($constraint->getUserMessage(), $value.'@'.$this->config->get('Domain')));
             return;

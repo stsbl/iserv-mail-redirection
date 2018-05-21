@@ -46,20 +46,17 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
 
     function initialize()
     {
-        var groupCollection = $('.mail-aliases-recipient-group-autocomplete');
-        var userCollection = $('.mail-aliases-recipient-user-autocomplete');
+        var $groupCollection = $('.mail-aliases-recipient-group-autocomplete');
+        var $userCollection = $('.mail-aliases-recipient-user-autocomplete');
         
-    	IServ.Autocomplete.make(groupCollection, thSourceGroup, thOptions);
-        IServ.Autocomplete.make(userCollection, thSourceUser, thOptions);
-        consoleLog('IServ.MailAliases.Autocomplete.initalize: Autocompleter registered');
+    	IServ.Autocomplete.make($groupCollection, thSourceGroup, thOptions);
+        IServ.Autocomplete.make($userCollection, thSourceUser, thOptions);
         
-        groupCollection.initialize( function (e) {
+        $groupCollection.initialize( function (e) {
             IServ.Autocomplete.make($('.mail-aliases-recipient-group-autocomplete'), thSourceGroup, thOptions);
-            consoleLog('IServ.MailAliases.Autocomplete.initalize: Autocompleter registered');
         });
-        userCollection.initialize( function (e) {
+        $userCollection.initialize( function (e) {
             IServ.Autocomplete.make($('.mail-aliases-recipient-user-autocomplete'), thSourceUser, thOptions);
-            consoleLog('IServ.MailAliases.Autocomplete.initalize: Autocompleter registered');
         });
     }
     
@@ -67,10 +64,8 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
     function renderSuggestion(data)
     {
         var icon;
-        var label;
-        var extra;
-        
-        consoleLog('IServ.MailAliases.Autocomplete.renderSuggestion: Type is ' + data.type + '.');
+        var $label;
+        var $extra;
         
         switch(data.type) {
             case 'group': 
@@ -95,34 +90,27 @@ IServ.MailAliases.Autocomplete = IServ.register(function(IServ) {
                 icon = 'question-sign';
         }
         
-        label = '<h4 class="media-heading">' + data.label + '</h4>';
+        $label = $('<h4 class="media-heading">').text(data.label);
         
         if (data.extra === null || data.extra === '') {
-            extra = '';
+            $extra = '';
         } else {
-            extra = '<span class="text-muted">' + data.extra + '</span>';
+            $extra = $('<span class="text-muted">').text(data.extra);
         }
         
-        var suggestion = '<div class="media autocomplete-suggestion">';
-        suggestion += '<div class="media-left">';
-        suggestion += '<div class="icon">' + IServ.Icon.get(icon) + '</div>';
-        suggestion += '</div>';
-        suggestion += '<div class="media-body">';
-        suggestion += label;
-        suggestion += extra;
-        suggestion += '</div>';
-        suggestion += '</div>';
-        
-        consoleLog('IServ.MailAliases.Autocomplete.renderSuggestion: Rendered output is ' + suggestion + '.');
-        return suggestion;
-    }
-    
-    // for console logging in debug mode
-    function consoleLog(text)
-    {
-        if (IServ.App.isDebug()) {
-            console.log(text);
-        }
+        var $suggestion = $('<div class="media autocomplete-suggestion">');
+
+        var $mediaLeft = $('<div class="media-left">');
+        var $icon = $('<div class="icon">' + IServ.Icon.get(icon) + '</div>');
+        $mediaLeft.append($icon);
+        $suggestion.append($mediaLeft);
+
+        var $mediaBody = $('<div class="media-body">');
+        $mediaBody.append($label);
+        $mediaBody.append($extra);
+        $suggestion.append($mediaBody);
+
+        return $suggestion;
     }
 
     // Public API

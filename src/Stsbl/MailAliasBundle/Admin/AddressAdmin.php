@@ -251,13 +251,11 @@ class AddressAdmin extends AbstractAdmin
         if (null === $previousData) {
             // if there is no previous data, assume that we are called from post persist
             foreach ($userRecipients as $recipient) {
-                /* @var $recipient \Stsbl\MailAliasBundle\Entity\UserRecipient */
-                $this->log(sprintf(self::LOG_USER_RECIPIENT_ADDED, (string)$recipient, (string)$object, $servername));
+                $this->log(sprintf(self::LOG_USER_RECIPIENT_ADDED, $recipient, $object, $servername));
             }
             
             foreach ($groupRecipients as $recipient) {
-                /* @var $recipient \Stsbl\MailAliasBundle\Entity\GroupRecipient */
-                $this->log(sprintf(self::LOG_GROUP_RECIPIENT_ADDED, (string)$recipient, (string)$object, $servername));
+                $this->log(sprintf(self::LOG_GROUP_RECIPIENT_ADDED, $recipient, $object, $servername));
             }
             
             // stop here

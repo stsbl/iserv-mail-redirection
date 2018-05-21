@@ -87,7 +87,7 @@ class Address implements CrudInterface
      *      inverseJoinColumns={@ORM\JoinColumn(name="recipient", referencedColumnName="act", unique=true)}
      * )
      *
-     * @var User[]
+     * @var User[]|ArrayCollection
      */
     private $users;
 
@@ -98,7 +98,7 @@ class Address implements CrudInterface
      *      inverseJoinColumns={@ORM\JoinColumn(name="recipient", referencedColumnName="act", unique=true)}
      * )
      *
-     * @var Group[]
+     * @var Group[]|ArrayCollection
      */
     private $groups;
     
@@ -160,7 +160,7 @@ class Address implements CrudInterface
     /**
      * Get userRecipients
      * 
-     * @return User[]
+     * @return User[]|ArrayCollection
      */
     public function getUsers()
     {
@@ -170,7 +170,7 @@ class Address implements CrudInterface
     /**
      * Get groupRecipients
      * 
-     * @return Group[]
+     * @return Group[]|ArrayCollection
      */
     public function getGroups()
     {

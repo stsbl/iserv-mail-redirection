@@ -66,7 +66,7 @@ class Address extends Constraint
     /**
      * @return string
      */
-        public function getDuplicateUserMessage()
+    public function getDuplicateUserMessage()
     {
         return _('User "%s" can not added multiple times to the original recipient %s.');
     }
