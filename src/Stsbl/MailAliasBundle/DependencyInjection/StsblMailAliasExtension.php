@@ -2,10 +2,7 @@
 // src/Stsbl/MailAliasBundle/DependencyInjection/StsblMailAliasExtension.php
 namespace Stsbl\MailAliasBundle\DependencyInjection;
 
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use IServ\CoreBundle\DependencyInjection\IServBaseExtension;
 
 /*
  * The MIT License
@@ -39,25 +36,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class StsblMailAliasExtension extends Extension
+class StsblMailAliasExtension extends IServBaseExtension
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function load(array $configs, ContainerBuilder $container)
-    {
-        $configuration = new Configuration($this->getAlias());
-        $config = $this->processConfiguration($configuration, $configs);
-        
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAlias()
-    {
-        return 'stsbl_mail_aliases';
-    }
 }

@@ -8,9 +8,7 @@
     {{ jqi.integrate() }}
     
     {% if app.environment != 'prod' %}
-	<!-- {{ _self }} => mailaliases.js -->
+	<!-- {{ _self }} => mailaliases_autocomplete.js -->
     {% endif %}
-    {% javascripts output='js/compiled/mailaliases.js' filter='?uglifyjs2' '@StsblMailAliasBundle/Resources/public/js/mailaliases_autocomplete.js' %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    <script type="text/javascript" src="{{ asset('js/mailaliases_autocomplete.js', 'stsbl-mail-alias') }}"></script>
 {% endblock %}
