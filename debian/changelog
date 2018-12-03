@@ -1,3 +1,11 @@
+stsbl-iserv-mail-redirection (18.12.03-1) experimental; urgency=medium
+
+  * Overhauled code
+  * Removed choice constraint deprecation
+  * Moved import form to custom form type and use model class for data
+
+ -- Felix Jacobi <felix.jacobi@stsbl.de>  Mon, 03 Dec 2018 05:48:49 +0100
+
 stsbl-iserv-mail-redirection (18.11.25-1) experimental; urgency=medium
 
   * Adapted module structure to web application move
