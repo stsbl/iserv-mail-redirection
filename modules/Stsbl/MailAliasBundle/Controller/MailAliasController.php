@@ -275,7 +275,11 @@ class MailAliasController extends StrictCrudController
                 ],
                 'constraints' => [
                     new NotBlank(),
-                    new Choice(['message' => _('Please select a valid value.'), 'choices' => [1, 0]]),
+                    new Choice([
+                        'message' => _('Please select a valid value.'),
+                        'choices' => [1, 0],
+                        'strict' => true,
+                    ]),
                 ],
             ])
             ->add('submit', SubmitType::class, [
