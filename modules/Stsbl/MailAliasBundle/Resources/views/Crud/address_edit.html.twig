@@ -1,9 +1,8 @@
-{# src/Stsbl/MailAliasBundle/Resources/views/Crud/address_edit.html.twig #}
-{% extends 'IServCrudBundle:Crud:edit.html.twig' %}
-{% import 'StsblJavaScriptLibraryBundle::jquery.initialize.html.twig' as jqi %}
+{% extends '@IServCrud/Crud/edit.html.twig' %}
+{% import '@StsblJavaScriptLibrary/jquery.initialize.html.twig' as jqi %}
 
 {% block crud_title %}
-    <h1>{{ __('Edit %s@%s', item, admin.config.get('Domain0')) }}</h1>
+    <h1>{{ __('Edit %s@%s', item, cfg.get('Domain')) }}</h1>
 {% endblock crud_title %}
 
 {% block javascripts %}

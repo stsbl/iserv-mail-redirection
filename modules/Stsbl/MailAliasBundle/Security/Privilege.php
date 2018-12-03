@@ -1,5 +1,5 @@
-<?php
-// src/Stsbl/MailAliasBundle/Security/Privilege.php
+<?php declare(strict_types = 1);
+
 namespace Stsbl\MailAliasBundle\Security;
 
 /*
@@ -32,7 +32,7 @@ namespace Stsbl\MailAliasBundle\Security;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-final class Privilege 
+final class Privilege
 {
     /**
      * Privilege that allows users to edit the mail aliases (admin password required)

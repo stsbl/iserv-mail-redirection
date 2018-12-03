@@ -29,8 +29,8 @@ use Symfony\Component\Validator\Constraint;
  */
 
 /**
- * Validates the user recipients and group recipients 
- * 
+ * Validates the user recipients and group recipients.
+ *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  * @Annotation
@@ -40,33 +40,27 @@ class Address extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function validatedBy() 
+    public function validatedBy(): string
     {
-        return 'stsbl_mailalias_address_validator';
+        return AddressValidator::class;
     }
     
     /**
      * {@inheritdoc]
      */
-    public function getTargets()
+    public function getTargets(): string
     {
         return self::CLASS_CONSTRAINT;
     }
     
     /* Message functions */
-    
-    /**
-     * @return string
-     */
-    public function getDuplicateGroupMessage()
+
+    public function getDuplicateGroupMessage(): string
     {
         return _('Group "%s" can not added multiple times to the original recipient %s.');
     }
-    
-    /**
-     * @return string
-     */
-    public function getDuplicateUserMessage()
+
+    public function getDuplicateUserMessage(): string
     {
         return _('User "%s" can not added multiple times to the original recipient %s.');
     }

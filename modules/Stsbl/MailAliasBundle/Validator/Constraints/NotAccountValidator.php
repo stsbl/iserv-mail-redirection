@@ -50,11 +50,6 @@ class NotAccountValidator extends ConstraintValidator
      */
     private $em;
 
-    /**
-     * The constructor
-     * @param Config $config
-     * @param EntityManagerInterface $em
-     */
     public function __construct(Config $config, EntityManagerInterface $em)
     {
         $this->config = $config;
@@ -64,7 +59,7 @@ class NotAccountValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         // ignore null values
         if (null === $value) {
@@ -76,12 +71,19 @@ class NotAccountValidator extends ConstraintValidator
         }
 
         if ($this->em->find(User::class, $value) !== null) {
-            $this->context->addViolation(sprintf($constraint->getUserMessage(), $value.'@'.$this->config->get('Domain')));
+            $this->context->addViolation(sprintf(
+                $constraint->getUserMessage(),
+                $value . '@' . $this->config->get('Domain')
+            ));
             return;
         }
 
         if ($this->em->find(Group::class, $value) !== null) {
-            $this->context->addViolation(sprintf($constraint->getGroupMessage(), $value.'@'.$this->config->get('Domain')));
+            $this->context->addViolation(sprintf(
+                $constraint->getGroupMessage(),
+                $value . '@' . $this->config->get('Domain')
+            ));
+
             return;
         }
 

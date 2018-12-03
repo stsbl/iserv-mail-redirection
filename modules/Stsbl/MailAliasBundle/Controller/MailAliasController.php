@@ -1,16 +1,13 @@
-<?php
-// src/Stsbl/MailAliasBundle/Controler/MailAliasController.php
+<?php declare(strict_types = 1);
+
 namespace Stsbl\MailAliasBundle\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use IServ\CoreBundle\Entity\User;
 use IServ\CoreBundle\Form\Type\BooleanType;
-use IServ\CoreBundle\Service\Config;
 use IServ\CoreBundle\Service\Logger;
-use IServ\CrudBundle\Controller\CrudController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use IServ\CrudBundle\Controller\StrictCrudController;
+use IServ\CrudBundle\Entity\FlashMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Stsbl\MailAliasBundle\Admin\AddressAdmin;
@@ -18,11 +15,11 @@ use Stsbl\MailAliasBundle\Exception\ImportException;
 use Stsbl\MailAliasBundle\Service\Importer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -56,33 +53,12 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class MailAliasController extends CrudController 
+class MailAliasController extends StrictCrudController
 {
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
     /**
      * {@inheritdoc}
      */
-    public function indexAction(Request $request) 
+    public function indexAction(Request $request)
     {
         $session = $this->getSession();
 
@@ -113,16 +89,13 @@ class MailAliasController extends CrudController
 
     /**
      * Get auto-completion suggestions for users and groups
-     * 
-     * @Method("GET")
-     * @Route("admin/mailaliases/recipients", name="admin_mailalias_recipients", options={"expose"=true})
+     *
+     * @Route("admin/mailaliases/recipients", name="admin_mailalias_recipients", options={"expose"=true}, methods={"GET"})
      * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
-     * @param Request $request
-     * @return JsonResponse
      */
-    public function getRecipientsAutocompleteAction(Request $request)
+    public function getRecipientsAutocompleteAction(Request $request): JsonResponse
     {
-        $config = $this->getConfig();
+        $config = $this->get('iserv.config');
 
         $type = $request->query->get('type');
         $query = $request->query->get('query');
@@ -138,28 +111,28 @@ class MailAliasController extends CrudController
         $host = $config->get('Domain');
         if ($type === 'group') {
             /* @var $groupRepo \IServ\CoreBundle\Entity\GroupRepository */
-            $groupRepo = $this->getEntityManager()->getRepository('IServCoreBundle:Group');
+            $groupRepo = $this->getDoctrine()->getRepository('IServCoreBundle:Group');
             
             foreach ($groupRepo->addressLookup($query) as $group) {
-                /* @var $group \IServ\CoreBundle\Entity\Group */ 
+                /* @var $group \IServ\CoreBundle\Entity\Group */
                 $rfc822string = imap_rfc822_write_address($group->getAccount(), $host, $group->getName());
                 $suggestions[] = ['label' => $group->getName(), 'value' => $rfc822string, 'type' => $type, 'extra' => _('Group')];
             }
-        } else if ($type === 'user') {
+        } elseif ($type === 'user') {
             $users = $this->userAddressLookup($query);
             
             foreach ($users as $user) {
-                /* @var $user \IServ\CoreBundle\Entity\User */ 
+                /* @var $user \IServ\CoreBundle\Entity\User */
                 $rfc822string = imap_rfc822_write_address($user->getUsername(), $host, $user->getName());
                 
                 // determine extra + type
                 if ($user->isAdmin()) {
                     $extra = _('Administrator');
                     $type = 'admin';
-                } else if ($user->hasRole('ROLE_TEACHER')) {
+                } elseif ($user->hasRole('ROLE_TEACHER')) {
                     $extra = _('Teacher');
                     $type = 'teacher';
-                } else if ($user->hasRole ('ROLE_STUDENT')) {
+                } elseif ($user->hasRole('ROLE_STUDENT')) {
                     $extra = _('Student');
                     $type = 'student';
                 } else {
@@ -185,14 +158,11 @@ class MailAliasController extends CrudController
      * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
      * @Template()
      *
-     * @param Importer $importer
-     * @param Logger $logger
-     * @param Request $request
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function importAction(Importer $importer, Logger $logger, Request $request)
     {
-        $config = $this->getConfig();
+        $config = $this->get('iserv.config');
         $session = $this->getSession();
 
         $form = $this->getImportForm();
@@ -222,17 +192,27 @@ class MailAliasController extends CrudController
                 /* @var $newAddresses \Stsbl\MailAliasBundle\Entity\Address[] */
                 $newAddresses = $importer->getNewAddresses();
                 foreach ($newAddresses as $address) {
-                    $logger->writeForModule(sprintf(AddressAdmin::LOG_ALIAS_ADDED, (string)$address, $servername), $module);
+                    $logger->writeForModule(sprintf(AddressAdmin::LOG_ALIAS_ADDED, $address, $servername), $module);
                     $messages[] = __('Added alias %s@%s.', (string)$address, $servername);
 
                     foreach ($address->getUsers() as $user) {
-                        $logger->writeForModule(sprintf(AddressAdmin::LOG_USER_RECIPIENT_ADDED, (string)$user, (string)$address, $servername), $module);
-                        $messages[] = __('Added user %s as recipient for alias %s@%s.', (string)$user, (string)$address, $servername);
+                        $logger->writeForModule(sprintf(
+                            AddressAdmin::LOG_USER_RECIPIENT_ADDED,
+                            $user,
+                            $address,
+                            $servername
+                        ), $module);
+                        $messages[] = __('Added user %s as recipient for alias %s@%s.', $user, $address, $servername);
                     }
 
                     foreach ($address->getGroups() as $group) {
-                        $logger->writeForModule(sprintf(AddressAdmin::LOG_GROUP_RECIPIENT_ADDED, (string)$group, (string)$address, $servername), $module);
-                        $messages[] = __('Added group %s as recipient for alias %s@%s.', (string)$group, (string)$address, $servername);
+                        $logger->writeForModule(sprintf(
+                            AddressAdmin::LOG_GROUP_RECIPIENT_ADDED,
+                            $group,
+                            $address,
+                            $servername
+                        ), $module);
+                        $messages[] = __('Added group %s as recipient for alias %s@%s.', $group, $address, $servername);
                     }
                 }
                 
@@ -258,7 +238,7 @@ class MailAliasController extends CrudController
                     $message = _($message);
                 }
                 
-                $this->get('iserv.flash')->error($message);
+                $this->addFlash(new FlashMessage('error', $message));
             }
         }
         
@@ -275,13 +255,11 @@ class MailAliasController extends CrudController
     
     /**
      * Gets an form for csv import
-     * 
-     * @return \Symfony\Component\Form\Form
      */
-    private function getImportForm()
+    private function getImportForm(): FormInterface
     {
         /* @var $builder \Symfony\Component\Form\FormBuilder */
-        $builder = $this->getFormFactory()->createNamedBuilder('mailalias_import');
+        $builder = $this->get('form.factory')->createNamedBuilder('mailalias_import');
         
         $builder
             ->setAction($this->generateUrl('admin_mailalias_import'))
@@ -295,7 +273,10 @@ class MailAliasController extends CrudController
                     _('Enable new aliases') => 1,
                     _('Disable new aliases') => 0,
                 ],
-                'constraints' => [new NotBlank(), new Choice(['message' => _('Please select a valid value.'), 'choices' => [1, 0]])]
+                'constraints' => [
+                    new NotBlank(),
+                    new Choice(['message' => _('Please select a valid value.'), 'choices' => [1, 0]]),
+                ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => _('Import'),
@@ -312,100 +293,33 @@ class MailAliasController extends CrudController
      * Inspired by the function in GroupRepository,
      * but User has no similar function and also
      * seems to does not have even a repository.
-     * 
+     *
      * So, we have to implement the functions here.
-     * 
+     *
      * @param string $query
      * @return User[]
      */
-    protected function userAddressLookup($query)
+    private function userAddressLookup(string $query): array
     {
         /** @var QueryBuilder $qb */
-        $qb = $this->getEntityManager()->getRepository(User::class)->createQueryBuilder('u');
+        $qb = $this->getDoctrine()->getRepository(User::class)->createQueryBuilder('u');
+
+        $qb->select('u');
 
         $terms = preg_split("/\s+/", trim($query));
-        foreach($terms as $i => $term) {
+        foreach ($terms as $index => $term) {
             $qb
-                ->select('u')
-                ->where(
-                    'LOWER(u.username) LIKE :adra'.$i.' OR LOWER(u.username) LIKE :adr_mail'.$i.' OR ' .
-                    'LOWER(u.firstname) LIKE :adra'.$i.' OR LOWER(u.firstname) LIKE :adrb'.$i.' OR ' .
-                    'LOWER(u.lastname) LIKE :adra'.$i.' OR LOWER(u.lastname) LIKE :adrb'.$i
+                ->andWhere(
+                    'LOWER(u.username) LIKE :adra'.$index.' OR LOWER(u.username) LIKE :adr_mail'.$index.' OR ' .
+                    'LOWER(u.firstname) LIKE :adra'.$index.' OR LOWER(u.firstname) LIKE :adrb'.$index.' OR ' .
+                    'LOWER(u.lastname) LIKE :adra'.$index.' OR LOWER(u.lastname) LIKE :adrb'.$index
                 )
-                ->setParameter('adra'.$i, strtolower($term).'%')
-                ->setParameter('adrb'.$i, '% '.strtolower($term).'%')
-                ->setParameter('adr_mail'.$i, '%.'.strtolower($term).'%')
+                ->setParameter('adra'.$index, strtolower($term).'%')
+                ->setParameter('adrb'.$index, '% '.strtolower($term).'%')
+                ->setParameter('adr_mail'.$index, '%.'.strtolower($term).'%')
             ;
         }
 
         return $qb->getQuery()->setMaxResults(10)->getResult();
-    }
-
-    /**
-     * @return FormFactoryInterface
-     */
-    public function getFormFactory()
-    {
-        return $this->formFactory;
-    }
-
-    /**
-     * @param FormFactoryInterface $formFactory
-     * @required
-     */
-    public function setFormFactory(FormFactoryInterface $formFactory)
-    {
-        $this->formFactory = $formFactory;
-    }
-
-    /**
-     * @return EntityManagerInterface
-     */
-    public function getEntityManager()
-    {
-        return $this->em;
-    }
-
-    /**
-     * @param EntityManagerInterface $em
-     * @required
-     */
-    public function setEntityManager(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
-    /**
-     * @return SessionInterface
-     */
-    public function getSession()
-    {
-        return $this->session;
-    }
-
-    /**
-     * @param SessionInterface $session
-     * @required
-     */
-    public function setSession(SessionInterface $session)
-    {
-        $this->session = $session;
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param Config $config
-     * @required
-     */
-    public function setConfig(Config $config)
-    {
-        $this->config = $config;
     }
 }

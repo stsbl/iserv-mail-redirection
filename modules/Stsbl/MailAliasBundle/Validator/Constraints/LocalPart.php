@@ -38,48 +38,44 @@ use Symfony\Component\Validator\Constraint;
 class LocalPart extends Constraint
 {
     /**
-     * Get message for invalid address.
-     * 
-     * @return string
+     * {@inheritdoc}
      */
-    public function getMessage()
+    public function validatedBy(): string
     {
-        return _('This is not a valid local part of an e-mail address.');
+        return LocalPartValidator::class;
     }
     
     /**
-     * Get message for invalid address if an @ is contained in it.
-     * 
-     * @return string
+     * {@inheritdoc]
      */
-    public function getMessageForAt()
+    public function getTargets(): string
+    {
+        return self::PROPERTY_CONSTRAINT;
+    }
+
+    /* Message functions */
+
+    /**
+     * Get message for invalid address.
+     */
+    public function getMessage(): string
+    {
+        return _('This is not a valid local part of an e-mail address.');
+    }
+
+    /**
+     * Get message for invalid address if an @ is contained in it.
+     */
+    public function getMessageForAt(): string
     {
         return _('Enter only the address part before the @.');
     }
 
     /**
      * Get message for invalid address if an ä,ö,ü,ß is contained in it.
-     * 
-     * @return string
      */
-    public function getMessageForUmlauts()
+    public function getMessageForUmlauts(): string
     {
         return _('Umlauts are not allowed as part of it.');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validatedBy()
-    {
-        return get_class($this).'Validator';
-    }
-    
-    /**
-     * {@inheritdoc]
-     */
-    public function getTargets()
-    {
-        return self::PROPERTY_CONSTRAINT;
     }
 }

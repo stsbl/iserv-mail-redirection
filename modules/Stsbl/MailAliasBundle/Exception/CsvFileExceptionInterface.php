@@ -1,5 +1,4 @@
-<?php
-// src/Stsbl/MailAliasBundle/Execption/CsvFileExceptionInterface.php
+<?php declare(strict_types = 1);
 namespace Stsbl\MailAliasBundle\Exception;
 
 /*
@@ -30,11 +29,11 @@ namespace Stsbl\MailAliasBundle\Exception;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-interface CsvFileExceptionInterface 
+interface CsvFileExceptionInterface
 {
-    public function getFileLine();
+    public function getFileLine(): ?int;
     
-    public function getColumnAmount();
+    public function getColumnAmount(): ?int;
     
-    public function getExpected();
+    public function getExpected(): ?int;
 }

@@ -1,0 +1,26 @@
+{% extends '@IServAdmin/page.html.twig' %}
+
+{% block page_title %}
+    {{ _('Import') }} -
+    {{ _('Mail aliases') }} -
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <div class="alert alert-info">
+        {{ importExplanation }}
+        {% for text in importExplanationFieldList %}
+            <ul>
+                <li>{{ text }}</li>
+            </ul>
+        {% endfor %}
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">{{ _('Import') }}</h4>
+        </div>
+        <div class="panel-body">
+            {{ form(importForm, {'style': 'inline'}) }}
+        </div>
+    </div>
+{% endblock %}

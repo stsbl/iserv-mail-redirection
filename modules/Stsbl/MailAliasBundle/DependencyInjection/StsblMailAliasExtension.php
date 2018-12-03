@@ -1,5 +1,5 @@
-<?php
-// src/Stsbl/MailAliasBundle/DependencyInjection/StsblMailAliasExtension.php
+<?php declare(strict_types = 1);
+
 namespace Stsbl\MailAliasBundle\DependencyInjection;
 
 use IServ\CoreBundle\DependencyInjection\IServBaseExtension;

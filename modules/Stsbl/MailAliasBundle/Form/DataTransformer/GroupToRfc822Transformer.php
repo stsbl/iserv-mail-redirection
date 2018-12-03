@@ -1,10 +1,11 @@
-<?php
-// src/Stsbl/MailAliasBundle/Form/DataTransformer/GroupToRfc822Transformer.php
+<?php declare(strict_types = 1);
+
 namespace Stsbl\MailAliasBundle\Form\DataTransformer;
 
 use IServ\CoreBundle\Entity\Group;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
+use Symfony\Component\Form\Exception\UnexpectedTypeException;
 
 /*
  * The MIT License
@@ -41,13 +42,13 @@ class GroupToRfc822Transformer implements DataTransformerInterface
     use ConstructorTrait;
     
     /**
+     * {@inheritdoc}
+     *
      * Transforms the rfc822 string back to an object
-     * 
+     *
      * @param array $value
-     * 
-     * @return Group|null
      */
-    public function reverseTransform($value)
+    public function reverseTransform($value): ?Group
     {
         $domain = $this->config->get('Domain');
         $value = imap_rfc822_parse_adrlist($value['groupRecipient'], $domain);
@@ -66,18 +67,24 @@ class GroupToRfc822Transformer implements DataTransformerInterface
 
             return $group;
         }
+
+        return null;
     }
     
     /**
+     * {@inheritdoc}
+     *
      * Transforms the object to an rfc822 string
-     * 
+     *
      * @param Group|null $object
-     * 
-     * @return array|null
      */
-    public function transform($object)
+    public function transform($object): ?array
     {
         if (null !== $object) {
+            if (!$object instanceof Group) {
+                throw new UnexpectedTypeException($object, Group::class);
+            }
+
             $fullName = $object->getName();
 
             if ($object->getDeleted() !== null) {
@@ -89,6 +96,8 @@ class GroupToRfc822Transformer implements DataTransformerInterface
 
             return ['groupRecipient' => imap_rfc822_write_address($localPart, $host, $fullName)];
         }
+
+        return null;
     }
 
 }

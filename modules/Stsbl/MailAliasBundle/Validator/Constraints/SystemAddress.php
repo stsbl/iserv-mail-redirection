@@ -35,31 +35,28 @@ use Symfony\Component\Validator\Constraint;
  * @license MIT license <https://opensource.org/licenses/MIT>
  * @Annotation
  */
-class SystemAddress extends Constraint 
+class SystemAddress extends Constraint
 {
-    /**
-     * get message
-     * 
-     * @return string
-     */
-    public function getMessage()
-    {
-        return _('%s is a system e-mail address, you are not allowed to create aliases for it.');
-    }
-    
     /**
      * {@inheritdoc}
      */
-    public function validatedBy()
+    public function validatedBy(): string
     {
-        return 'stsbl_mailalias_system_address_validator';
+        return SystemAddressValidator::class;
     }
     
     /**
      * {@inheritdoc]
      */
-    public function getTargets()
+    public function getTargets(): string
     {
         return self::PROPERTY_CONSTRAINT;
+    }
+
+    /* Message functions */
+
+    public function getMessage(): string
+    {
+        return _('%s is a system e-mail address, you are not allowed to create aliases for it.');
     }
 }

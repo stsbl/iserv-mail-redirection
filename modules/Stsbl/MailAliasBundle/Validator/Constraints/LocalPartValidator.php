@@ -41,7 +41,7 @@ class LocalPartValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof LocalPart) {
             throw new UnexpectedTypeException($constraint, LocalPart::class);
@@ -50,18 +50,13 @@ class LocalPartValidator extends ConstraintValidator
         // use random domain, it does matter, which one is behind the local part.
         if (!filter_var($value . '@example.com', \FILTER_VALIDATE_EMAIL)) {
             if (false !== strpos($value, '@')) {
-                $this->context->buildViolation($constraint->getMessageForAt())
-                    ->addViolation();
+                $this->context->buildViolation($constraint->getMessageForAt())->addViolation();
             } elseif (preg_match('/(.*)[äöüß](.*)/i', $value)) {
-                $this->context->buildViolation($constraint->getMessageForUmlauts())
-                    ->addViolation();                
-            } 
-            // show generic message if there is no custom message
-            else {
-                $this->context->buildViolation($constraint->getMessage())
-                    ->addViolation();
+                $this->context->buildViolation($constraint->getMessageForUmlauts())->addViolation();
+            } else {
+                // show generic message if there is no custom message
+                $this->context->buildViolation($constraint->getMessage())->addViolation();
             }
         }
     }
-
 }

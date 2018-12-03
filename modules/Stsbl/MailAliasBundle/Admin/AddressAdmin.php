@@ -1,5 +1,5 @@
-<?php
-// src/Stsbl/MailAliasBundle/Profile/MailAliasAdmin.php
+<?php declare(strict_types = 1);
+
 namespace Stsbl\MailAliasBundle\Admin;
 
 use Braincrafted\Bundle\BootstrapBundle\Form\Type\BootstrapCollectionType;
@@ -8,12 +8,14 @@ use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
 use IServ\CoreBundle\Form\Type\BooleanType;
 use IServ\CoreBundle\Service\Config;
+use IServ\CoreBundle\Service\Logger;
 use IServ\CoreBundle\Traits\LoggerTrait;
 use IServ\CrudBundle\Entity\CrudInterface;
 use IServ\CrudBundle\Mapper\AbstractBaseMapper;
 use IServ\CrudBundle\Mapper\FormMapper;
 use IServ\CrudBundle\Mapper\ListMapper;
 use IServ\CrudBundle\Mapper\ShowMapper;
+use Stsbl\MailAliasBundle\Entity\Address;
 use Stsbl\MailAliasBundle\Form\Type\GroupRecipientType;
 use Stsbl\MailAliasBundle\Form\Type\UserRecipientType;
 use Stsbl\MailAliasBundle\Security\Privilege;
@@ -62,20 +64,19 @@ class AddressAdmin extends AbstractAdmin
     
     /**
      * Gets explanation for import
-     * 
-     * @return string
      */
-    public static function getImportExplanation()
+    public static function getImportExplanation(): string
     {
-        return _('You can import mail aliases from a CSV file. The CSV file should have no column titles and the following columns (from left to right):');
+        return _('You can import mail aliases from a CSV file. The CSV file should have no column titles and the '.
+            'following columns (from left to right):');
     }
     
     /**
      * Gets fields for explanation for import
-     * 
-     * @return array<string>
+     *
+     * @return string[]
      */
-    public static function getImportExplanationFieldList()
+    public static function getImportExplanationFieldList(): array
     {
         return [
             _('Original recipient').' '._('(Only local part, without the @ and the domain)'),
@@ -89,11 +90,16 @@ class AddressAdmin extends AbstractAdmin
      * @var Config
      */
     private $config;
-    
+
+    public function __construct()
+    {
+        parent::__construct(Address::class);
+    }
+
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         // set module context for logging
         $this->logModule = 'Mail aliases';
@@ -114,7 +120,7 @@ class AddressAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    protected function buildRoutes() 
+    protected function buildRoutes(): void
     {
         parent::buildRoutes();
         
@@ -127,7 +133,7 @@ class AddressAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    public function configureFormFields(FormMapper $formMapper)
+    public function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
             ->add('recipient', null, [
@@ -146,7 +152,7 @@ class AddressAdmin extends AbstractAdmin
                 'entry_type' => UserRecipientType::class,
                 'prototype_name' => 'proto-entry',
                 'attr' => [
-                    'help_text' => _('The users who should receive the e-mails to that address.')
+                    'help_text' => _('The users who should receive the e-mails to that address.'),
                 ],
                 // Child options
                 'entry_options' => [
@@ -162,7 +168,7 @@ class AddressAdmin extends AbstractAdmin
                 'entry_type' => GroupRecipientType::class,
                 'prototype_name' => 'proto-entry',
                 'attr' => [
-                    'help_text' => _('The groups which should receive the e-mails to that address.')
+                    'help_text' => _('The groups which should receive the e-mails to that address.'),
                 ],
                 // Child options
                 'entry_options' => [
@@ -176,7 +182,8 @@ class AddressAdmin extends AbstractAdmin
                 'label' => _('Enabled'),
                 'multi_edit' => true,
                 'attr' => [
-                    'help_text' => _('You can enable or disable this redirection. If it is disabled all assigned users and groups will stop receiving the mails of this address.')
+                    'help_text' => _('You can enable or disable this redirection. If it is disabled all assigned '.
+                        'users and groups will stop receiving the mails of this address.'),
                 ]
             ])
             ->add('comment', TextareaType::class, [
@@ -184,23 +191,27 @@ class AddressAdmin extends AbstractAdmin
                 'label' => _('Note'),
                 'multi_edit' => true,
                 'attr' => [
-                    'help_text' => _('Here you can enter further explanation for this redirection.')
+                    'help_text' => _('Here you can enter further explanation for this redirection.'),
                 ]
             ])
         ;
     }
     
     /**
-     * Mapper for show fields and form fields
-     * 
-     * @param AbstractBaseMapper $mapper
+     * {@inheritdoc}
      */
     public function configureFields(AbstractBaseMapper $mapper)
     {
         if ($mapper instanceof ListMapper) {
-            $mapper->addIdentifier('recipient', null, ['label' => _('Original recipient'), 'template' => 'StsblMailAliasBundle:List:field_recipient.html.twig']);
-        } else if ($mapper instanceof ShowMapper) {
-            $mapper->add('recipient', null, ['label' => _('Original recipient'), 'template' => 'StsblMailAliasBundle:Show:field_recipient.html.twig']);
+            $mapper->addIdentifier('recipient', null, [
+                'label' => _('Original recipient'),
+                'template' => '@StsblMailAlias/List/field_recipient.html.twig',
+            ]);
+        } elseif ($mapper instanceof ShowMapper) {
+            $mapper->add('recipient', null, [
+                'label' => _('Original recipient'),
+                'template' => '@StsblMailAlias/Show/field_recipient.html.twig',
+            ]);
         }
         
         // explicitly block FormMapper
@@ -211,13 +222,12 @@ class AddressAdmin extends AbstractAdmin
             $mapper->add('enabled', 'boolean', ['label' => _('Enabled')]);
             $mapper->add('comment', null, ['label' => _('Note'), 'responsive' => 'desktop']);
         }
-        
     }
     
     /**
      * {@inheritdoc}
      */
-    public function getRoutePattern($action, $id, $entityBased = true)
+    public function getRoutePattern($action, $id, $entityBased = true): string
     {
         // Overwrite route generation of Crud which struggles with id
         if ('index' === $action) {
@@ -230,18 +240,17 @@ class AddressAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    public function isAuthorized() 
+    public function isAuthorized(): bool
     {
         return $this->isGranted(Privilege::ADMIN);
     }
     
     /**
      * Logs the adding and removing of user recipients.
-     * 
-     * @param CrudInterface $object
-     * @param array $previousData
+     *
+     * @param mixed[] $previousData
      */
-    private function logRecipients(CrudInterface $object, array $previousData = null)
+    private function logRecipients(CrudInterface $object, array $previousData = null): void
     {
         /* @var $object \Stsbl\MailAliasBundle\Entity\Address */
         $userRecipients = $object->getUsers()->toArray();
@@ -301,7 +310,7 @@ class AddressAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    public function postPersist(CrudInterface $object) 
+    public function postPersist(CrudInterface $object): void
     {
         /* @var $object \Stsbl\MailAliasBundle\Entity\Address */
         // write log
@@ -313,25 +322,31 @@ class AddressAdmin extends AbstractAdmin
     
     /**
      * Logging should not run as postUpdate, because then we are not able to find previous user recipients!
-     * 
+     *
      * {@inheritdoc}
      */
-    public function preUpdate(CrudInterface $object, array $previousData = null) 
+    public function preUpdate(CrudInterface $object, array $previousData = null): void
     {
         /* @var $object \Stsbl\MailAliasBundle\Entity\Address */
-        if ((string)$object->getRecipient() == (string)$previousData['recipient']
-            && (string)$object->getComment() == (string)$previousData['comment'] 
-            && (bool)$object->getEnabled() == (bool)$previousData['enabled']) {
+        if ($object->getRecipient() === $previousData['recipient'] &&
+            $object->getComment() === $previousData['comment'] &&
+            $object->getEnabled() === $previousData['enabled']) {
             // if nothing is changed, skip next sections and go directly to recipient log
         } else {
             $servername = $this->config->get('Domain');
 
-            if ((string)$object->getRecipient() !== (string)$previousData['recipient']) {
+            if ($object->getRecipient() !== $previousData['recipient']) {
                 // write log
-                $this->log(sprintf('Alias %s@%s geändert nach %s@%s', $previousData['recipient'], $servername, (string)$object, $servername));
+                $this->log(sprintf(
+                    'Alias %s@%s geändert nach %s@%s',
+                    $previousData['recipient'],
+                    $servername,
+                    $object,
+                    $servername
+                ));
             }
 
-            if ((bool)$object->getEnabled() !== (bool)$previousData['enabled']) {
+            if ($object->getEnabled() !== $previousData['enabled']) {
                 // write log
                 if ($object->getEnabled()) {
                     $text = 'aktiviert';
@@ -343,11 +358,11 @@ class AddressAdmin extends AbstractAdmin
                 $this->log(sprintf('Alias %s@%s %s', (string)$object, $servername, $text));
             }
 
-            if ((string)$object->getComment() !== (string)$previousData['comment']) {
+            if ($object->getComment() !== $previousData['comment']) {
                 $prePosition = 'von';
                 if (empty($object->getComment())) {
                     $text = 'gelöscht';
-                } else if (empty($previousData['comment'])) {
+                } else if (strlen($previousData['comment']) !== 0) {
                     // german grammar: "Notiz von Alias xy hinzugefügt" sounds ugly.
                     $prePosition = 'für';
                     $text = 'hinzugefügt';
@@ -368,17 +383,16 @@ class AddressAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    public function postRemove(CrudInterface $object) 
+    public function postRemove(CrudInterface $object): void
     {
         /* @var $object \Stsbl\MailAliasBundle\Entity\Address */
         $servername = $this->config->get('Domain');
         
         // write log
-        $this->log(sprintf('Alias %s@%s gelöscht', (string)$object, $servername));       
+        $this->log(sprintf('Alias %s@%s gelöscht', (string)$object, $servername));
     }
     
     /**
-     * @param Config $config
      * @required
      */
     public function setConfig(Config $config)
@@ -387,12 +401,10 @@ class AddressAdmin extends AbstractAdmin
     }
 
     /**
-     * Get config
-     *
-     * @return Config $config
+     * @required
      */
-    public function getConfig()
+    public function setLogger(Logger $logger)
     {
-        return $this->config;
+        $this->logger = $logger;
     }
 }

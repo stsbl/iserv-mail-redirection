@@ -1,5 +1,4 @@
-<?php
-// src/Stsbl/MailAliasBundle/Form/DataTransformer/ContructorTrait.php
+<?php declare(strict_types = 1);
 namespace Stsbl\MailAliasBundle\Form\DataTransformer;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,7 +34,7 @@ use IServ\CoreBundle\Service\Config;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-trait ConstructorTrait 
+trait ConstructorTrait
 {
     /**
      * @var Config
@@ -47,12 +46,6 @@ trait ConstructorTrait
      */
     protected $em;
 
-    /**
-     * The constructor
-     *
-     * @param Config $config
-     * @param EntityManagerInterface $em
-     */
     public function __construct(Config $config, EntityManagerInterface $em)
     {
         $this->config = $config;

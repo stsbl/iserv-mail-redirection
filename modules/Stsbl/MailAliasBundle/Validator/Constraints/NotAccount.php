@@ -40,7 +40,7 @@ class NotAccount extends Constraint
      */
     public function validatedBy()
     {
-        return 'stsbl_mailalias_not_account_validator';
+        return NotAccountValidator::class;
     }
 
     /**

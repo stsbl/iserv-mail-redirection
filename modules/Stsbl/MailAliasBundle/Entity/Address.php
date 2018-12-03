@@ -1,5 +1,5 @@
-<?php
-// src/Stsbl/MailAlias/Bundle/Enity/Recipient.php
+<?php declare(strict_types = 1);
+
 namespace Stsbl\MailAliasBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -53,7 +53,7 @@ class Address implements CrudInterface
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * 
+     *
      * @var int
      */
     private $id;
@@ -64,7 +64,7 @@ class Address implements CrudInterface
      * @StsblAssert\LocalPart()
      * @StsblAssert\NotAccount()
      * @ORM\Column(name="recipient", type="text")
-     * 
+     *
      * @var string
      */
     private $recipient;
@@ -72,11 +72,15 @@ class Address implements CrudInterface
     /**
      * @ORM\Column(name="enabled", type="boolean")
      * @Assert\NotBlank()
+     *
+     * @var bool
      */
     private $enabled;
 
     /**
      * @ORM\Column(name="comment", type="text")
+     *
+     * @var string
      */
     private $comment;
 
@@ -101,11 +105,8 @@ class Address implements CrudInterface
      * @var Group[]|ArrayCollection
      */
     private $groups;
-    
-    /**
-     * The constructor
-     */
-    public function __construct() 
+
+    public function __construct()
     {
         $this->groups = new ArrayCollection();
         $this->users = new ArrayCollection();
@@ -122,44 +123,27 @@ class Address implements CrudInterface
     /**
      * {@inheritdoc}
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Get recipient
-     * 
-     * @return string
-     */
-    public function getRecipient()
+    public function getRecipient(): ?string
     {
         return $this->recipient;
     }
-    
-    /**
-     * Get enabled
-     * 
-     * @return bool
-     */
-    public function getEnabled()
+
+    public function getEnabled(): ?bool
     {
         return $this->enabled;
     }
 
-    /**
-     * Get comment
-     * 
-     * @return string
-     */
-    public function getComment()
+    public function getComment(): ?string
     {
         return $this->comment;
     }
     
     /**
-     * Get userRecipients
-     * 
      * @return User[]|ArrayCollection
      */
     public function getUsers()
@@ -168,8 +152,6 @@ class Address implements CrudInterface
     }
 
     /**
-     * Get groupRecipients
-     * 
      * @return Group[]|ArrayCollection
      */
     public function getGroups()
@@ -178,38 +160,29 @@ class Address implements CrudInterface
     }
     
     /**
-     * Set recipient
-     * 
-     * @param string $recipient
-     * @return Address
+     * @return $this
      */
-    public function setRecipient($recipient)
+    public function setRecipient(?string $recipient): self
     {
         $this->recipient = $recipient;
         
         return $this;
     }
-    
+
     /**
-     * Set enabled
-     * 
-     * @param bool $enabled
-     * @return Address
+     * @return $this
      */
-    public function setEnabled($enabled)
+    public function setEnabled(?bool $enabled): self
     {
         $this->enabled = $enabled;
         
         return $this;
     }
-    
+
     /**
-     * Set comment
-     * 
-     * @param string $comment
-     * @return Address
+     * @return $this
      */
-    public function setComment($comment)
+    public function setComment(?string $comment): self
     {
         $this->comment = $comment;
         
@@ -217,12 +190,9 @@ class Address implements CrudInterface
     }
 
     /**
-     * Adds one user to this original recipient
-     *
-     * @param User $user
-     * @return Address
+     * @return $this
      */
-    public function addUser(User $user)
+    public function addUser(User $user): self
     {
         $this->users->add($user);
 
@@ -233,31 +203,24 @@ class Address implements CrudInterface
      * removes one user recipient from this original recipient
      *
      * @param User $user
-     * @return Address
+     * @return $this
      */
-    public function removeUser(User $user)
+    public function removeUser(User $user): self
     {
         $this->users->removeElement($user);
 
         return $this;
     }
 
-    /**
-     * @param User $user
-     * @return bool
-     */
-    public function hasUser(User $user)
+    public function hasUser(User $user): bool
     {
         return $this->users->contains($user);
     }
 
     /**
-     * Adds one user to this original recipient
-     *
-     * @param Group $group
-     * @return Address
+     * @return $this
      */
-    public function addGroup(Group $group)
+    public function addGroup(Group $group): self
     {
         $this->groups->add($group);
 
@@ -265,23 +228,16 @@ class Address implements CrudInterface
     }
 
     /**
-     * removes one group recipient from this original recipient
-     *
-     * @param Group $group
-     * @return Address
+     * @return $this
      */
-    public function removeGroup(Group $group)
+    public function removeGroup(Group $group): self
     {
         $this->groups->removeElement($group);
 
         return $this;
     }
 
-    /**
-     * @param Group $group
-     * @return bool
-     */
-    public function hasGroup(Group $group)
+    public function hasGroup(Group $group): bool
     {
         return $this->groups->contains($group);
     }

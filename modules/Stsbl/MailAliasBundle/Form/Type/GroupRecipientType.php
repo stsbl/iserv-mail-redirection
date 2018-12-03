@@ -1,5 +1,5 @@
-<?php
-// src/Stsbl/MailAliasBundle/Form/Type/GroupRecipientType.php
+<?php declare(strict_types = 1);
+
 namespace Stsbl\MailAliasBundle\Form\Type;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -51,12 +51,6 @@ class GroupRecipientType extends AbstractType
      */
     private $em;
 
-    /**
-     * The constructor
-     *
-     * @param Config $config
-     * @param EntityManagerInterface $em
-     */
     public function __construct(Config $config, EntityManagerInterface $em)
     {
         $this->config = $config;
@@ -64,11 +58,9 @@ class GroupRecipientType extends AbstractType
     }
 
     /**
-     * @see \Symfony\Component\Form\AbstractType::buildForm()
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) 
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $transformer = new GroupToRfc822Transformer($this->config, $this->em);
         
@@ -84,9 +76,9 @@ class GroupRecipientType extends AbstractType
     }
     
     /**
-     * @see \Symfony\Component\Form\FormTypeInterface::getName()
+     * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'mailredirection_grouprecipient';
     }

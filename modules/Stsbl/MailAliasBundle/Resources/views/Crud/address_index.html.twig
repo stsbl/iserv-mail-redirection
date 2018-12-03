@@ -1,5 +1,5 @@
-{# src/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig #}
-{% extends 'IServCrudBundle:Crud:index.html.twig' %}
+{% extends '@IServCrud/Crud/index.html.twig' %}
+{% import '@IServCrud/macros.html.twig' as m %}
 
 {% block crud_actions %}
     {% if admin.isAllowedToAdd() %}

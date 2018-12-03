@@ -39,6 +39,9 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class SystemAddressValidator extends ConstraintValidator
 {
+    private const REGEX_SYSTEM = '/^(root|postmaster|mailer-daemon|nobody|hostmaster|usenet|news|webmaster|ftp|abuse|'.
+        'noc|security|monit|clamav|www-data)$/';
+
     /**
      * @var Config
      */
@@ -46,7 +49,7 @@ class SystemAddressValidator extends ConstraintValidator
 
     /**
      * The constructor
-     * 
+     *
      * @param Config $config
      */
     public function __construct(Config $config)
@@ -57,17 +60,18 @@ class SystemAddressValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof SystemAddress) {
             throw new UnexpectedTypeException($constraint, SystemAddress::class);
         }
 
         // disallow redirection of system mails, this must be done via /etc/aliases.
-        if (preg_match('/^(root|postmaster|mailer-daemon|nobody|hostmaster|usenet|news|webmaster|ftp|abuse|noc|security|monit|clamav|www-data)$/', $value)) {
-            $this->context->buildViolation(sprintf($constraint->getMessage(), $value . '@' . $this->config->get('Domain')))
-                ->addViolation();
+        if (preg_match(self::REGEX_SYSTEM, $value)) {
+            $this->context
+                ->buildViolation(sprintf($constraint->getMessage(), $value . '@' . $this->config->get('Domain')))
+                ->addViolation()
+            ;
         }
     }
-
 }

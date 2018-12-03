@@ -1,6 +1,5 @@
-{# src/Stsbl/MailAliasBundle/Resources/views/Crud/address_show.html.twig #}
-{%  extends 'IServCrudBundle:Crud:show.html.twig' %}
+{%  extends '@IServCrud/Crud/show.html.twig' %}
 
 {% block crud_title %}
-    <h1>{{ __('Details for %s@%s', item, admin.config.get('Domain')) }}</h1>
+    <h1>{{ __('Details for %s@%s', item, cfg.get('Domain')) }}</h1>
 {% endblock crud_title %}

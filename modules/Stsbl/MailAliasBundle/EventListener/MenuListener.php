@@ -1,5 +1,4 @@
-<?php
-// src/Stsbl/MailAliasBundle/EventListener/MenuListener.php
+<?php declare(strict_types = 1);
 
 namespace Stsbl\MailAliasBundle\EventListener;
 
@@ -45,8 +44,7 @@ class MenuListener implements AdminMenuListenerInterface
     public function onBuildAdminMenu(MenuEvent $event)
     {
         // check if user is privileged
-        if ($event->getAuthorizationChecker()->isGranted(Privilege::ADMIN))
-        {
+        if ($event->getAuthorizationChecker()->isGranted(Privilege::ADMIN)) {
             $menu = $event->getMenu();
             $block = $menu->getChild('users');
 

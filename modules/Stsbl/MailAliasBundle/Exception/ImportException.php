@@ -1,5 +1,4 @@
-<?php
-// src/Stsbl/MailAliasBundle/Exception/ImportExecption.php
+<?php declare(strict_types = 1);
 namespace Stsbl\MailAliasBundle\Exception;
 
 /*
@@ -43,108 +42,78 @@ class ImportException extends \RuntimeException implements CsvFileExceptionInter
     const MESSAGE_FILE_IS_NULL = 'The uploaded file is undefined.';
     
     /**
-     * @var integer
+     * @var int|null
      */
     private $fileLine;
     
     /**
-     * @var integer
+     * @var int|null
      */
     private $columnAmount;
     
     /**
-     * @var integer
+     * @var int|null
      */
     private $expected;
-    
-    /**
-     * Fires up a new exception
-     * 
-     * @param string $message
-     * @param integer $code
-     * @param \Throwable $previous
-     * @param integer $fileLine
-     * @param integer $columnAmount
-     * @param integer $expected
-     */
-    public function __construct($message = "", $code = 0, $fileLine = null, $columnAmount = null, $expected = null, \Throwable $previous = null) 
-    {
+
+    public function __construct(
+        ?string $message = '',
+        int $code = 0,
+        ?int $fileLine = null,
+        ?int $columnAmount = null,
+        ?int $expected = null,
+        \Throwable $previous = null
+    ) {
         $this->fileLine = $fileLine;
         $this->columnAmount = $columnAmount;
         $this->expected = $expected;
         
         parent::__construct($message, $code, $previous);
     }
-    
-    /**
-     * Get line
-     * 
-     * @return integer|null
-     */
-    public function getFileLine()
+
+    public function getFileLine(): ?int
     {
         return $this->fileLine;
     }
-    
-    /**
-     * Get number of columns
-     * 
-     * @return integer|null
-     */
-    public function getColumnAmount() 
+
+    public function getColumnAmount(): ?int
     {
         return $this->columnAmount;
     }
-    
-    /**
-     * Get acually amount of columns
-     * 
-     * @return integer|null
-     */
-    public function getExpected() 
+
+    public function getExpected(): ?int
     {
         return $this->expected;
     }
     
     /**
      * Creates exception with predefined message for invalid mime type
-     * 
-     * @return ImportException
      */
-    public static function invalidMimeType()
+    public static function invalidMimeType(): self
     {
         return new self(self::MESSAGE_INVALID_MIME_TYPE);
     }
     
     /**
      * Creates exception with predefined message for not found uploaded file
-     * 
-     * @return ImportException
      */
-    public static function pathNotFound()
+    public static function pathNotFound(): self
     {
         return new self(self::MESSAGE_PATH_NOT_FOUND);
     }
     
     /**
      * Creates exception with predefined message for invalid column number.
-     * 
-     * @param integer $line
-     * @param integer $columnAmount
-     * @param integer $expected
-     * @return ImportException
      */
-    public static function invalidColumnAmount($line, $columnAmount, $expected)
+    public static function invalidColumnAmount(int $line, int $columnAmount, int $expected): self
     {
         return new self(self::MESSAGE_INVALID_COLUMN_AMOUNT, 0, $line, $columnAmount, $expected);
     }
     
     /**
      * Creates exception with predefined message for not defined uploaded file.
-     * 
-     * @return ImportException
      */
-    public static function fileIsNull()
+    public static function fileIsNull(): self
     {
         return new self(self::MESSAGE_FILE_IS_NULL);
     }

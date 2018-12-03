@@ -3,15 +3,12 @@ services:
     _defaults:
         autoconfigure: true
         autowire: true
+        public: false
 
     _instanceof:
         IServ\AdminBundle\EventListener\AdminMenuListenerInterface:
             tags:
               - { name: kernel.event_listener, event: iserv_portal.menu_admin, method: onBuildAdminMenu }
-
-        IServ\CrudBundle\Crud\AbstractCrud:
-            tags:
-                - { name: iserv.crud }
 
     Stsbl\MailAliasBundle\:
         resource: '../../'
@@ -21,19 +18,3 @@ services:
         arguments: [Stsbl\MailAliasBundle\Entity\Address]
         calls:
             - [setLogger, ["@iserv.logger"]] # LoggerTrait has no @required annotation on setter for now
-
-    Stsbl\MailAliasBundle\Controller\:
-        resource: '../../Controller'
-        tags: ['controller.service_arguments']
-            
-    Stsbl\MailAliasBundle\Validator\Constraints\AddressValidator:
-        tags:
-            - { name: validator.constraint_validator, alias: stsbl_mailalias_address_validator }
-
-    Stsbl\MailAliasBundle\Validator\Constraints\NotAccountValidator:
-        tags:
-            - { name: validator.constraint_validator, alias: stsbl_mailalias_not_account_validator }
-
-    Stsbl\MailAliasBundle\Validator\Constraints\SystemAddressValidator:
-        tags:
-            - { name: validator.constraint_validator, alias: stsbl_mailalias_system_address_validator }
