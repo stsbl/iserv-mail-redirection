@@ -4,7 +4,6 @@ namespace Stsbl\MailAliasBundle\Controller;
 
 use Doctrine\ORM\QueryBuilder;
 use IServ\CoreBundle\Entity\User;
-use IServ\CoreBundle\Form\Type\BooleanType;
 use IServ\CoreBundle\Service\Logger;
 use IServ\CrudBundle\Controller\StrictCrudController;
 use IServ\CrudBundle\Entity\FlashMessage;
@@ -12,16 +11,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Stsbl\MailAliasBundle\Admin\AddressAdmin;
 use Stsbl\MailAliasBundle\Exception\ImportException;
+use Stsbl\MailAliasBundle\Form\Type\ImportType;
+use Stsbl\MailAliasBundle\Model\Import;
 use Stsbl\MailAliasBundle\Service\Importer;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\Choice;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 /*
  * The MIT License
@@ -65,7 +62,7 @@ class MailAliasController extends StrictCrudController
         $ret = parent::indexAction($request);
         
         if (is_array($ret)) {
-            $ret['importForm'] = $this->getImportForm()->createView();
+            $ret['importForm'] = $this->createImportForm()->createView();
 
             $importMsg = $session->has('mailalias_import_msg');
             $ret['displayImportMessages'] = $importMsg;
@@ -165,23 +162,19 @@ class MailAliasController extends StrictCrudController
         $config = $this->get('iserv.config');
         $session = $this->getSession();
 
-        $form = $this->getImportForm();
+        $form = $this->createImportForm();
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            /** @var Import $import */
+            $import = $form->getData();
             
             try {
-                $importer->setEnableNewAliases((boolean)$data['enable']);
-                $importer->setUploadedFile($data['file']);
-                $importer->transform();
+                $importer->transform($import);
                 
-                $warnings = [];
-                foreach ($importer->getWarnings() as $w) {
-                    $warnings[] = $w;
-                }
+                $warnings = $importer->getWarnings();
                 
-                if (count($warnings) > 0) {
+                if (!empty($warnings)) {
                     $session->set('mailalias_import_warnings', implode("\n", $warnings));
                 }
 
@@ -193,7 +186,7 @@ class MailAliasController extends StrictCrudController
                 $newAddresses = $importer->getNewAddresses();
                 foreach ($newAddresses as $address) {
                     $logger->writeForModule(sprintf(AddressAdmin::LOG_ALIAS_ADDED, $address, $servername), $module);
-                    $messages[] = __('Added alias %s@%s.', (string)$address, $servername);
+                    $messages[] = __('Added alias %s@%s.', $address, $servername);
 
                     foreach ($address->getUsers() as $user) {
                         $logger->writeForModule(sprintf(
@@ -256,40 +249,9 @@ class MailAliasController extends StrictCrudController
     /**
      * Gets an form for csv import
      */
-    private function getImportForm(): FormInterface
+    private function createImportForm(): FormInterface
     {
-        /* @var $builder \Symfony\Component\Form\FormBuilder */
-        $builder = $this->get('form.factory')->createNamedBuilder('mailalias_import');
-        
-        $builder
-            ->setAction($this->generateUrl('admin_mailalias_import'))
-            ->add('file', FileType::class, [
-                'label' => false,
-                'constraints' => [new NotBlank(['message' => _('Please select a CSV file for import.')])]
-            ])
-            ->add('enable', BooleanType::class, [
-                'label' => false,
-                'choices' => [
-                    _('Enable new aliases') => 1,
-                    _('Disable new aliases') => 0,
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Choice([
-                        'message' => _('Please select a valid value.'),
-                        'choices' => [1, 0],
-                        'strict' => true,
-                    ]),
-                ],
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => _('Import'),
-                'buttonClass' => 'btn-success',
-                'icon' => 'pro-file-import'
-            ])
-        ;
-        
-        return $builder->getForm();
+        return $this->createForm(ImportType::class);
     }
     
     /**

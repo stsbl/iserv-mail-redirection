@@ -7,6 +7,7 @@ use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
 use Stsbl\MailAliasBundle\Exception\ImportException;
 use Stsbl\MailAliasBundle\Entity\Address;
+use Stsbl\MailAliasBundle\Model\Import;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -97,7 +98,7 @@ class Importer
     /**
      * Set uploaded csv file for import
      */
-    public function setUploadedFile(UploadedFile $csvFile): void
+    private function setUploadedFile(UploadedFile $csvFile): void
     {
         if ($csvFile->getMimeType() !== 'text/plain') {
             throw ImportException::invalidMimeType();
@@ -109,7 +110,7 @@ class Importer
     /**
      * Set if new aliases should enabled or not
      */
-    public function setEnableNewAliases(bool $enable): void
+    private function setEnableNewAliases(bool $enable): void
     {
         $this->enableNewAliases = $enable;
     }
@@ -117,16 +118,19 @@ class Importer
     /**
      * Transforms the csv file into entities
      */
-    public function transform(): void
+    public function transform(Import $import): void
     {
         // reset everything
         $this->newAddresses = [];
         $this->warnings = [];
         $this->lines = [];
         
-        if (null === $this->csvFile) {
+        if (null === $import->getFile()) {
             throw ImportException::fileIsNull();
         }
+
+        $this->setUploadedFile($import->getFile());
+        $this->setEnableNewAliases($import->isEnable());
         
         if (!$filePath = $this->csvFile->getRealPath()) {
             throw ImportException::pathNotFound();

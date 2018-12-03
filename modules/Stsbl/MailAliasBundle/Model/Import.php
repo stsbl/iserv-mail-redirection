@@ -1,6 +1,11 @@
 <?php declare(strict_types = 1);
 
-/* 
+namespace Stsbl\MailAliasBundle\Model;
+
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/*
  * The MIT License
  *
  * Copyright 2018 Felix Jacobi.
@@ -25,24 +30,55 @@
  */
 
 /**
+ * Model class holding data to pass to the Importer.
+ *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
+class Import
+{
+    /**
+     * @Assert\NotBlank()
+     *
+     * @var bool
+     */
+    private $enable = true;
+    
+    /**
+     * @Assert\NotBlank(message="Please select a CSV file for import.")
+     *
+     * @var UploadedFile|null
+     */
+    private $file;
 
-// message strings for gettext
+    /**
+     * @return bool
+     */
+    public function isEnable(): bool
+    {
+        return $this->enable;
+    }
 
-// ImportException
-_('The uploaded file is not a plain text file.');
-_('The path of the uploaded file was not found.');
-_('The CSV file has an invalid amount of columns.');
-_('The uploaded file is undefined.');
+    /**
+     * @return $this
+     */
+    public function setEnable(bool $enable): self
+    {
+        $this->enable = $enable;
+        return $this;
+    }
 
-// MailAliasController::importAction - dynamically built translations
-_('The CSV file has an invalid amount of columns near line %s.');
+    public function getFile(): ?UploadedFile
+    {
+        return $this->file;
+    }
 
-// Privilege
-_('Manage e-mail redirects');
-
-// Constraints
-_('There is already an entry for that address.');
-_('Please select a CSV file for import.');
+    /**
+     * @return $this
+     */
+    public function setFile(?UploadedFile $file = null): self
+    {
+        $this->file = $file;
+        return $this;
+    }
+}
