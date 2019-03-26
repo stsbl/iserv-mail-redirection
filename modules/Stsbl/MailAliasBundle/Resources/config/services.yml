@@ -13,8 +13,3 @@ services:
     Stsbl\MailAliasBundle\:
         resource: '../../'
         exclude: '../../{DependencyInjection,Exception,Form/DataTransformer,Resources}'
-
-    Stsbl\MailAliasBundle\Admin\AddressAdmin:
-        arguments: [Stsbl\MailAliasBundle\Entity\Address]
-        calls:
-            - [setLogger, ["@iserv.logger"]] # LoggerTrait has no @required annotation on setter for now
