@@ -15,6 +15,7 @@ use IServ\CrudBundle\Mapper\AbstractBaseMapper;
 use IServ\CrudBundle\Mapper\FormMapper;
 use IServ\CrudBundle\Mapper\ListMapper;
 use IServ\CrudBundle\Mapper\ShowMapper;
+use Stsbl\MailAliasBundle\Controller\MailAliasController;
 use Stsbl\MailAliasBundle\Entity\Address;
 use Stsbl\MailAliasBundle\Form\Type\GroupRecipientType;
 use Stsbl\MailAliasBundle\Form\Type\UserRecipientType;
@@ -124,10 +125,10 @@ class AddressAdmin extends AbstractAdmin
     {
         parent::buildRoutes();
         
-        $this->routes[self::ACTION_INDEX]['_controller'] = 'StsblMailAliasBundle:MailAlias:index';
-        $this->routes[self::ACTION_ADD]['_controller'] = 'StsblMailAliasBundle:MailAlias:add';
-        $this->routes[self::ACTION_SHOW]['_controller'] = 'StsblMailAliasBundle:MailAlias:show';
-        $this->routes[self::ACTION_EDIT]['_controller'] = 'StsblMailAliasBundle:MailAlias:edit';
+        $this->routes[self::ACTION_INDEX]['_controller'] = MailAliasController::class . '::indexAction';
+        $this->routes[self::ACTION_ADD]['_controller'] = MailAliasController::class . '::addAction';
+        $this->routes[self::ACTION_SHOW]['_controller'] = MailAliasController::class . '::showAction';
+        $this->routes[self::ACTION_EDIT]['_controller'] = MailAliasController::class . '::editAction';
     }
 
     /**
