@@ -356,14 +356,14 @@ class AddressAdmin extends AbstractAdmin
                 }
 
                 // write log*
-                $this->log(sprintf('Alias %s@%s %s', (string)$object, $servername, $text));
+                $this->log(sprintf('Alias %s@%s %s', $object, $servername, $text));
             }
 
             if ($object->getComment() !== $previousData['comment']) {
                 $prePosition = 'von';
-                if (empty($object->getComment())) {
+                if (strlen($object->getComment() ?? '') === 0) {
                     $text = 'gelöscht';
-                } else if (strlen($previousData['comment']) !== 0) {
+                } elseif (strlen($previousData['comment'] ?? '') !== 0) {
                     // german grammar: "Notiz von Alias xy hinzugefügt" sounds ugly.
                     $prePosition = 'für';
                     $text = 'hinzugefügt';
