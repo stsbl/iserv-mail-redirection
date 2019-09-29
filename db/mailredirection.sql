@@ -1,7 +1,7 @@
 /**
  * Author:  Felix Jacobi <felix.jacobi@stsbl.de>
  * License: MIT license <https://opensource.org/licenses/MIT>
- * Created: 30.12.2016
+ * Created: 30.12.2019
  */
 
 CREATE TABLE mailredirection_addresses (
