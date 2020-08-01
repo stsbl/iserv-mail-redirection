@@ -1,0 +1,291 @@
+msgid ""
+msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-04-27 03:36+0200\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: modules/Stsbl/MailAliasBundle/Validator/Constraints/SystemAddress.php
+#, php-format
+msgid ""
+"%s is a system e-mail address, you are not allowed to create aliases for it."
+msgstr ""
+"%s ist eine System E-Mail-Adresse, es ist Ihnen nicht erlaubt, "
+"Weiterleitungen dafür zu erstellen."
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "(Account names as a comma separated list, can be empty)"
+msgstr "(Accountnamen als kommagetrennte Liste, darf leer sein)"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "(Only local part, without the @ and the domain)"
+msgstr "(Nur den lokalen Teil, nicht das @ und die Domain)"
+
+#: modules/Stsbl/MailAliasBundle/Service/Importer.php
+#, php-format
+msgid "A group with the account %s was not found."
+msgstr "Eine Gruppe mir dem Account %s konnte nicht gefunden werden."
+
+#: modules/Stsbl/MailAliasBundle/Validator/Constraints/NotAccount.php
+#, php-format
+msgid "A group with the e-mail address %s does already exists."
+msgstr "Ex existiert bereits eine Gruppe mit der E-Mail-Adresse %s."
+
+#: modules/Stsbl/MailAliasBundle/Service/Importer.php
+msgid ""
+"A line with an empty original recipient was ignored. The listed users and "
+"groups wasn't assigned to this recipient."
+msgstr ""
+"Eine Zeile mit einem leeren Originalempfänger wurde ignoriert. Die "
+"aufgelisteten Benutzer und Gruppen wurden diesem Empfänger nicht zugewiesen."
+
+#: modules/Stsbl/MailAliasBundle/Validator/Constraints/NotAccount.php
+#, php-format
+msgid "A system account %s does already exists."
+msgstr "Es existiert bereits ein System-Account %s."
+
+#: modules/Stsbl/MailAliasBundle/Service/Importer.php
+#, php-format
+msgid "A user with the account %s was not found."
+msgstr "Ein Benutzer mit dem Account %s konnte nicht gefunden werden."
+
+#: modules/Stsbl/MailAliasBundle/Validator/Constraints/NotAccount.php
+#, php-format
+msgid "A user with the e-mail address %s does already exists."
+msgstr "Es existiert bereits ein Benutzer mit der E-Mail-Adresse %s."
+
+#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+#, php-format
+msgid "Added alias %s@%s."
+msgstr "Alias %s@%s hinzugefügt."
+
+#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+#, php-format
+msgid "Added group %s as recipient for alias %s@%s."
+msgstr "Gruppe %s als Empfänger zu Alias %s@%s hinzugefügt."
+
+#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+#, php-format
+msgid "Added user %s as recipient for alias %s@%s."
+msgstr "Benutzer %s als Empfänger zu Alias %s@%s hinzugefügt."
+
+#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+msgid "Administrator"
+msgstr "Administrator"
+
+#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_show.html.twig.php
+#, php-format
+msgid "Details for %s@%s"
+msgstr "Details zu %s@%s"
+
+#: modules/Stsbl/MailAliasBundle/Form/Type/ImportType.php
+msgid "Disable new aliases"
+msgstr "Neue Aliase deaktivieren"
+
+#: priv/mailredirection
+msgid "E-mail"
+msgstr "E-Mail"
+
+#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_edit.html.twig.php
+#, php-format
+msgid "Edit %s@%s"
+msgstr "%s@%s bearbeiten"
+
+#: modules/Stsbl/MailAliasBundle/Form/Type/ImportType.php
+msgid "Enable new aliases"
+msgstr "Neue Aliase aktivieren"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Enabled"
+msgstr "Aktiviert"
+
+#: modules/Stsbl/MailAliasBundle/Form/Type/UserRecipientType.php
+#: modules/Stsbl/MailAliasBundle/Form/Type/GroupRecipientType.php
+msgid "Enter a search term..."
+msgstr "Suchbegriff eingeben..."
+
+#: modules/Stsbl/MailAliasBundle/Validator/Constraints/LocalPart.php
+msgid "Enter only the address part before the @."
+msgstr "Geben Sie nur den Adressteil, der vor dem @ steht, ein."
+
+#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+msgid "Group"
+msgstr "Gruppe"
+
+#: modules/Stsbl/MailAliasBundle/Validator/Constraints/Address.php
+#, php-format
+msgid "Group \"%s\" can not added multiple times to the original recipient %s."
+msgstr ""
+"Gruppe \"%s\" kann nicht mehrmals zum Originalempfänger %s hinzugefügt "
+"werden."
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Groups"
+msgstr "Gruppen"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Here you can enter further explanation for this redirection."
+msgstr ""
+"Hier können Sie weitere Erläuterungen zu dieser Weiterleitung eingeben."
+
+#: modules/Stsbl/MailAliasBundle/Form/Type/ImportType.php
+#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
+#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
+msgid "Import"
+msgstr "Importieren"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Mail alias"
+msgstr "Mailalias"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+#: modules/Stsbl/MailAliasBundle/EventListener/MenuListener.php
+#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
+msgid "Mail aliases"
+msgstr "Mailaliase"
+
+#: priv/mailredirection
+#: modules/Stsbl/MailAliasBundle/Resources/translations/messages.php
+msgid "Manage e-mail redirects"
+msgstr "E-Mail-Weiterleitungen verwalten"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Note"
+msgstr "Notiz"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Original recipient"
+msgstr "Originalempfänger"
+
+#: modules/Stsbl/MailAliasBundle/Resources/translations/messages.php
+msgid "Please select a CSV file for import."
+msgstr "Bitte wählen Sie eine CSV-Datei für den Import."
+
+#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+msgid "Student"
+msgstr "Schüler"
+
+#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+msgid "Teacher"
+msgstr "Lehrer"
+
+#: modules/Stsbl/MailAliasBundle/Resources/translations/messages.php
+#, php-format
+msgid "The CSV file has an invalid amount of columns near line %s."
+msgstr "Die CSV-Datei hat eine ungültige Anzahl von Spalten in der Zeile %s."
+
+#: modules/Stsbl/MailAliasBundle/Resources/translations/messages.php
+msgid "The CSV file has an invalid amount of columns."
+msgstr "Die CSV-Datei hat eine ungültige Anzahl von Spalten."
+
+#: modules/Stsbl/MailAliasBundle/Service/Importer.php
+#, php-format
+msgid ""
+"The alias %s does already exists! A note for it which is may defined in the "
+"CSV file was ignored."
+msgstr ""
+"Der Alias %s exisitiert bereits! Eine Notiz, welche möglicherweise in der "
+"CSV-Datei definiert wurde, ist ignoriert worden."
+
+#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_multi_edit.html.twig.php
+msgid ""
+"The current recipients will never displayed. To change the recipients for "
+"all selected aliases, you can select the checkboxes and enter the desired "
+"recipients."
+msgstr ""
+"Die aktuellen Empfänger werden niemals angezeigt. Um die Empfänger für alle "
+"gewählten Aliase zu ändern, können Sie die Checkboxen wählen und die "
+"gewünschten Empfänger eingeben."
+
+#: modules/Stsbl/MailAliasBundle/Service/Importer.php
+#, php-format
+msgid "The group %s is already assigned to the original recipient %s."
+msgstr "Die Gruppe %s ist bereits dem Originalempfänger %s zugewiesen."
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "The groups which should receive the e-mails to that address."
+msgstr "Die Gruppen, welche die E-Mails an diese Adresse erhalten sollen."
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "The local part of the e-mail address which you want to redirect."
+msgstr "Der lokale Teil der E-Mail-Adresse, die Sie weiterleiten möchten."
+
+#: modules/Stsbl/MailAliasBundle/Resources/translations/messages.php
+msgid "The path of the uploaded file was not found."
+msgstr "Der Pfad der hochgeladenen Datei konnte nicht gefunden werden."
+
+#: modules/Stsbl/MailAliasBundle/Resources/translations/messages.php
+msgid "The uploaded file is not a plain text file."
+msgstr "Die hochgeladene Textdatei ist keine Textdatei."
+
+#: modules/Stsbl/MailAliasBundle/Resources/translations/messages.php
+msgid "The uploaded file is undefined."
+msgstr "Die hochgeladene Datei ist nicht vorhanden."
+
+#: modules/Stsbl/MailAliasBundle/Service/Importer.php
+#, php-format
+msgid "The user %s is already assigned to the original recipient %s."
+msgstr "Der Benutzer %s ist bereits dem Originalempfänger %s zugewiesen."
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "The users who should receive the e-mails to that address."
+msgstr "Die Benutzer, welche die E-Mails an diese Adresse erhalten sollen."
+
+#: modules/Stsbl/MailAliasBundle/Resources/translations/messages.php
+msgid "There is already an entry for that address."
+msgstr "Für diese Adresse existiert bereits ein Eintrag."
+
+#: modules/Stsbl/MailAliasBundle/Validator/Constraints/LocalPart.php
+msgid "This is not a valid local part of an e-mail address."
+msgstr "Dies ist kein gültiger lokaler Teil einer E-Mail-Adresse."
+
+#: modules/Stsbl/MailAliasBundle/Validator/Constraints/LocalPart.php
+msgid "Umlauts are not allowed as part of it."
+msgstr "Umlaute dürfen nicht enthalten sein."
+
+#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+msgid "User"
+msgstr "Benutzer"
+
+#: modules/Stsbl/MailAliasBundle/Validator/Constraints/Address.php
+#, php-format
+msgid "User \"%s\" can not added multiple times to the original recipient %s."
+msgstr ""
+"Benutzer \"%s\" kann nicht mehrmals zum Originalempfänger %s hinzugefügt "
+"werden."
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Users"
+msgstr "Benutzer"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid ""
+"You can enable or disable this redirection. If it is disabled all assigned "
+"users and groups will stop receiving the mails of this address."
+msgstr ""
+"Sie können diese Weiterleitung aktivieren oder deaktivieren. Wenn Sie "
+"deaktiviert ist, werden zugewiesene Benutzer und Gruppen die Mails an diese "
+"Adresse nicht mehr erhalten."
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid ""
+"You can import mail aliases from a CSV file. The CSV file should have no "
+"column titles and the following columns (from left to right):"
+msgstr ""
+"Sie können Mailaliase aus einer CSV-Datei importieren. Die CSV-Datei darf "
+"keine Spaltenüberschriften besitzen und muss die folgenden Spalten besitzen "
+"(von links nach rechts):"
+
+#: modules/Stsbl/MailAliasBundle/Form/DataTransformer/GroupToRfc822Transformer.php
+msgid "deleted"
+msgstr "gelöscht"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "optional"
+msgstr "optional"
