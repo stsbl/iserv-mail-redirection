@@ -1,3 +1,10 @@
+stsbl-iserv-mail-redirection (20.08.02-1) testing; urgency=medium
+
+  * Bumped copyright
+  * Updated locale handling to use genpo
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Sun, 02 Aug 2020 06:44:31 +0200
+
 stsbl-iserv-mail-redirection (19.09.27-1) experimental; urgency=medium
 
   * Fixed logging
