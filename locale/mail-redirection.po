@@ -134,8 +134,8 @@ msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Form/Type/ImportType.php
 #: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
 #: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
+#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
 msgid "Import"
 msgstr "Importieren"
 

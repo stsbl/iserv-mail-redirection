@@ -38,7 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Import
 {
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotNull()
      *
      * @var bool
      */

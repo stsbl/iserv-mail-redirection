@@ -2,7 +2,7 @@
 namespace Stsbl\MailAliasBundle\Form\DataTransformer;
 
 use Doctrine\ORM\EntityManagerInterface;
-use IServ\CoreBundle\Service\Config;
+use IServ\Library\Config\Config;
 
 /*
  * The MIT License

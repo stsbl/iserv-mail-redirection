@@ -7,6 +7,7 @@ use IServ\CoreBundle\Entity\User;
 use IServ\CoreBundle\Service\Logger;
 use IServ\CrudBundle\Controller\StrictCrudController;
 use IServ\CrudBundle\Entity\FlashMessage;
+use IServ\Library\Config\Config;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Stsbl\MailAliasBundle\Admin\AddressAdmin;
@@ -90,10 +91,8 @@ class MailAliasController extends StrictCrudController
      * @Route("admin/mailaliases/recipients", name="admin_mailalias_recipients", options={"expose"=true}, methods={"GET"})
      * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
      */
-    public function getRecipientsAutocompleteAction(Request $request): JsonResponse
+    public function getRecipientsAutocompleteAction(Request $request, Config $config): JsonResponse
     {
-        $config = $this->get('iserv.config');
-
         $type = $request->query->get('type');
         $query = $request->query->get('query');
         $suggestions = [];
@@ -155,11 +154,10 @@ class MailAliasController extends StrictCrudController
      * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
      * @Template()
      *
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @return array|RedirectResponse
      */
-    public function importAction(Importer $importer, Logger $logger, Request $request)
+    public function importAction(Importer $importer, Logger $logger, Request $request, Config $config)
     {
-        $config = $this->get('iserv.config');
         $session = $this->getSession();
 
         $form = $this->createImportForm();

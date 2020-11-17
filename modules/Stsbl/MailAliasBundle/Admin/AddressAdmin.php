@@ -7,7 +7,6 @@ use IServ\AdminBundle\Admin\AbstractAdmin;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
 use IServ\CoreBundle\Form\Type\BooleanType;
-use IServ\CoreBundle\Service\Config;
 use IServ\CoreBundle\Service\Logger;
 use IServ\CoreBundle\Traits\LoggerTrait;
 use IServ\CrudBundle\Entity\CrudInterface;
@@ -15,12 +14,12 @@ use IServ\CrudBundle\Mapper\AbstractBaseMapper;
 use IServ\CrudBundle\Mapper\FormMapper;
 use IServ\CrudBundle\Mapper\ListMapper;
 use IServ\CrudBundle\Mapper\ShowMapper;
+use IServ\Library\Config\Config;
 use Stsbl\MailAliasBundle\Controller\MailAliasController;
 use Stsbl\MailAliasBundle\Entity\Address;
 use Stsbl\MailAliasBundle\Form\Type\GroupRecipientType;
 use Stsbl\MailAliasBundle\Form\Type\UserRecipientType;
 use Stsbl\MailAliasBundle\Security\Privilege;
-use Stsbl\MailAliasBundle\Util\ArrayUtil;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 /*
