@@ -1,9 +1,11 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle\Form\Type;
 
 use Doctrine\ORM\EntityManagerInterface;
-use IServ\CoreBundle\Service\Config;
+use IServ\Library\Config\Config;
 use Stsbl\MailAliasBundle\Form\DataTransformer\GroupToRfc822Transformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

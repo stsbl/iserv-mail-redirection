@@ -1,10 +1,12 @@
 <?php
-// src/Stsbl/MailAliasBundle/Validator/Constraints/AddressValidiator.php
+
+declare(strict_types=1);
+
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
-use IServ\CoreBundle\Service\Config;
+use IServ\Library\Config\Config;
 use Stsbl\MailAliasBundle\Entity\Address as AddressEntity;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;

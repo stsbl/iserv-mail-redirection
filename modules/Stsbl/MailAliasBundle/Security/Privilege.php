@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle\Security;
 
@@ -37,5 +39,5 @@ final class Privilege
     /**
      * Privilege that allows users to edit the mail aliases (admin password required)
      */
-    const ADMIN = 'PRIV_MAIL_REDIRECTION_ADMIN';
+    public const ADMIN = 'PRIV_MAIL_REDIRECTION_ADMIN';
 }

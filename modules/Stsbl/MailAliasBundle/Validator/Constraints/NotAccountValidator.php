@@ -5,7 +5,7 @@ namespace Stsbl\MailAliasBundle\Validator\Constraints;
 use Doctrine\ORM\EntityManagerInterface;
 use IServ\ApiBundle\Entity\User;
 use IServ\CoreBundle\Entity\Group;
-use IServ\CoreBundle\Service\Config;
+use IServ\Library\Config\Config;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;

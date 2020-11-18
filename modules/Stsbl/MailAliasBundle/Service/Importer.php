@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle\Service;
 
@@ -154,10 +156,11 @@ class Importer
 
             // check if column is four (original recipient, users, groups, note) or three (without note)
             // or two (alias and user without a group and a note)
-            if (count($line) > self::COLUMN_NUMBER || count($line) < self::COLUMN_NUMBER_WITHOUT_GROUPS_NOTES) {
+            $lineCount = \count($line);
+            if ($lineCount > self::COLUMN_NUMBER || $lineCount < self::COLUMN_NUMBER_WITHOUT_GROUPS_NOTES) {
                 throw ImportException::invalidColumnAmount(
                     $currentLine,
-                    count($line),
+                    $lineCount,
                     self::COLUMN_NUMBER_WITHOUT_GROUPS_NOTES
                 );
             }
@@ -203,7 +206,7 @@ class Importer
                 $originalRecipient = new Address();
                 $originalRecipient->setRecipient($originalRecipientAct);
                 $originalRecipient->setEnabled($this->enableNewAliases);
-                if ($note != null) {
+                if ($note !== null) {
                     $originalRecipient->setComment($note);
                 }
 

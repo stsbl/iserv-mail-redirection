@@ -1,8 +1,10 @@
 <?php
-// src/Stsbl/MailAliasBundle/Validator/Contraints/SystemAddressValidator.php
+
+declare(strict_types=1);
+
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
-use IServ\CoreBundle\Service\Config;
+use IServ\Library\Config\Config;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
