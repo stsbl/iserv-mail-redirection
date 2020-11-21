@@ -77,6 +77,22 @@ msgstr "Benutzer %s als Empfänger zu Alias %s@%s hinzugefügt."
 msgid "Administrator"
 msgstr "Administrator"
 
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Aliases without associated groups"
+msgstr "Aliase ohne zugeordnete Gruppen"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Aliases without associated users"
+msgstr "Aliase ohne zugeordnete Benutzer"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Aliases without associated users and groups"
+msgstr "Aliase ohne zugeordnete Benutzer und Gruppen"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "All aliases"
+msgstr "Alle Aliase"
+
 #: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_show.html.twig.php
 #, php-format
 msgid "Details for %s@%s"
@@ -156,6 +172,10 @@ msgid "Manage e-mail redirects"
 msgstr "E-Mail-Weiterleitungen verwalten"
 
 #: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "No"
+msgstr "Nein"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
 msgid "Note"
 msgstr "Notiz"
 
@@ -166,6 +186,10 @@ msgstr "Originalempfänger"
 #: modules/Stsbl/MailAliasBundle/Resources/translations/messages.php
 msgid "Please select a CSV file for import."
 msgstr "Bitte wählen Sie eine CSV-Datei für den Import."
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Recipient"
+msgstr "Empfänger"
 
 #: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
 msgid "Student"
@@ -263,6 +287,10 @@ msgstr ""
 #: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
 msgid "Users"
 msgstr "Benutzer"
+
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Yes"
+msgstr "Ja"
 
 #: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
 msgid ""

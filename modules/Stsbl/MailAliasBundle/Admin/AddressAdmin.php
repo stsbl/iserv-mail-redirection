@@ -7,6 +7,7 @@ namespace Stsbl\MailAliasBundle\Admin;
 use Braincrafted\Bundle\BootstrapBundle\Form\Type\BootstrapCollectionType;
 use IServ\AdminBundle\Admin\AbstractAdmin;
 use IServ\CoreBundle\Entity\Group;
+use IServ\CoreBundle\Entity\Specification\PropertyMatchSpecification;
 use IServ\CoreBundle\Entity\User;
 use IServ\CoreBundle\Form\Type\BooleanType;
 use IServ\CoreBundle\Service\Logger;
@@ -16,7 +17,15 @@ use IServ\CrudBundle\Mapper\AbstractBaseMapper;
 use IServ\CrudBundle\Mapper\FormMapper;
 use IServ\CrudBundle\Mapper\ListMapper;
 use IServ\CrudBundle\Mapper\ShowMapper;
+use IServ\CrudBundle\Table\Filter\FilterGroup;
+use IServ\CrudBundle\Table\Filter\ListChoiceFilter;
+use IServ\CrudBundle\Table\Filter\ListExpressionFilter;
+use IServ\CrudBundle\Table\Filter\ListPropertyFilter;
+use IServ\CrudBundle\Table\Filter\ListSearchFilter;
+use IServ\CrudBundle\Table\Filter\ListSpecificationFilter;
+use IServ\CrudBundle\Table\ListHandler;
 use IServ\Library\Config\Config;
+use Stsbl\MailAliasBundle\Admin\Filter\AliasAssociationSpecification;
 use Stsbl\MailAliasBundle\Controller\MailAliasController;
 use Stsbl\MailAliasBundle\Entity\Address;
 use Stsbl\MailAliasBundle\Form\Type\GroupRecipientType;
@@ -225,7 +234,28 @@ class AddressAdmin extends AbstractAdmin
             $mapper->add('comment', null, ['label' => _('Note'), 'responsive' => 'desktop']);
         }
     }
-    
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureListFilter(ListHandler $listHandler): void
+    {
+        $associationFilterGroup = new FilterGroup('associations', _('All aliases'));
+        $associationFilterGroup->addListFilter((new ListSpecificationFilter(_('Aliases without associated users and groups'), new AliasAssociationSpecification(true, true)))->setName('without'));
+        $associationFilterGroup->addListFilter((new ListSpecificationFilter(_('Aliases without associated users'), new AliasAssociationSpecification(false, true)))->setName('without-users'));
+        $associationFilterGroup->addListFilter((new ListSpecificationFilter(_('Aliases without associated groups'), new AliasAssociationSpecification(true, false)))->setName('without-groups'));
+
+        $listHandler->addListFilterGroup($associationFilterGroup);
+
+        $enabledFilterGroup = new FilterGroup('enabled', _('Enabled'));
+        $enabledFilterGroup->addListFilter((new ListSpecificationFilter(_('Yes'), new PropertyMatchSpecification('enabled', true)))->setName('true'));
+        $enabledFilterGroup->addListFilter((new ListSpecificationFilter(_('No'), new PropertyMatchSpecification('enabled', false)))->setName('false'));
+
+        $listHandler->addListFilterGroup($enabledFilterGroup);
+
+        $listHandler->addListFilter((new ListSearchFilter(_('Recipient'), ['recipient']))->setName('recipient'));
+    }
+
     /**
      * {@inheritdoc}
      */
