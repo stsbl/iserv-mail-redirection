@@ -1,3 +1,13 @@
+stsbl-iserv-mail-redirection (20.11.21-1) stable; urgency=medium
+
+  * Added filters
+
+  iserv: In der Alias-Verwaltung kann nun nach Aktivierungszustand, dem
+    Vorhandensein von zugeordneten Benutzern und Gruppen sowie dem Empfänger
+    gefilter werden.
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Sat, 21 Nov 2020 03:43:14 +0100
+
 stsbl-iserv-mail-redirection (20.11.19-1) stable; urgency=medium
 
   * Fixed incomplete config library migration
