@@ -1,20 +1,19 @@
 Source: stsbl-iserv-mail-redirection
 Section: misc
-Priority: extra
+Priority: optional
 Maintainer: Stadtteilschule Blankenese <repository@stsbl.de>
-Build-Depends: debhelper (>= 10)
-Build-Depends-Indep: iserv-buildtools
-Standards-Version: 4.1.3
+Build-Depends: debhelper-compat (= 13), dh-sequence-iserv, dh-sequence-stsbl
+Standards-Version: 4.5.0
 Homepage: https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection
 
 Package: stsbl-iserv-mail-redirection
 Architecture: all
-Depends: ${misc:Depends},
-  ${perl:Depends},
-  iserv-portal,
-  stsbl-iserv3-js-libs,
-  stsbl-iserv3-maintenance
-Xb-Private-IServ-Revision: ${iserv:Revision}
+Depends: iserv-portal,
+         stsbl-iserv3-js-libs,
+         stsbl-iserv3-maintenance,
+         ${misc:Depends},
+         ${perl:Depends}
+Xb-Private-Iserv-Revision: ${iserv:Revision}
 Description: E-Mail-Weiterleitungs-Modul für IServ
  Dieses Modul bringt die Möglichkeit mit, E-Mail-Weiterleitungen (auch Alias
  genannt) über den IDesk einzurichten.
