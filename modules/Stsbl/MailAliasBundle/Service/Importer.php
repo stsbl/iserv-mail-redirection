@@ -7,8 +7,8 @@ namespace Stsbl\MailAliasBundle\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
-use Stsbl\MailAliasBundle\Exception\ImportException;
 use Stsbl\MailAliasBundle\Entity\Address;
+use Stsbl\MailAliasBundle\Exception\ImportException;
 use Stsbl\MailAliasBundle\Model\Import;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -43,19 +43,19 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT licenses <https://opensource.org/licenses/MIT>
  */
-class Importer 
+class Importer
 {
-    const COLUMN_NUMBER = 4;
-    
-    const COLUMN_NUMBER_WITHOUT_NOTES = 3;
-    
-    const COLUMN_NUMBER_WITHOUT_GROUPS_NOTES = 2;
-    
+    public const COLUMN_NUMBER = 4;
+
+    public const COLUMN_NUMBER_WITHOUT_NOTES = 3;
+
+    public const COLUMN_NUMBER_WITHOUT_GROUPS_NOTES = 2;
+
     /**
      * @var UploadedFile
      */
     private $csvFile;
-    
+
     /**
      * @var EntityManagerInterface
      */
@@ -70,22 +70,22 @@ class Importer
      * @var \SplFileObject
      */
     private $fileObject;
-    
+
     /**
      * @var Address[]
      */
     private $newAddresses = [];
-    
+
     /**
      * @var string[]
      */
     private $warnings = [];
-    
+
     /**
      * @var bool
      */
     private $enableNewAliases = true;
-    
+
     /**
      * @var array
      */
@@ -96,7 +96,7 @@ class Importer
         $this->em = $em;
         $this->validator = $validator;
     }
-    
+
     /**
      * Set uploaded csv file for import
      */
@@ -105,10 +105,10 @@ class Importer
         if ($csvFile->getMimeType() !== 'text/plain') {
             throw ImportException::invalidMimeType();
         }
-        
+
         $this->csvFile = $csvFile;
     }
-    
+
     /**
      * Set if new aliases should enabled or not
      */
@@ -116,7 +116,7 @@ class Importer
     {
         $this->enableNewAliases = $enable;
     }
-    
+
     /**
      * Transforms the csv file into entities
      */
@@ -126,23 +126,23 @@ class Importer
         $this->newAddresses = [];
         $this->warnings = [];
         $this->lines = [];
-        
+
         if (null === $import->getFile()) {
             throw ImportException::fileIsNull();
         }
 
         $this->setUploadedFile($import->getFile());
         $this->setEnableNewAliases($import->isEnable());
-        
+
         if (!$filePath = $this->csvFile->getRealPath()) {
             throw ImportException::pathNotFound();
         }
-        
+
         $this->fileObject = new \SplFileObject($filePath);
         $this->validateColumnNumber();
         $this->generateEntities();
     }
-    
+
     /**
      * Validates the number of columns of the csv file and stores the lines into an array
      */
@@ -169,11 +169,11 @@ class Importer
 
             $currentLine++;
         }
-        
+
         // reset file pointer
         $this->fileObject->rewind();
     }
-    
+
     /**
      * Generates entities from the csv lines
      */
@@ -184,24 +184,24 @@ class Importer
             $userActString = array_shift($line);
             $groupActString = null;
             $note = null;
-            
+
             if (empty($originalRecipientAct)) {
-                $this->warnings[] = _('A line with an empty original recipient was ignored. The listed users and '.
+                $this->warnings[] = _('A line with an empty original recipient was ignored. The listed users and ' .
                     'groups wasn\'t assigned to this recipient.');
                 continue;
             }
-           
+
             if (count($line) > 0) {
                 $groupActString = array_shift($line);
             }
-            
+
             if (count($line) > 0) {
                 $note = array_shift($line);
             }
 
             $addrRepo = $this->em->getRepository(Address::class);
             $originalRecipient = $addrRepo->findOneBy(['recipient' => $originalRecipientAct]);
-            
+
             if (null === $originalRecipient) {
                 $originalRecipient = new Address();
                 $originalRecipient->setRecipient($originalRecipientAct);
@@ -221,24 +221,24 @@ class Importer
                 $this->em->persist($originalRecipient);
                 $this->newAddresses[] = $originalRecipient;
             } else {
-                $this->warnings[] = __('The alias %s does already exists! A note for it which is may defined in the '.
+                $this->warnings[] = __('The alias %s does already exists! A note for it which is may defined in the ' .
                     'CSV file was ignored.', $originalRecipient->getRecipient());
             }
-            
+
             $userActs = explode(',', $userActString);
             $groupActs = explode(',', $groupActString);
             $userRepo = $this->em->getRepository(User::class);
             $groupRepo = $this->em->getRepository(Group::class);
-           
+
             if (!empty($userActString)) {
                 foreach ($userActs as $account) {
                     $user = $userRepo->find($account);
-                
+
                     if (null === $user) {
                         $this->warnings[] = __('A user with the account %s was not found.', $account);
                         continue;
                     }
-                
+
                     if ($originalRecipient->hasUser($user)) {
                         $this->warnings[] = __(
                             'The user %s is already assigned to the original recipient %s.',
@@ -247,22 +247,22 @@ class Importer
                         );
                         continue;
                     }
-                
+
                     $originalRecipient->addUser($user);
 
                     $this->em->persist($originalRecipient);
                 }
             }
-            
+
             if (!empty($groupActString)) {
                 foreach ($groupActs as $g) {
                     $group = $groupRepo->find($g);
-                
+
                     if (null === $group) {
                         $this->warnings[] = __('A group with the account %s was not found.', $g);
                         continue;
                     }
-                
+
                     if ($originalRecipient->hasGroup($group)) {
                         $this->warnings[] = __(
                             'The group %s is already assigned to the original recipient %s.',
@@ -281,7 +281,7 @@ class Importer
             $this->em->flush();
         }
     }
-    
+
     /**
      * Get warnings thrown during import
      *
@@ -291,7 +291,7 @@ class Importer
     {
         return $this->warnings;
     }
-    
+
     /**
      * Get new Address entities generated during import
      *

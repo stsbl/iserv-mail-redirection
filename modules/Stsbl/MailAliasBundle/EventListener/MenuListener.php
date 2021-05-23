@@ -38,12 +38,12 @@ use Stsbl\MailAliasBundle\Security\Privilege;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class MenuListener implements AdminMenuListenerInterface
+final class MenuListener implements AdminMenuListenerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function onBuildAdminMenu(MenuEvent $event)
+    public function onBuildAdminMenu(MenuEvent $event): void
     {
         // check if user is privileged
         if ($event->getAuthorizationChecker()->isGranted(Privilege::ADMIN)) {
@@ -54,7 +54,7 @@ class MenuListener implements AdminMenuListenerInterface
                 'route' => 'admin_mailalias_index',
                 'label' => _('Mail aliases'),
             ]);
-            
+
             $item->setExtra('icon', 'mail');
         }
     }

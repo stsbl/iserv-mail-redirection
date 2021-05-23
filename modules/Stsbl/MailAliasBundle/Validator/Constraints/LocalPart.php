@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraint;
  * @license MIT license <https://opensource.org/liceneses/MIT>
  * @Annotation
  */
-class LocalPart extends Constraint
+final class LocalPart extends Constraint
 {
     /**
      * {@inheritdoc}
@@ -46,7 +46,7 @@ class LocalPart extends Constraint
     {
         return LocalPartValidator::class;
     }
-    
+
     /**
      * {@inheritdoc]
      */

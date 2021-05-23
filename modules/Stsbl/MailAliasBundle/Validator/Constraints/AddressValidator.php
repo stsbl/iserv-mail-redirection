@@ -42,7 +42,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class AddressValidator extends ConstraintValidator
+final class AddressValidator extends ConstraintValidator
 {
     /**
      * @var Config
@@ -53,7 +53,7 @@ class AddressValidator extends ConstraintValidator
     {
         $this->config = $config;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -81,7 +81,7 @@ class AddressValidator extends ConstraintValidator
             array_unique($groupRecipientAccounts),
             $groupRecipientAccounts
         ));
-        
+
         foreach ($duplicatedGroupRecipients as $duplicate) {
             $this->context->buildViolation(sprintf(
                 $constraint->getDuplicateGroupMessage(),
@@ -104,7 +104,7 @@ class AddressValidator extends ConstraintValidator
             array_unique($userRecipientAccounts),
             $userRecipientAccounts
         ));
-        
+
         foreach ($duplicatedUserRecipients as $duplicate) {
             $this->context->buildViolation(sprintf(
                 $constraint->getDuplicateUserMessage(),

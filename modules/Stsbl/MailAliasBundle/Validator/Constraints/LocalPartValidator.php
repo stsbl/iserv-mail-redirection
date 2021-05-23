@@ -38,7 +38,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class LocalPartValidator extends ConstraintValidator
+final class LocalPartValidator extends ConstraintValidator
 {
     /**
      * {@inheritdoc}

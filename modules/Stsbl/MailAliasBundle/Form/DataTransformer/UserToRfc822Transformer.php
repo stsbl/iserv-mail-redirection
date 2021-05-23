@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Stsbl\MailAliasBundle\Form\DataTransformer;
 
 use IServ\CoreBundle\Entity\User;
+use IServ\Library\Address\Address;
+use IServ\Library\PhpImapReplacement\PhpImapReplacement;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
@@ -39,10 +41,10 @@ use Symfony\Component\Form\Exception\UnexpectedTypeException;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class UserToRfc822Transformer implements DataTransformerInterface
+final class UserToRfc822Transformer implements DataTransformerInterface
 {
     use ConstructorTrait;
-    
+
     /**
      * {@inheritdoc}
      *
@@ -53,7 +55,9 @@ class UserToRfc822Transformer implements DataTransformerInterface
     public function reverseTransform($value): ?User
     {
         $domain = $this->config->get('Domain');
-        $value = imap_rfc822_parse_adrlist($value['userRecipient'], $domain);
+
+        $value = PhpImapReplacement::imap_rfc822_parse_adrlist($value['userRecipient'], $domain);
+
 
         foreach ($value as $address) {
             $repository = $this->em->getRepository(User::class);
@@ -72,7 +76,7 @@ class UserToRfc822Transformer implements DataTransformerInterface
 
         return null;
     }
-    
+
     /**
      * {@inheritdoc}
      *
@@ -91,7 +95,7 @@ class UserToRfc822Transformer implements DataTransformerInterface
             $localPart = $object->getUsername();
             $host = $this->config->get('Domain');
 
-            return ['userRecipient' => imap_rfc822_write_address($localPart, $host, $fullName)];
+            return ['userRecipient' => PhpImapReplacement::imap_rfc822_write_address($localPart, $host, $fullName)];
         }
 
         return null;

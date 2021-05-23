@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Stsbl\MailAliasBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
@@ -49,7 +50,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Address implements CrudInterface
 {
-    const CRUD_ICON = 'message-forward';
+    public const CRUD_ICON = 'message-forward';
 
     /**
      * @ORM\Column(type="integer")
@@ -70,7 +71,7 @@ class Address implements CrudInterface
      * @var string
      */
     private $recipient;
-    
+
     /**
      * @ORM\Column(name="enabled", type="boolean")
      * @Assert\NotBlank()
@@ -93,7 +94,7 @@ class Address implements CrudInterface
      *      inverseJoinColumns={@ORM\JoinColumn(name="recipient", referencedColumnName="act", unique=true)}
      * )
      *
-     * @var User[]|ArrayCollection
+     * @var User[]&Collection
      */
     private $users;
 
@@ -104,7 +105,7 @@ class Address implements CrudInterface
      *      inverseJoinColumns={@ORM\JoinColumn(name="recipient", referencedColumnName="act", unique=true)}
      * )
      *
-     * @var Group[]|ArrayCollection
+     * @var Group[]&Collection
      */
     private $groups;
 
@@ -113,13 +114,13 @@ class Address implements CrudInterface
         $this->groups = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return (string)$this->recipient;
+        return $this->recipient ?? '?';
     }
 
     /**
@@ -144,30 +145,30 @@ class Address implements CrudInterface
     {
         return $this->comment;
     }
-    
+
     /**
-     * @return User[]|ArrayCollection
+     * @return User[]&Collection
      */
-    public function getUsers()
+    public function getUsers(): Collection
     {
         return $this->users;
     }
 
     /**
-     * @return Group[]|ArrayCollection
+     * @return Group[]&Collection
      */
-    public function getGroups()
+    public function getGroups(): Collection
     {
         return $this->groups;
     }
-    
+
     /**
      * @return $this
      */
     public function setRecipient(?string $recipient): self
     {
         $this->recipient = $recipient;
-        
+
         return $this;
     }
 
@@ -177,7 +178,7 @@ class Address implements CrudInterface
     public function setEnabled(?bool $enabled): self
     {
         $this->enabled = $enabled;
-        
+
         return $this;
     }
 
@@ -187,7 +188,7 @@ class Address implements CrudInterface
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
-        
+
         return $this;
     }
 
@@ -202,9 +203,6 @@ class Address implements CrudInterface
     }
 
     /**
-     * removes one user recipient from this original recipient
-     *
-     * @param User $user
      * @return $this
      */
     public function removeUser(User $user): self

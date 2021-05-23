@@ -35,8 +35,8 @@ namespace Stsbl\MailAliasBundle\Exception;
 interface CsvFileExceptionInterface
 {
     public function getFileLine(): ?int;
-    
+
     public function getColumnAmount(): ?int;
-    
+
     public function getExpected(): ?int;
 }

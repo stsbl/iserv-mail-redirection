@@ -34,26 +34,26 @@ namespace Stsbl\MailAliasBundle\Exception;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @licenses MIT license <https://opensource.org/licenses/MIT>
  */
-class ImportException extends \RuntimeException implements CsvFileExceptionInterface
+final class ImportException extends \RuntimeException implements CsvFileExceptionInterface
 {
-    const MESSAGE_INVALID_MIME_TYPE = 'The uploaded file is not a plain text file.';
-    
-    const MESSAGE_PATH_NOT_FOUND = 'The path of the uploaded file was not found.';
-    
-    const MESSAGE_INVALID_COLUMN_AMOUNT = 'The CSV file has an invalid amount of columns.';
-    
-    const MESSAGE_FILE_IS_NULL = 'The uploaded file is undefined.';
-    
+    public const MESSAGE_INVALID_MIME_TYPE = 'The uploaded file is not a plain text file.';
+
+    public const MESSAGE_PATH_NOT_FOUND = 'The path of the uploaded file was not found.';
+
+    public const MESSAGE_INVALID_COLUMN_AMOUNT = 'The CSV file has an invalid amount of columns.';
+
+    public const MESSAGE_FILE_IS_NULL = 'The uploaded file is undefined.';
+
     /**
      * @var int|null
      */
     private $fileLine;
-    
+
     /**
      * @var int|null
      */
     private $columnAmount;
-    
+
     /**
      * @var int|null
      */
@@ -70,7 +70,7 @@ class ImportException extends \RuntimeException implements CsvFileExceptionInter
         $this->fileLine = $fileLine;
         $this->columnAmount = $columnAmount;
         $this->expected = $expected;
-        
+
         parent::__construct($message, $code, $previous);
     }
 
@@ -88,7 +88,7 @@ class ImportException extends \RuntimeException implements CsvFileExceptionInter
     {
         return $this->expected;
     }
-    
+
     /**
      * Creates exception with predefined message for invalid mime type
      */
@@ -96,7 +96,7 @@ class ImportException extends \RuntimeException implements CsvFileExceptionInter
     {
         return new self(self::MESSAGE_INVALID_MIME_TYPE);
     }
-    
+
     /**
      * Creates exception with predefined message for not found uploaded file
      */
@@ -104,7 +104,7 @@ class ImportException extends \RuntimeException implements CsvFileExceptionInter
     {
         return new self(self::MESSAGE_PATH_NOT_FOUND);
     }
-    
+
     /**
      * Creates exception with predefined message for invalid column number.
      */
@@ -112,7 +112,7 @@ class ImportException extends \RuntimeException implements CsvFileExceptionInter
     {
         return new self(self::MESSAGE_INVALID_COLUMN_AMOUNT, 0, $line, $columnAmount, $expected);
     }
-    
+
     /**
      * Creates exception with predefined message for not defined uploaded file.
      */

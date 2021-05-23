@@ -41,13 +41,13 @@ use Symfony\Component\Form\FormBuilderInterface;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @licnese MIT license <https://opensource.org/licenses/MIT>
  */
-class UserRecipientType extends AbstractType 
+final class UserRecipientType extends AbstractType
 {
     /**
      * @var Config
      */
     private $config;
-    
+
     /**
      * @var EntityManagerInterface
      */
@@ -58,14 +58,14 @@ class UserRecipientType extends AbstractType
         $this->config = $config;
         $this->em = $em;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $transformer = new UserToRfc822Transformer($this->config, $this->em);
-        
+
         $builder->add('userRecipient', TextType::class, [
             'label' => false,
             'attr' => [
@@ -73,10 +73,10 @@ class UserRecipientType extends AbstractType
                 'placeholder' => _('Enter a search term...')
             ]
         ]);
-        
+
         $builder->addModelTransformer($transformer);
     }
-    
+
     /**
      * {@inheritdoc}
      */

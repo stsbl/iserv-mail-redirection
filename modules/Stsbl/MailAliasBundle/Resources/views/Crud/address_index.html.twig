@@ -1,20 +1,20 @@
 {% extends '@IServCrud/Crud/index.html.twig' %}
 {% import '@IServCrud/macros.html.twig' as m %}
 
+{# @var crud \Stsbl\MailAliasBundle\Admin\AddressAdmin #}
+
 {% block crud_actions %}
-    {% if admin.isAllowedToAdd() %}
-        <div class="list-actions">
-            {{ m.linkButton(admin.generateUrl('add'), _('Add'), 'plus') }}
-            <a class="btn btn-default" data-toggle="toggle" data-target="#import-list" href="{{ path('admin_mailalias_import') }}">{{ icon('upload') }} {{ _('Import') }}</a>
-        </div>
-    {% endif %}
+    <div class="list-actions">
+        {{ m.linkButton(crud.generateUrl('add'), _('Add'), 'plus') }}
+        <a class="btn btn-default" data-toggle="toggle" data-target="#import-list" href="{{ path('admin_mailalias_import') }}">{{ icon('upload') }} {{ _('Import') }}</a>
+    </div>
 {% endblock %}
 
 {% block crud_table %}
     <div id="import-list" class="well hidden mb0">
         <div class="alert alert-info">
-            {{ admin.getImportExplanation() }}
-            {% for text in admin.getImportExplanationFieldList() %}
+            {{ crud.getImportExplanation() }}
+            {% for text in crud.getImportExplanationFieldList() %}
                 <ul>
                     <li>{{ text }}</li>
                 </ul>

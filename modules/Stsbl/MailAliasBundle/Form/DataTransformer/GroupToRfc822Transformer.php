@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Stsbl\MailAliasBundle\Form\DataTransformer;
 
 use IServ\CoreBundle\Entity\Group;
+use IServ\Library\PhpImapReplacement\PhpImapReplacement;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
@@ -39,10 +40,10 @@ use Symfony\Component\Form\Exception\UnexpectedTypeException;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class GroupToRfc822Transformer implements DataTransformerInterface
+final class GroupToRfc822Transformer implements DataTransformerInterface
 {
     use ConstructorTrait;
-    
+
     /**
      * {@inheritdoc}
      *
@@ -53,7 +54,7 @@ class GroupToRfc822Transformer implements DataTransformerInterface
     public function reverseTransform($value): ?Group
     {
         $domain = $this->config->get('Domain');
-        $value = imap_rfc822_parse_adrlist($value['groupRecipient'], $domain);
+        $value = PhpImapReplacement::imap_rfc822_parse_adrlist($value['groupRecipient'], $domain);
 
         foreach ($value as $address) {
             $repository = $this->em->getRepository(Group::class);
@@ -72,7 +73,7 @@ class GroupToRfc822Transformer implements DataTransformerInterface
 
         return null;
     }
-    
+
     /**
      * {@inheritdoc}
      *
@@ -96,7 +97,7 @@ class GroupToRfc822Transformer implements DataTransformerInterface
             $localPart = $object->getAccount();
             $host = $this->config->get('Domain');
 
-            return ['groupRecipient' => imap_rfc822_write_address($localPart, $host, $fullName)];
+            return ['groupRecipient' => PhpImapReplacement::imap_rfc822_write_address($localPart, $host, $fullName)];
         }
 
         return null;

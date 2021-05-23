@@ -41,7 +41,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class SystemAddressValidator extends ConstraintValidator
 {
-    private const REGEX_SYSTEM = '/^(root|postmaster|mailer-daemon|nobody|hostmaster|usenet|news|webmaster|ftp|abuse|'.
+    private const REGEX_SYSTEM = '/^(root|postmaster|mailer-daemon|nobody|hostmaster|usenet|news|webmaster|ftp|abuse|' .
         'noc|security|monit|clamav|www-data)$/';
 
     /**
@@ -58,7 +58,7 @@ class SystemAddressValidator extends ConstraintValidator
     {
         $this->config = $config;
     }
-    
+
     /**
      * {@inheritdoc}
      */

@@ -1,5 +1,7 @@
 <?php
+
 // src/Stsbl/MailAliasBundle/Validator/Constraints/NotAccountValidator.php
+
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
 use Doctrine\ORM\EntityManagerInterface;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle\Admin\Filter;
 
-use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;

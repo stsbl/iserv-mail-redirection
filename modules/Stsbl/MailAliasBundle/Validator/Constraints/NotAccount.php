@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraint;
  * @license MIT license <https://opensource.org/licneses/MIT>
  * @Annotation
  */
-class NotAccount extends Constraint
+final class NotAccount extends Constraint
 {
     /**
      * {@inheritdoc}
@@ -55,26 +55,17 @@ class NotAccount extends Constraint
 
     /* Message functions */
 
-    /**
-     * @return string
-     */
-    public function getUserMessage()
+    public function getUserMessage(): string
     {
         return _('A user with the e-mail address %s does already exists.');
     }
 
-    /**
-     * @return string
-     */
-    public function getGroupMessage()
+    public function getGroupMessage(): string
     {
         return _('A group with the e-mail address %s does already exists.');
     }
 
-    /**
-     * @return string
-     */
-    public function getSystemAccountMessage()
+    public function getSystemAccountMessage(): string
     {
         return _('A system account %s does already exists.');
     }

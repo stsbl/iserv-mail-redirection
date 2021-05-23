@@ -1,14 +1,8 @@
-# src/Stsbl/MailAliasBundle/Resources/config/services.yml
 services:
     _defaults:
         autoconfigure: true
         autowire: true
         public: false
-
-    _instanceof:
-        IServ\AdminBundle\EventListener\AdminMenuListenerInterface:
-            tags:
-              - { name: kernel.event_listener, event: iserv_portal.menu_admin, method: onBuildAdminMenu }
 
     Stsbl\MailAliasBundle\:
         resource: '../../'

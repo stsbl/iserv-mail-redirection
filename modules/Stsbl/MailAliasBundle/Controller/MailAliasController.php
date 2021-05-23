@@ -53,7 +53,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class MailAliasController extends StrictCrudController
+final class MailAliasController extends StrictCrudController
 {
     /**
      * {@inheritdoc}
@@ -63,7 +63,7 @@ class MailAliasController extends StrictCrudController
         $session = $this->getSession();
 
         $ret = parent::indexAction($request);
-        
+
         if (is_array($ret)) {
             $ret['importForm'] = $this->createImportForm()->createView();
 
@@ -83,7 +83,7 @@ class MailAliasController extends StrictCrudController
                 $this->get('session')->remove('mailalias_import_warnings');
             }
         }
-        
+
         return $ret;
     }
 
@@ -98,19 +98,19 @@ class MailAliasController extends StrictCrudController
         $type = $request->query->get('type');
         $query = $request->query->get('query');
         $suggestions = [];
-        
+
         if ($type === null) {
             throw new \InvalidArgumentException('Parameter type should not be null.');
         }
         if ($type !== 'group' && $type !== 'user') {
             throw new \InvalidArgumentException(sprintf('Invalid type %s.', $type));
         }
-        
+
         $host = $config->get('Domain');
         if ($type === 'group') {
             /* @var $groupRepo \IServ\CoreBundle\Entity\GroupRepository */
             $groupRepo = $this->getDoctrine()->getRepository('IServCoreBundle:Group');
-            
+
             foreach ($groupRepo->addressLookup($query) as $group) {
                 /* @var $group \IServ\CoreBundle\Entity\Group */
                 $rfc822string = imap_rfc822_write_address($group->getAccount(), $host, $group->getName());
@@ -118,11 +118,11 @@ class MailAliasController extends StrictCrudController
             }
         } elseif ($type === 'user') {
             $users = $this->userAddressLookup($query);
-            
+
             foreach ($users as $user) {
                 /* @var $user \IServ\CoreBundle\Entity\User */
                 $rfc822string = imap_rfc822_write_address($user->getUsername(), $host, $user->getName());
-                
+
                 // determine extra + type
                 if ($user->isAdmin()) {
                     $extra = _('Administrator');
@@ -137,15 +137,15 @@ class MailAliasController extends StrictCrudController
                     $extra = _('User');
                     $type = 'user';
                 }
-                
+
                 $label = $user->getName();
                 if ($user->getAuxInfo() != null) {
-                    $label .= ' ('.$user->getAuxInfo().')';
+                    $label .= ' (' . $user->getAuxInfo() . ')';
                 }
                 $suggestions[] = ['label' => $label, 'value' => $rfc822string, 'type' => $type, 'extra' => $extra];
             }
         }
-        
+
         return new JsonResponse($suggestions);
     }
 
@@ -164,16 +164,16 @@ class MailAliasController extends StrictCrudController
 
         $form = $this->createImportForm();
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Import $import */
             $import = $form->getData();
-            
+
             try {
                 $importer->transform($import);
-                
+
                 $warnings = $importer->getWarnings();
-                
+
                 if (!empty($warnings)) {
                     $session->set('mailalias_import_warnings', implode("\n", $warnings));
                 }
@@ -181,7 +181,7 @@ class MailAliasController extends StrictCrudController
                 $servername = $config->get('Domain');
                 $module = 'Mail aliases';
                 $messages = [];
-                
+
                 /* @var $newAddresses \Stsbl\MailAliasBundle\Entity\Address[] */
                 $newAddresses = $importer->getNewAddresses();
                 foreach ($newAddresses as $address) {
@@ -208,7 +208,7 @@ class MailAliasController extends StrictCrudController
                         $messages[] = __('Added group %s as recipient for alias %s@%s.', $group, $address, $servername);
                     }
                 }
-                
+
                 if (count($messages) > 0) {
                     $session->set('mailalias_import_msg', implode("\n", $messages));
                 }
@@ -217,7 +217,7 @@ class MailAliasController extends StrictCrudController
             } catch (ImportException $e) {
                 $message = $e->getMessage();
                 $line = $e->getFileLine();
-                
+
                 if ($message === ImportException::MESSAGE_INVALID_COLUMN_AMOUNT) {
                     $message = str_replace('.', '', $message);
                     if (null !== $line) {
@@ -225,27 +225,27 @@ class MailAliasController extends StrictCrudController
                     } else {
                         $message .= '.';
                     }
-                    
+
                     $message = __($message, $line);
                 } else {
                     $message = _($message);
                 }
-                
+
                 $this->addFlash(new FlashMessage('error', $message));
             }
         }
-        
+
         // track path
         $this->addBreadcrumb(_('Mail aliases'), $this->generateUrl('admin_mailalias_index'));
         $this->addBreadcrumb(_('Import'));
-        
+
         return [
             'importForm' => $form->createView(),
             'importExplanation' => AddressAdmin::getImportExplanation(),
             'importExplanationFieldList' => AddressAdmin::getImportExplanationFieldList()
         ];
     }
-    
+
     /**
      * Gets an form for csv import
      */
@@ -253,7 +253,7 @@ class MailAliasController extends StrictCrudController
     {
         return $this->createForm(ImportType::class);
     }
-    
+
     /**
      * Finds users for address lookup
      * Inspired by the function in GroupRepository,
@@ -276,13 +276,13 @@ class MailAliasController extends StrictCrudController
         foreach ($terms as $index => $term) {
             $qb
                 ->andWhere(
-                    'LOWER(u.username) LIKE :adra'.$index.' OR LOWER(u.username) LIKE :adr_mail'.$index.' OR ' .
-                    'LOWER(u.firstname) LIKE :adra'.$index.' OR LOWER(u.firstname) LIKE :adrb'.$index.' OR ' .
-                    'LOWER(u.lastname) LIKE :adra'.$index.' OR LOWER(u.lastname) LIKE :adrb'.$index
+                    'LOWER(u.username) LIKE :adra' . $index . ' OR LOWER(u.username) LIKE :adr_mail' . $index . ' OR ' .
+                    'LOWER(u.firstname) LIKE :adra' . $index . ' OR LOWER(u.firstname) LIKE :adrb' . $index . ' OR ' .
+                    'LOWER(u.lastname) LIKE :adra' . $index . ' OR LOWER(u.lastname) LIKE :adrb' . $index
                 )
-                ->setParameter('adra'.$index, strtolower($term).'%')
-                ->setParameter('adrb'.$index, '% '.strtolower($term).'%')
-                ->setParameter('adr_mail'.$index, '%.'.strtolower($term).'%')
+                ->setParameter('adra' . $index, strtolower($term) . '%')
+                ->setParameter('adrb' . $index, '% ' . strtolower($term) . '%')
+                ->setParameter('adr_mail' . $index, '%.' . strtolower($term) . '%')
             ;
         }
 

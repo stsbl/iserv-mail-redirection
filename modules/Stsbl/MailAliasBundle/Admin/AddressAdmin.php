@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle\Admin;
 
-use Braincrafted\Bundle\BootstrapBundle\Form\Type\BootstrapCollectionType;
-use IServ\AdminBundle\Admin\AbstractAdmin;
+use IServ\AdminBundle\Admin\AdminServiceCrud;
+use IServ\BootstrapBundle\Form\Type\BootstrapCollectionType;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\Specification\PropertyMatchSpecification;
 use IServ\CoreBundle\Entity\User;
@@ -17,10 +17,8 @@ use IServ\CrudBundle\Mapper\AbstractBaseMapper;
 use IServ\CrudBundle\Mapper\FormMapper;
 use IServ\CrudBundle\Mapper\ListMapper;
 use IServ\CrudBundle\Mapper\ShowMapper;
+use IServ\CrudBundle\Routing\RoutingDefinition;
 use IServ\CrudBundle\Table\Filter\FilterGroup;
-use IServ\CrudBundle\Table\Filter\ListChoiceFilter;
-use IServ\CrudBundle\Table\Filter\ListExpressionFilter;
-use IServ\CrudBundle\Table\Filter\ListPropertyFilter;
 use IServ\CrudBundle\Table\Filter\ListSearchFilter;
 use IServ\CrudBundle\Table\Filter\ListSpecificationFilter;
 use IServ\CrudBundle\Table\ListHandler;
@@ -63,25 +61,30 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://mit.otg/licenses/MIT>
  */
-class AddressAdmin extends AbstractAdmin
+final class AddressAdmin extends AdminServiceCrud
 {
     use LoggerTrait;
-    
-    const LOG_ALIAS_ADDED = 'Alias %s@%s hinzugefügt';
-    
-    const LOG_USER_RECIPIENT_ADDED = 'Benutzer %s als Empfänger von Alias %s@%s hinzugefügt';
-    
-    const LOG_GROUP_RECIPIENT_ADDED = 'Gruppe %s als Empfänger von Alias %s@%s hinzugefügt';
-    
+
+    public const LOG_ALIAS_ADDED = 'Alias %s@%s hinzugefügt';
+
+    public const LOG_USER_RECIPIENT_ADDED = 'Benutzer %s als Empfänger von Alias %s@%s hinzugefügt';
+
+    public const LOG_GROUP_RECIPIENT_ADDED = 'Gruppe %s als Empfänger von Alias %s@%s hinzugefügt';
+
+    /**
+     * {@inheritDoc}
+     */
+    protected static $entityClass = Address::class;
+
     /**
      * Gets explanation for import
      */
     public static function getImportExplanation(): string
     {
-        return _('You can import mail aliases from a CSV file. The CSV file should have no column titles and the '.
+        return _('You can import mail aliases from a CSV file. The CSV file should have no column titles and the ' .
             'following columns (from left to right):');
     }
-    
+
     /**
      * Gets fields for explanation for import
      *
@@ -90,21 +93,11 @@ class AddressAdmin extends AbstractAdmin
     public static function getImportExplanationFieldList(): array
     {
         return [
-            _('Original recipient').' '._('(Only local part, without the @ and the domain)'),
-            _('Users').' '._('(Account names as a comma separated list, can be empty)'),
-            _('Groups').' '. _('(Account names as a comma separated list, can be empty)'),
-            _('Note').' ('._('optional').')',
+            _('Original recipient') . ' ' . _('(Only local part, without the @ and the domain)'),
+            _('Users') . ' ' . _('(Account names as a comma separated list, can be empty)'),
+            _('Groups') . ' ' . _('(Account names as a comma separated list, can be empty)'),
+            _('Note') . ' (' . _('optional') . ')',
         ];
-    }
-    
-    /**
-     * @var Config
-     */
-    private $config;
-
-    public function __construct()
-    {
-        parent::__construct(Address::class);
     }
 
     /**
@@ -127,18 +120,40 @@ class AddressAdmin extends AbstractAdmin
         $this->options['json'] = true;
         $this->options['multi_edit'] = true;
     }
-    
+
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    protected function buildRoutes(): void
+    public static function defineRoutes(): RoutingDefinition
     {
-        parent::buildRoutes();
-        
-        $this->routes[self::ACTION_INDEX]['_controller'] = MailAliasController::class . '::indexAction';
-        $this->routes[self::ACTION_ADD]['_controller'] = MailAliasController::class . '::addAction';
-        $this->routes[self::ACTION_SHOW]['_controller'] = MailAliasController::class . '::showAction';
-        $this->routes[self::ACTION_EDIT]['_controller'] = MailAliasController::class . '::editAction';
+        $definition = parent::defineRoutes()
+            ->useControllerForAction(self::ACTION_INDEX, MailAliasController::class . '::indexAction')
+            ->useControllerForAction(self::ACTION_ADD, MailAliasController::class . '::addAction')
+            ->useControllerForAction(self::ACTION_SHOW, MailAliasController::class . '::showAction')
+            ->useControllerForAction(self::ACTION_EDIT, MailAliasController::class . '::editAction')
+        ;
+
+        // FIXME: Remove, after CRUD allows proper access!
+        try {
+            $reflectionProperty = new \ReflectionProperty($definition, 'baseName');
+        } catch (\ReflectionException $e) {
+            throw new \RuntimeException('Could not reflect!', 0, $e);
+        }
+
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($definition, 'mailalias');
+
+        // FIXME: Remove, after CRUD allows proper access!
+        try {
+            $reflectionProperty = new \ReflectionProperty($definition, 'basePath');
+        } catch (\ReflectionException $e) {
+            throw new \RuntimeException('Could not reflect!', 0, $e);
+        }
+
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($definition, 'mailalias');
+
+        return $definition;
     }
 
     /**
@@ -152,7 +167,7 @@ class AddressAdmin extends AbstractAdmin
                 'attr' => [
                     'help_text' => _('The local part of the e-mail address which you want to redirect.'),
                     'input_group' => [
-                        'append' => '@'.$this->config->get('Domain')
+                        'append' => '@' . $this->config()->get('Domain')
                     ],
                 ]
             ])
@@ -193,7 +208,7 @@ class AddressAdmin extends AbstractAdmin
                 'label' => _('Enabled'),
                 'multi_edit' => true,
                 'attr' => [
-                    'help_text' => _('You can enable or disable this redirection. If it is disabled all assigned '.
+                    'help_text' => _('You can enable or disable this redirection. If it is disabled all assigned ' .
                         'users and groups will stop receiving the mails of this address.'),
                 ]
             ])
@@ -207,11 +222,11 @@ class AddressAdmin extends AbstractAdmin
             ])
         ;
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function configureFields(AbstractBaseMapper $mapper)
+    public function configureFields(AbstractBaseMapper $mapper): void
     {
         if ($mapper instanceof ListMapper) {
             $mapper->addIdentifier('recipient', null, [
@@ -224,7 +239,7 @@ class AddressAdmin extends AbstractAdmin
                 'template' => '@StsblMailAlias/Show/field_recipient.html.twig',
             ]);
         }
-        
+
         // explicitly block FormMapper
         // the method will also called when building form
         if (!$mapper instanceof FormMapper) {
@@ -259,24 +274,11 @@ class AddressAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    public function getRoutePattern($action, $id, $entityBased = true): string
-    {
-        // Overwrite route generation of Crud which struggles with id
-        if ('index' === $action) {
-            return sprintf('%s%s%s', $this->routesPrefix, $this->id, 'es');
-        }
-
-        return parent::getRoutePattern($action, $id, $entityBased);
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
     public function isAuthorized(): bool
     {
         return $this->isGranted(Privilege::ADMIN);
     }
-    
+
     /**
      * Logs the adding and removing of user recipients.
      *
@@ -284,74 +286,74 @@ class AddressAdmin extends AbstractAdmin
      */
     private function logRecipients(CrudInterface $object, array $previousData = null): void
     {
-        /* @var $object \Stsbl\MailAliasBundle\Entity\Address */
+        /* @var $object Address */
         $userRecipients = $object->getUsers()->toArray();
         $groupRecipients = $object->getGroups()->toArray();
-        $servername = $this->config->get('Domain');
-        
+        $servername = $this->config()->get('Domain');
+
         if (null === $previousData) {
             // if there is no previous data, assume that we are called from post persist
             foreach ($userRecipients as $recipient) {
                 $this->log(sprintf(self::LOG_USER_RECIPIENT_ADDED, $recipient, $object, $servername));
             }
-            
+
             foreach ($groupRecipients as $recipient) {
                 $this->log(sprintf(self::LOG_GROUP_RECIPIENT_ADDED, $recipient, $object, $servername));
             }
-            
+
             // stop here
             return;
         }
-        
+
         $previousUserRecipients = [];
         foreach ($previousData['users'] as $recipientId) {
             $previousUserRecipients[] = $this->getObjectManager()->findOneBy(User::class, ['username' => $recipientId]);
         }
-        
+
         $previousGroupRecipients = [];
         foreach ($previousData['groups'] as $recipientId) {
             $previousGroupRecipients[] = $this->getObjectManager()->findOneBy(Group::class, ['account' => $recipientId]);
         }
-        
+
         $removedUserRecipients = array_diff($previousUserRecipients, $userRecipients);
         $addedUserRecipients = array_diff($userRecipients, $previousUserRecipients);
         $removedGroupRecipients = array_diff($previousGroupRecipients, $groupRecipients);
         $addedGroupRecipients = array_diff($groupRecipients, $previousGroupRecipients);
-        
+
         // log removed user recipients
         foreach ($removedUserRecipients as $removed) {
             $this->log(sprintf('Benutzer %s als Empfänger von Alias %s@%s entfernt', (string)$removed, (string)$object, $servername));
         }
-        
+
         // log added user recipients
         foreach ($addedUserRecipients as $added) {
             $this->log(sprintf(self::LOG_USER_RECIPIENT_ADDED, (string)$added, (string)$object, $servername));
         }
-        
+
         // log removed group recipients
         foreach ($removedGroupRecipients as $removed) {
             $this->log(sprintf('Gruppe %s als Empfänger von Alias %s@%s entfernt', (string)$removed, (string)$object, $servername));
         }
-        
+
         // log added group recipients
         foreach ($addedGroupRecipients as $added) {
             $this->log(sprintf(self::LOG_GROUP_RECIPIENT_ADDED, (string)$added, (string)$object, $servername));
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function postPersist(CrudInterface $object): void
     {
-        /* @var $object \Stsbl\MailAliasBundle\Entity\Address */
+        /* @var $object Address */
         // write log
-        $servername = $this->config->get('Domain');
+        $servername = $this->config()->get('Domain');
         $this->log(sprintf(self::LOG_ALIAS_ADDED, $object->getRecipient(), $servername));
-        
+
         $this->logRecipients($object);
     }
-    
+
     /**
      * Logging should not run as postUpdate, because then we are not able to find previous user recipients!
      *
@@ -359,13 +361,13 @@ class AddressAdmin extends AbstractAdmin
      */
     public function preUpdate(CrudInterface $object, array $previousData = null): void
     {
-        /* @var $object \Stsbl\MailAliasBundle\Entity\Address */
+        /* @var $object Address */
         if ($object->getRecipient() === $previousData['recipient'] &&
             $object->getComment() === $previousData['comment'] &&
             $object->getEnabled() === $previousData['enabled']) {
             // if nothing is changed, skip next sections and go directly to recipient log
         } else {
-            $servername = $this->config->get('Domain');
+            $servername = $this->config()->get('Domain');
 
             if ($object->getRecipient() !== $previousData['recipient']) {
                 // write log
@@ -411,19 +413,19 @@ class AddressAdmin extends AbstractAdmin
         // log recipient changes
         $this->logRecipients($object, $previousData);
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function postRemove(CrudInterface $object): void
     {
-        /* @var $object \Stsbl\MailAliasBundle\Entity\Address */
-        $servername = $this->config->get('Domain');
-        
+        /* @var $object Address */
+        $servername = $this->config()->get('Domain');
+
         // write log
         $this->log(sprintf('Alias %s@%s gelöscht', (string)$object, $servername));
     }
-    
+
     /**
      * @required
      */
@@ -433,10 +435,28 @@ class AddressAdmin extends AbstractAdmin
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @required
      */
-    public function setLogger(Logger $logger)
+    public function setLogger(Logger $logger): void
     {
         $this->logger = $logger;
+    }
+
+    private function config(): Config
+    {
+        return $this->locator->get(Config::class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSubscribedServices(): array
+    {
+        $deps = parent::getSubscribedServices();
+        $deps[] = Config::class;
+
+        return $deps;
     }
 }

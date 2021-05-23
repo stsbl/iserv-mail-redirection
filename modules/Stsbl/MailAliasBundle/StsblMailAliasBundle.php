@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle;
 
-use Stsbl\MailAliasBundle\DependencyInjection\StsblMailAliasExtension;
 use IServ\CoreBundle\Routing\AutoloadRoutingBundleInterface;
+use Stsbl\MailAliasBundle\DependencyInjection\StsblMailAliasExtension;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /*
@@ -36,9 +37,12 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class StsblMailAliasBundle extends Bundle implements AutoloadRoutingBundleInterface
+final class StsblMailAliasBundle extends Bundle implements AutoloadRoutingBundleInterface
 {
-    public function getContainerExtension(): StsblMailAliasExtension
+    /**
+     * {@inheritDoc}
+     */
+    public function getContainerExtension(): ?ExtensionInterface
     {
         return new StsblMailAliasExtension();
     }

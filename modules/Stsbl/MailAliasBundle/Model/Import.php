@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class Import
+final class Import
 {
     /**
      * @Assert\NotNull()
@@ -45,7 +45,7 @@ class Import
      * @var bool
      */
     private $enable = true;
-    
+
     /**
      * @Assert\NotBlank(message="Please select a CSV file for import.")
      *

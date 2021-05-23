@@ -41,13 +41,13 @@ use Symfony\Component\Form\FormBuilderInterface;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @licnese MIT license <https://opensource.org/licenses/MIT>
  */
-class GroupRecipientType extends AbstractType 
+final class GroupRecipientType extends AbstractType
 {
     /**
      * @var Config
      */
     private $config;
-    
+
     /**
      * @var EntityManagerInterface
      */
@@ -65,7 +65,7 @@ class GroupRecipientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $transformer = new GroupToRfc822Transformer($this->config, $this->em);
-        
+
         $builder->add('groupRecipient', TextType::class, [
             'label' => false,
             'attr' => [
@@ -73,10 +73,10 @@ class GroupRecipientType extends AbstractType
                 'placeholder' => _('Enter a search term...')
             ]
         ]);
-        
+
         $builder->addModelTransformer($transformer);
     }
-    
+
     /**
      * {@inheritdoc}
      */

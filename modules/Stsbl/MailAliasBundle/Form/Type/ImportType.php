@@ -41,7 +41,7 @@ use Symfony\Component\Routing\RouterInterface;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class ImportType extends AbstractType
+final class ImportType extends AbstractType
 {
     /**
      * @var RouterInterface
@@ -56,7 +56,7 @@ class ImportType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->setAction($this->router->generate('admin_mailalias_import'))
@@ -81,7 +81,7 @@ class ImportType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('data_class', Import::class);
     }

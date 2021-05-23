@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraint;
  * @license MIT license <https://opensource.org/licenses/MIT>
  * @Annotation
  */
-class Address extends Constraint
+final class Address extends Constraint
 {
     /**
      * {@inheritdoc}
@@ -46,7 +46,7 @@ class Address extends Constraint
     {
         return AddressValidator::class;
     }
-    
+
     /**
      * {@inheritdoc]
      */
@@ -54,7 +54,7 @@ class Address extends Constraint
     {
         return self::CLASS_CONSTRAINT;
     }
-    
+
     /* Message functions */
 
     public function getDuplicateGroupMessage(): string
