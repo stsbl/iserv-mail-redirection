@@ -9,6 +9,7 @@ Homepage: https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection
 Package: stsbl-iserv-mail-redirection
 Architecture: all
 Depends: iserv-portal,
+         iserv3-crud (>= 21.05.27),
          stsbl-iserv3-js-libs,
          stsbl-iserv3-maintenance,
          ${misc:Depends},

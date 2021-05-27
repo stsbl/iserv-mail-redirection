@@ -126,34 +126,12 @@ final class AddressAdmin extends AdminServiceCrud
      */
     public static function defineRoutes(): RoutingDefinition
     {
-        $definition = parent::defineRoutes()
+        return parent::createRoutes('mailalias', 'mailalias')
             ->useControllerForAction(self::ACTION_INDEX, MailAliasController::class . '::indexAction')
             ->useControllerForAction(self::ACTION_ADD, MailAliasController::class . '::addAction')
             ->useControllerForAction(self::ACTION_SHOW, MailAliasController::class . '::showAction')
             ->useControllerForAction(self::ACTION_EDIT, MailAliasController::class . '::editAction')
         ;
-
-        // FIXME: Remove, after CRUD allows proper access!
-        try {
-            $reflectionProperty = new \ReflectionProperty($definition, 'baseName');
-        } catch (\ReflectionException $e) {
-            throw new \RuntimeException('Could not reflect!', 0, $e);
-        }
-
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($definition, 'mailalias');
-
-        // FIXME: Remove, after CRUD allows proper access!
-        try {
-            $reflectionProperty = new \ReflectionProperty($definition, 'basePath');
-        } catch (\ReflectionException $e) {
-            throw new \RuntimeException('Could not reflect!', 0, $e);
-        }
-
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($definition, 'mailalias');
-
-        return $definition;
     }
 
     /**
