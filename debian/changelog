@@ -1,3 +1,15 @@
+stsbl-iserv-mail-redirection (21.06.09.1) testing; urgency=medium
+
+  * Fixed Build-Depends
+  * Moved to iservinstall
+  * Updated copyright
+  * Turned source format to native
+  * Fixed deprecations and rectored code
+  * Removed CRUD hack of evilness
+  * Fixed routes
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Wed, 09 Jun 2021 23:02:30 +0200
+
 stsbl-iserv-mail-redirection (20.11.21-2) stable; urgency=medium
 
   * Fixed admin news
