@@ -90,7 +90,7 @@ final class MailAliasController extends StrictCrudController
     /**
      * Get auto-completion suggestions for users and groups
      *
-     * @Route("admin/mailaliases/recipients", name="admin_mailalias_recipients", options={"expose"=true}, methods={"GET"})
+     * @Route("admin/mailalias/recipients", name="admin_mailalias_recipients", options={"expose"=true}, methods={"GET"})
      * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
      */
     public function getRecipientsAutocompleteAction(Request $request, Config $config): JsonResponse
@@ -152,7 +152,7 @@ final class MailAliasController extends StrictCrudController
     /**
      * Imports a submitted csv file
      *
-     * @Route("admin/mailaliases/import", name="admin_mailalias_import")
+     * @Route("admin/mailalias/import", name="admin_mailalias_import")
      * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
      * @Template()
      *

@@ -131,6 +131,8 @@ final class AddressAdmin extends AdminServiceCrud
             ->useControllerForAction(self::ACTION_ADD, MailAliasController::class . '::addAction')
             ->useControllerForAction(self::ACTION_SHOW, MailAliasController::class . '::showAction')
             ->useControllerForAction(self::ACTION_EDIT, MailAliasController::class . '::editAction')
+	    ->setNamePrefix('admin_')
+	    ->setPathPrefix('/admin/')
         ;
     }
 
