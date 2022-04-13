@@ -10,6 +10,7 @@ use IServ\CoreBundle\Service\Logger;
 use IServ\CrudBundle\Controller\StrictCrudController;
 use IServ\CrudBundle\Entity\FlashMessage;
 use IServ\Library\Config\Config;
+use IServ\Library\PhpImapReplacement\PhpImapReplacement;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Stsbl\MailAliasBundle\Admin\AddressAdmin;
@@ -113,7 +114,7 @@ final class MailAliasController extends StrictCrudController
 
             foreach ($groupRepo->addressLookup($query) as $group) {
                 /* @var $group \IServ\CoreBundle\Entity\Group */
-                $rfc822string = imap_rfc822_write_address($group->getAccount(), $host, $group->getName());
+                $rfc822string = PhpImapReplacement::imap_rfc822_write_address($group->getAccount(), $host, $group->getName());
                 $suggestions[] = ['label' => $group->getName(), 'value' => $rfc822string, 'type' => $type, 'extra' => _('Group')];
             }
         } elseif ($type === 'user') {
@@ -121,7 +122,7 @@ final class MailAliasController extends StrictCrudController
 
             foreach ($users as $user) {
                 /* @var $user \IServ\CoreBundle\Entity\User */
-                $rfc822string = imap_rfc822_write_address($user->getUsername(), $host, $user->getName());
+                $rfc822string = PhpImapReplacement::imap_rfc822_write_address($user->getUsername(), $host, $user->getName());
 
                 // determine extra + type
                 if ($user->isAdmin()) {
