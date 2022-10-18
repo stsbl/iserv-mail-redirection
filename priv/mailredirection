@@ -1,4 +1,5 @@
 mail_redirection_admin:
+uuid 		f5f8da73-2a25-44ec-af7b-3acc8aa7fce4
 module          E-mail
 description     Manage e-mail redirects
 assign          admins
