@@ -45,16 +45,6 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 final class AddressValidator extends ConstraintValidator
 {
     /**
-     * @var Config
-     */
-    private $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint): void

@@ -43,20 +43,10 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 final class UserRecipientType extends AbstractType
 {
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    public function __construct(Config $config, EntityManagerInterface $em)
-    {
-        $this->config = $config;
-        $this->em = $em;
+    public function __construct(
+        private readonly Config $config,
+        private readonly EntityManagerInterface $em,
+    ) {
     }
 
     /**

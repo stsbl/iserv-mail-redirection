@@ -44,32 +44,14 @@ final class ImportException extends \RuntimeException implements CsvFileExceptio
 
     public const MESSAGE_FILE_IS_NULL = 'The uploaded file is undefined.';
 
-    /**
-     * @var int|null
-     */
-    private $fileLine;
-
-    /**
-     * @var int|null
-     */
-    private $columnAmount;
-
-    /**
-     * @var int|null
-     */
-    private $expected;
-
     public function __construct(
         ?string $message = '',
         int $code = 0,
-        ?int $fileLine = null,
-        ?int $columnAmount = null,
-        ?int $expected = null,
+        private readonly ?int $fileLine = null,
+        private readonly ?int $columnAmount = null,
+        private readonly ?int $expected = null,
         \Throwable $previous = null
     ) {
-        $this->fileLine = $fileLine;
-        $this->columnAmount = $columnAmount;
-        $this->expected = $expected;
 
         parent::__construct($message, $code, $previous);
     }

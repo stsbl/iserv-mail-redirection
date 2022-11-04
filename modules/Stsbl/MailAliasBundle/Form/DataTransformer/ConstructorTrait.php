@@ -39,19 +39,10 @@ use IServ\Library\Config\Config;
  */
 trait ConstructorTrait
 {
-    /**
-     * @var Config
-     */
-    protected $config;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-
-    public function __construct(Config $config, EntityManagerInterface $em)
-    {
-        $this->config = $config;
-        $this->em = $em;
+    public function __construct(
+        protected readonly Config $config,
+        protected readonly EntityManagerInterface $em,
+    ) {
     }
 }

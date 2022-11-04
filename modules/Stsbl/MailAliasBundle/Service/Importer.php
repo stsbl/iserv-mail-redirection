@@ -54,47 +54,37 @@ class Importer
     /**
      * @var UploadedFile
      */
-    private $csvFile;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
+    private UploadedFile $csvFile;
 
     /**
      * @var \SplFileObject
      */
-    private $fileObject;
+    private \SplFileObject $fileObject;
 
     /**
      * @var Address[]
      */
-    private $newAddresses = [];
+    private array $newAddresses = [];
 
     /**
      * @var string[]
      */
-    private $warnings = [];
+    private array $warnings = [];
 
     /**
      * @var bool
      */
-    private $enableNewAliases = true;
+    private bool $enableNewAliases = true;
 
     /**
      * @var array
      */
-    private $lines = [];
+    private array $lines = [];
 
-    public function __construct(EntityManagerInterface $em, ValidatorInterface $validator)
-    {
-        $this->em = $em;
-        $this->validator = $validator;
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly ValidatorInterface $validator,
+    ) {
     }
 
     /**

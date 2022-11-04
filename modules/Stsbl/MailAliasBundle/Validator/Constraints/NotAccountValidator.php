@@ -42,20 +42,10 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class NotAccountValidator extends ConstraintValidator
 {
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    public function __construct(Config $config, EntityManagerInterface $em)
-    {
-        $this->config = $config;
-        $this->em = $em;
+    public function __construct(
+        private readonly Config $config,
+        private readonly EntityManagerInterface $em,
+    ) {
     }
 
     /**

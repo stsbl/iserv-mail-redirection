@@ -43,14 +43,9 @@ use Symfony\Component\Routing\RouterInterface;
  */
 final class ImportType extends AbstractType
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    public function __construct(RouterInterface $router)
-    {
-        $this->router = $router;
+    public function __construct(
+        private readonly RouterInterface $router,
+    ) {
     }
 
     /**

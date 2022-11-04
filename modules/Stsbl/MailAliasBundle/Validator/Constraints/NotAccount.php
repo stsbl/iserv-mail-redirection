@@ -40,7 +40,7 @@ final class NotAccount extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function validatedBy()
+    public function validatedBy(): string
     {
         return NotAccountValidator::class;
     }
@@ -48,7 +48,7 @@ final class NotAccount extends Constraint
     /**
      * {@inheritdoc]
      */
-    public function getTargets()
+    public function getTargets(): array|string
     {
         return self::PROPERTY_CONSTRAINT;
     }

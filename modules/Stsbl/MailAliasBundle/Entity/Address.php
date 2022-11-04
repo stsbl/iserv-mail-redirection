@@ -59,7 +59,7 @@ class Address implements CrudInterface
      *
      * @var int
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @Assert\NotBlank()
@@ -67,10 +67,8 @@ class Address implements CrudInterface
      * @StsblAssert\LocalPart()
      * @StsblAssert\NotAccount()
      * @ORM\Column(name="recipient", type="text")
-     *
-     * @var string
      */
-    private $recipient;
+    private ?string $recipient;
 
     /**
      * @ORM\Column(name="enabled", type="boolean")
@@ -78,14 +76,12 @@ class Address implements CrudInterface
      *
      * @var bool
      */
-    private $enabled;
+    private bool $enabled = true;
 
     /**
      * @ORM\Column(name="comment", type="text")
-     *
-     * @var string
      */
-    private $comment;
+    private ?string $comment;
 
     /**
      * @ORM\ManyToMany(targetEntity="IServ\CoreBundle\Entity\User")
@@ -96,7 +92,7 @@ class Address implements CrudInterface
      *
      * @var User[]&Collection
      */
-    private $users;
+    private Collection $users;
 
     /**
      * @ORM\ManyToMany(targetEntity="IServ\CoreBundle\Entity\Group")
@@ -107,7 +103,7 @@ class Address implements CrudInterface
      *
      * @var Group[]&Collection
      */
-    private $groups;
+    private Collection $groups;
 
     public function __construct()
     {

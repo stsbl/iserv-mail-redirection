@@ -51,9 +51,9 @@ final class LocalPartValidator extends ConstraintValidator
 
         // use random domain, it does matter, which one is behind the local part.
         if (!filter_var($value . '@example.com', \FILTER_VALIDATE_EMAIL)) {
-            if (false !== strpos($value, '@')) {
+            if (str_contains($value, '@')) {
                 $this->context->buildViolation($constraint->getMessageForAt())->addViolation();
-            } elseif (preg_match('/(.*)[äöüß](.*)/i', $value)) {
+            } elseif (preg_match('/(.*)[äöüß](.*)/iu', $value)) {
                 $this->context->buildViolation($constraint->getMessageForUmlauts())->addViolation();
             } else {
                 // show generic message if there is no custom message

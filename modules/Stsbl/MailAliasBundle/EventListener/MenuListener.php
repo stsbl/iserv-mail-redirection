@@ -50,7 +50,7 @@ final class MenuListener implements AdminMenuListenerInterface
             $menu = $event->getMenu();
             $block = $menu->getChild('users');
 
-            $item = $block->addChild('mail_aliases_admin', [
+            $item = $block?->addChild('mail_aliases_admin', [
                 'route' => 'admin_mailalias_index',
                 'label' => _('Mail aliases'),
             ]);

@@ -44,14 +44,14 @@ final class Import
      *
      * @var bool
      */
-    private $enable = true;
+    private bool $enable = true;
 
     /**
      * @Assert\NotBlank(message="Please select a CSV file for import.")
      *
      * @var UploadedFile|null
      */
-    private $file;
+    private ?UploadedFile $file;
 
     /**
      * @return bool

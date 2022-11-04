@@ -22,6 +22,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /*
@@ -59,7 +60,7 @@ final class MailAliasController extends StrictCrudController
     /**
      * {@inheritdoc}
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): array|Response
     {
         $session = $this->getSession();
 
@@ -81,7 +82,7 @@ final class MailAliasController extends StrictCrudController
 
             if ($importWarn) {
                 $ret['importWarnings'] = $session->get('mailalias_import_warnings');
-                $this->get('session')->remove('mailalias_import_warnings');
+                $session->remove('mailalias_import_warnings');
             }
         }
 
@@ -110,7 +111,7 @@ final class MailAliasController extends StrictCrudController
         $host = $config->get('Domain');
         if ($type === 'group') {
             /* @var $groupRepo \IServ\CoreBundle\Entity\GroupRepository */
-            $groupRepo = $this->getDoctrine()->getRepository('IServCoreBundle:Group');
+            $groupRepo = $this->getDoctrine()->getRepository(\IServ\CoreBundle\Entity\Group::class);
 
             foreach ($groupRepo->addressLookup($query) as $group) {
                 /* @var $group \IServ\CoreBundle\Entity\Group */
@@ -156,10 +157,8 @@ final class MailAliasController extends StrictCrudController
      * @Route("admin/mailalias/import", name="admin_mailalias_import")
      * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
      * @Template()
-     *
-     * @return array|RedirectResponse
      */
-    public function importAction(Importer $importer, Logger $logger, Request $request, Config $config)
+    public function importAction(Importer $importer, Logger $logger, Request $request, Config $config): RedirectResponse|array
     {
         $session = $this->getSession();
 
