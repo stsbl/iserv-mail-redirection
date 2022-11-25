@@ -53,6 +53,10 @@ final class GroupToRfc822Transformer implements DataTransformerInterface
      */
     public function reverseTransform($value): ?Group
     {
+        if (null === $value['groupRecipient']) {
+            return null;
+        }
+
         $domain = $this->config->get('Domain');
         $value = PhpImapReplacement::imap_rfc822_parse_adrlist($value['groupRecipient'], $domain);
 

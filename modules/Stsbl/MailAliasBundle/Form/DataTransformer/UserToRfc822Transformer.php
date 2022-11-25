@@ -54,6 +54,10 @@ final class UserToRfc822Transformer implements DataTransformerInterface
      */
     public function reverseTransform($value): ?User
     {
+        if (null === $value['userRecipient']) {
+            return null;
+        }
+
         $domain = $this->config->get('Domain');
 
         $value = PhpImapReplacement::imap_rfc822_parse_adrlist($value['userRecipient'], $domain);
