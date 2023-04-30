@@ -1,17 +1,12 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# TRANSLATION CATALOG OF STSBL-ISERV-MAIL-REDIRECTION.
+# Copyright (C) 2023 IServ GmbH
+# This file is distributed under the same license as the stsbl-iserv-mail-redirection package.
+# IServ GmbH <info@iserv.eu>, 2023.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-21 03:42+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: stsbl-iserv-mail-redirection\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +57,7 @@ msgstr ""
 msgid "A user with the e-mail address %s does already exists."
 msgstr ""
 
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
 msgid "Add"
 msgstr ""
 
@@ -101,7 +96,7 @@ msgstr ""
 msgid "All aliases"
 msgstr ""
 
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_show.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_show.html.twig.php
 #, php-format
 msgid "Details for %s@%s"
 msgstr ""
@@ -114,7 +109,7 @@ msgstr ""
 msgid "E-mail"
 msgstr ""
 
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_edit.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_edit.html.twig.php
 #, php-format
 msgid "Edit %s@%s"
 msgstr ""
@@ -127,8 +122,8 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: modules/Stsbl/MailAliasBundle/Form/Type/UserRecipientType.php
 #: modules/Stsbl/MailAliasBundle/Form/Type/GroupRecipientType.php
+#: modules/Stsbl/MailAliasBundle/Form/Type/UserRecipientType.php
 msgid "Enter a search term..."
 msgstr ""
 
@@ -155,8 +150,8 @@ msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Form/Type/ImportType.php
 #: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
 msgid "Import"
 msgstr ""
 
@@ -165,9 +160,9 @@ msgid "Mail alias"
 msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
-#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
 #: modules/Stsbl/MailAliasBundle/EventListener/MenuListener.php
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
 msgid "Mail aliases"
 msgstr ""
 
@@ -220,7 +215,7 @@ msgid ""
 "CSV file was ignored."
 msgstr ""
 
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_multi_edit.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_multi_edit.html.twig.php
 msgid ""
 "The current recipients will never displayed. To change the recipients for "
 "all selected aliases, you can select the checkboxes and enter the desired "
