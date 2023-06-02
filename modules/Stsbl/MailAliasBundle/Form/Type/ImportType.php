@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle\Form\Type;
 
-use IServ\CoreBundle\Form\Type\BooleanType;
+use IServ\Bundle\Form\Form\Type\BooleanType;
 use Stsbl\MailAliasBundle\Model\Import;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;

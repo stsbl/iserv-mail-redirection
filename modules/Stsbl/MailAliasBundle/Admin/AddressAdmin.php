@@ -6,10 +6,10 @@ namespace Stsbl\MailAliasBundle\Admin;
 
 use IServ\AdminBundle\Admin\AdminServiceCrud;
 use IServ\BootstrapBundle\Form\Type\BootstrapCollectionType;
+use IServ\Bundle\Form\Form\Type\BooleanType;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\Specification\PropertyMatchSpecification;
 use IServ\CoreBundle\Entity\User;
-use IServ\CoreBundle\Form\Type\BooleanType;
 use IServ\CoreBundle\Service\Logger;
 use IServ\CoreBundle\Traits\LoggerTrait;
 use IServ\CrudBundle\Entity\CrudInterface;
@@ -131,8 +131,8 @@ final class AddressAdmin extends AdminServiceCrud
             ->useControllerForAction(self::ACTION_ADD, MailAliasController::class . '::addAction')
             ->useControllerForAction(self::ACTION_SHOW, MailAliasController::class . '::showAction')
             ->useControllerForAction(self::ACTION_EDIT, MailAliasController::class . '::editAction')
-	    ->setNamePrefix('admin_')
-	    ->setPathPrefix('/admin/')
+            ->setNamePrefix('admin_')
+            ->setPathPrefix('/admin/')
         ;
     }
 
