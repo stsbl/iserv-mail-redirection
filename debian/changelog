@@ -1,3 +1,11 @@
+stsbl-iserv-mail-redirection (23.06.02.1) stable; urgency=medium
+
+  * Renamed locale templates
+  * Renamed pot files
+  * Fixed using BooleanType
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Fri, 02 Jun 2023 12:21:59 +0200
+
 stsbl-iserv-mail-redirection (22.11.26.1) stable; urgency=medium
 
   * Fixed transforming null values
