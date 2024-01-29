@@ -6,7 +6,6 @@ namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
-use IServ\Library\Config\Config;
 use Stsbl\MailAliasBundle\Entity\Address as AddressEntity;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Stsbl\MailAliasBundle\Form\DataTransformer;
 
 use IServ\CoreBundle\Entity\User;
-use IServ\Library\Address\Address;
 use IServ\Library\PhpImapReplacement\PhpImapReplacement;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;

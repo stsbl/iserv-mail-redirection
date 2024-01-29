@@ -40,7 +40,6 @@ use Stsbl\MailAliasBundle\Entity\Address;
  */
 final class AliasAssociationSpecification extends AbstractSpecification
 {
-
     public function __construct(
         private readonly bool $filterWithoutGroup,
         private readonly bool $filterWithoutUser,

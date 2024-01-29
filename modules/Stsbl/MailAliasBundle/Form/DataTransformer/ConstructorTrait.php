@@ -39,7 +39,6 @@ use IServ\Library\Config\Config;
  */
 trait ConstructorTrait
 {
-
     public function __construct(
         protected readonly Config $config,
         protected readonly EntityManagerInterface $em,
