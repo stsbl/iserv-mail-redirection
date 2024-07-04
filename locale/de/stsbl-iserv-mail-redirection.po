@@ -54,7 +54,7 @@ msgstr "Ein Benutzer mit dem Account %s konnte nicht gefunden werden."
 msgid "A user with the e-mail address %s does already exists."
 msgstr "Es existiert bereits ein Benutzer mit der E-Mail-Adresse %s."
 
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
 msgid "Add"
 msgstr "Hinzufügen"
 
@@ -93,7 +93,7 @@ msgstr "Aliase ohne zugeordnete Benutzer und Gruppen"
 msgid "All aliases"
 msgstr "Alle Aliase"
 
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_show.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_show.html.twig.php
 #, php-format
 msgid "Details for %s@%s"
 msgstr "Details zu %s@%s"
@@ -106,7 +106,7 @@ msgstr "Neue Aliase deaktivieren"
 msgid "E-mail"
 msgstr "E-Mail"
 
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_edit.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_edit.html.twig.php
 #, php-format
 msgid "Edit %s@%s"
 msgstr "%s@%s bearbeiten"
@@ -119,8 +119,8 @@ msgstr "Neue Aliase aktivieren"
 msgid "Enabled"
 msgstr "Aktiviert"
 
-#: modules/Stsbl/MailAliasBundle/Form/Type/UserRecipientType.php
 #: modules/Stsbl/MailAliasBundle/Form/Type/GroupRecipientType.php
+#: modules/Stsbl/MailAliasBundle/Form/Type/UserRecipientType.php
 msgid "Enter a search term..."
 msgstr "Suchbegriff eingeben..."
 
@@ -150,8 +150,8 @@ msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Form/Type/ImportType.php
 #: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
 msgid "Import"
 msgstr "Importieren"
 
@@ -160,9 +160,9 @@ msgid "Mail alias"
 msgstr "Mailalias"
 
 #: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
-#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
 #: modules/Stsbl/MailAliasBundle/EventListener/MenuListener.php
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
 msgid "Mail aliases"
 msgstr "Mailaliase"
 
@@ -217,7 +217,7 @@ msgstr ""
 "Der Alias %s exisitiert bereits! Eine Notiz, welche möglicherweise in der "
 "CSV-Datei definiert wurde, ist ignoriert worden."
 
-#: /tmp/twig2php-stsbl-iserv-mail-redirection/modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_multi_edit.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_multi_edit.html.twig.php
 msgid ""
 "The current recipients will never displayed. To change the recipients for "
 "all selected aliases, you can select the checkboxes and enter the desired "
