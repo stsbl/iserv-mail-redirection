@@ -7,10 +7,10 @@ namespace Stsbl\MailAliasBundle\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
+use IServ\FilesystemBundle\Model\File;
 use Stsbl\MailAliasBundle\Entity\Address;
 use Stsbl\MailAliasBundle\Exception\ImportException;
 use Stsbl\MailAliasBundle\Model\Import;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /*
@@ -47,19 +47,12 @@ class Importer
 {
     public const COLUMN_NUMBER = 4;
 
-    public const COLUMN_NUMBER_WITHOUT_NOTES = 3;
-
     public const COLUMN_NUMBER_WITHOUT_GROUPS_NOTES = 2;
 
     /**
-     * @var UploadedFile
+     * @var File
      */
-    private UploadedFile $csvFile;
-
-    /**
-     * @var \SplFileObject
-     */
-    private \SplFileObject $fileObject;
+    private File $csvFile;
 
     /**
      * @var Address[]
@@ -90,9 +83,10 @@ class Importer
     /**
      * Set uploaded csv file for import
      */
-    private function setUploadedFile(UploadedFile $csvFile): void
+    private function setUploadedFile(File $csvFile): void
     {
-        if ($csvFile->getMimeType() !== 'text/plain') {
+        $mimetype = $csvFile->getMimetype();
+        if ($mimetype !== 'text/plain' && $mimetype !== 'text/csv') {
             throw ImportException::invalidMimeType();
         }
 
@@ -117,18 +111,14 @@ class Importer
         $this->warnings = [];
         $this->lines = [];
 
-        if (null === $import->getFile()) {
+        $file = $import->getFile();
+        if (null === $file) {
             throw ImportException::fileIsNull();
         }
 
-        $this->setUploadedFile($import->getFile());
+        $this->setUploadedFile($file);
         $this->setEnableNewAliases($import->isEnable());
 
-        if (!$filePath = $this->csvFile->getRealPath()) {
-            throw ImportException::pathNotFound();
-        }
-
-        $this->fileObject = new \SplFileObject($filePath);
         $this->validateColumnNumber();
         $this->generateEntities();
     }
@@ -139,11 +129,8 @@ class Importer
     private function validateColumnNumber(): void
     {
         $currentLine = 1;
-        while ($line = $this->fileObject->fgetcsv()) {
-            if ($this->fileObject->eof()) {
-                break;
-            }
-
+        $stream = $this->csvFile->readStream();
+        while ($line = fgetcsv($stream)) {
             // check if column is four (original recipient, users, groups, note) or three (without note)
             // or two (alias and user without a group and a note)
             $lineCount = \count($line);
@@ -159,9 +146,6 @@ class Importer
 
             $currentLine++;
         }
-
-        // reset file pointer
-        $this->fileObject->rewind();
     }
 
     /**

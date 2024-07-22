@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle\Model;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use IServ\FilesystemBundle\Model\File;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /*
@@ -48,10 +48,8 @@ final class Import
 
     /**
      * @Assert\NotBlank(message="Please select a CSV file for import.")
-     *
-     * @var UploadedFile|null
      */
-    private ?UploadedFile $file;
+    private ?File $file;
 
     /**
      * @return bool
@@ -70,7 +68,7 @@ final class Import
         return $this;
     }
 
-    public function getFile(): ?UploadedFile
+    public function getFile(): ?File
     {
         return $this->file;
     }
@@ -78,7 +76,7 @@ final class Import
     /**
      * @return $this
      */
-    public function setFile(?UploadedFile $file = null): self
+    public function setFile(?File $file = null): self
     {
         $this->file = $file;
         return $this;

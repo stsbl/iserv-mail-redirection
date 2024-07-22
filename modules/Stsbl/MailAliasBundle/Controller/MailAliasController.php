@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle\Controller;
 
-use Doctrine\ORM\QueryBuilder;
+use IServ\Bundle\Flash\Flash\FlashInterface;
+use IServ\Bundle\Flash\Flash\FlashMessage;
+use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\User;
+use IServ\CoreBundle\Repository\GroupRepository;
+use IServ\CoreBundle\Repository\UserRepository;
 use IServ\CoreBundle\Service\Logger;
 use IServ\CrudBundle\Controller\StrictCrudController;
-use IServ\CrudBundle\Entity\FlashMessage;
+use IServ\Library\Breadcrumb\Breadcrumb;
+use IServ\Library\Breadcrumb\BreadcrumbManagerInterface;
 use IServ\Library\Config\Config;
 use IServ\Library\PhpImapReplacement\PhpImapReplacement;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -95,8 +100,12 @@ final class MailAliasController extends StrictCrudController
      * @Route("admin/mailalias/recipients", name="admin_mailalias_recipients", options={"expose"=true}, methods={"GET"})
      * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
      */
-    public function getRecipientsAutocompleteAction(Request $request, Config $config): JsonResponse
-    {
+    public function getRecipientsAutocompleteAction(
+        Request $request,
+        Config $config,
+        GroupRepository $groupRepository,
+        UserRepository $userRepository,
+    ): JsonResponse {
         $type = $request->query->get('type');
         $query = $request->query->get('query');
         $suggestions = [];
@@ -110,19 +119,16 @@ final class MailAliasController extends StrictCrudController
 
         $host = $config->get('Domain');
         if ($type === 'group') {
-            /* @var $groupRepo \IServ\CoreBundle\Entity\GroupRepository */
-            $groupRepo = $this->getDoctrine()->getRepository(\IServ\CoreBundle\Entity\Group::class);
-
-            foreach ($groupRepo->addressLookup($query) as $group) {
-                /* @var $group \IServ\CoreBundle\Entity\Group */
+            foreach ($groupRepository->addressLookup($query) as $group) {
+                /* @var $group Group */
                 $rfc822string = PhpImapReplacement::imap_rfc822_write_address($group->getAccount(), $host, $group->getName());
                 $suggestions[] = ['label' => $group->getName(), 'value' => $rfc822string, 'type' => $type, 'extra' => _('Group')];
             }
         } elseif ($type === 'user') {
-            $users = $this->userAddressLookup($query);
+            $users = $this->userAddressLookup($userRepository, $query);
 
             foreach ($users as $user) {
-                /* @var $user \IServ\CoreBundle\Entity\User */
+                /* @var $user User */
                 $rfc822string = PhpImapReplacement::imap_rfc822_write_address($user->getUsername(), $host, $user->getName());
 
                 // determine extra + type
@@ -158,8 +164,14 @@ final class MailAliasController extends StrictCrudController
      * @Security("is_granted('PRIV_MAIL_REDIRECTION_ADMIN')")
      * @Template()
      */
-    public function importAction(Importer $importer, Logger $logger, Request $request, Config $config): RedirectResponse|array
-    {
+    public function importAction(
+        Importer $importer,
+        Logger $logger,
+        Request $request,
+        Config $config,
+        FlashInterface $flash,
+        BreadcrumbManagerInterface $breadcrumbManager,
+    ): RedirectResponse|array {
         $session = $this->getSession();
 
         $form = $this->createImportForm();
@@ -178,11 +190,10 @@ final class MailAliasController extends StrictCrudController
                     $session->set('mailalias_import_warnings', implode("\n", $warnings));
                 }
 
-                $servername = $config->get('Domain');
+                $servername = $config->getString('Domain');
                 $module = 'Mail aliases';
                 $messages = [];
 
-                /* @var $newAddresses \Stsbl\MailAliasBundle\Entity\Address[] */
                 $newAddresses = $importer->getNewAddresses();
                 foreach ($newAddresses as $address) {
                     $logger->writeForModule(sprintf(AddressAdmin::LOG_ALIAS_ADDED, $address, $servername), $module);
@@ -213,6 +224,10 @@ final class MailAliasController extends StrictCrudController
                     $session->set('mailalias_import_msg', implode("\n", $messages));
                 }
 
+                if (($file = $import->getFile()) && $file->isTemporary()) {
+                    $file->delete();
+                }
+
                 return new RedirectResponse($this->generateUrl('admin_mailalias_index'));
             } catch (ImportException $e) {
                 $message = $e->getMessage();
@@ -231,13 +246,13 @@ final class MailAliasController extends StrictCrudController
                     $message = _($message);
                 }
 
-                $this->addFlash(new FlashMessage('error', $message));
+                $flash->add(new FlashMessage('error', $message));
             }
         }
 
         // track path
-        $this->addBreadcrumb(_('Mail aliases'), $this->generateUrl('admin_mailalias_index'));
-        $this->addBreadcrumb(_('Import'));
+        $breadcrumbManager->add(Breadcrumb::create(_('Mail aliases'), $this->generateUrl('admin_mailalias_index')));
+        $breadcrumbManager->add(Breadcrumb::create(_('Import')));
 
         return [
             'importForm' => $form->createView(),
@@ -265,10 +280,9 @@ final class MailAliasController extends StrictCrudController
      * @param string $query
      * @return User[]
      */
-    private function userAddressLookup(string $query): array
+    private function userAddressLookup(UserRepository $userRepository, string $query): array
     {
-        /** @var QueryBuilder $qb */
-        $qb = $this->getDoctrine()->getRepository(User::class)->createQueryBuilder('u');
+        $qb = $userRepository->createQueryBuilder('u');
 
         $qb->select('u');
 

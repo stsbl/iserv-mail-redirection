@@ -38,8 +38,6 @@ final class ImportException extends \RuntimeException implements CsvFileExceptio
 {
     public const MESSAGE_INVALID_MIME_TYPE = 'The uploaded file is not a plain text file.';
 
-    public const MESSAGE_PATH_NOT_FOUND = 'The path of the uploaded file was not found.';
-
     public const MESSAGE_INVALID_COLUMN_AMOUNT = 'The CSV file has an invalid amount of columns.';
 
     public const MESSAGE_FILE_IS_NULL = 'The uploaded file is undefined.';
@@ -77,14 +75,6 @@ final class ImportException extends \RuntimeException implements CsvFileExceptio
     public static function invalidMimeType(): self
     {
         return new self(self::MESSAGE_INVALID_MIME_TYPE);
-    }
-
-    /**
-     * Creates exception with predefined message for not found uploaded file
-     */
-    public static function pathNotFound(): self
-    {
-        return new self(self::MESSAGE_PATH_NOT_FOUND);
     }
 
     /**
