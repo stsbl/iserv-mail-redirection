@@ -1,3 +1,13 @@
+stsbl-iserv-mail-redirection (24.07.23.1) testing; urgency=medium
+
+  * Updated .gitignore
+  * Updated CS to PSR-12
+  * iservmake: Disabled Pootle download
+  * Updated locales
+  * Fixed exception on alias import
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Tue, 23 Jul 2024 01:25:25 +0200
+
 stsbl-iserv-mail-redirection (23.06.02.1) stable; urgency=medium
 
   * Renamed locale templates
