@@ -102,7 +102,7 @@ msgid "Details for %s@%s"
 msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Form/Type/ImportType.php
-msgid "Disable new aliases"
+msgid "Disable"
 msgstr ""
 
 #: priv/mailredirection
@@ -112,6 +112,10 @@ msgstr ""
 #: modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_edit.html.twig.php
 #, php-format
 msgid "Edit %s@%s"
+msgstr ""
+
+#: modules/Stsbl/MailAliasBundle/Form/Type/ImportType.php
+msgid "Enable"
 msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Form/Type/ImportType.php
@@ -131,6 +135,10 @@ msgstr ""
 msgid "Enter only the address part before the @."
 msgstr ""
 
+#: modules/Stsbl/MailAliasBundle/Form/Type/ImportType.php
+msgid "File"
+msgstr ""
+
 #: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
 msgid "Group"
 msgstr ""
@@ -148,10 +156,10 @@ msgstr ""
 msgid "Here you can enter further explanation for this redirection."
 msgstr ""
 
-#: modules/Stsbl/MailAliasBundle/Form/Type/ImportType.php
 #: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
-#: modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Form/Type/ImportType.php
 #: modules/Stsbl/MailAliasBundle/Resources/views/Crud/address_index.html.twig.php
+#: modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
 msgid "Import"
 msgstr ""
 
@@ -160,8 +168,8 @@ msgid "Mail alias"
 msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
-#: modules/Stsbl/MailAliasBundle/EventListener/MenuListener.php
 #: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
+#: modules/Stsbl/MailAliasBundle/EventListener/MenuListener.php
 #: modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
 msgid "Mail aliases"
 msgstr ""
