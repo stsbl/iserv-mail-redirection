@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
 use IServ\Bundle\IdmDataBroker\Contract\IdmGroupFetcher;
 use IServ\Bundle\IdmDataBroker\Contract\IdmUserFetcher;
 use IServ\FilesystemBundle\FilePicker\Domain\PickedFile;
@@ -17,6 +16,7 @@ use Stsbl\MailAliasBundle\Idm\RecipientUserDto;
 use Stsbl\MailAliasBundle\Exception\ImportException;
 use Stsbl\MailAliasBundle\Model\Import;
 use Stsbl\MailAliasBundle\Model\ImportResult;
+use Stsbl\MailAliasBundle\Repository\AddressRepository;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /*
@@ -56,7 +56,7 @@ final class Importer
     public const COLUMN_NUMBER_WITHOUT_GROUPS_NOTES = 2;
 
     public function __construct(
-        private readonly EntityManagerInterface $em,
+        private readonly AddressRepository $addressRepository,
         private readonly ValidatorInterface $validator,
         private readonly IdmUserFetcher $idmUserFetcher,
         private readonly IdmGroupFetcher $idmGroupFetcher,
@@ -142,8 +142,7 @@ final class Importer
                 $note = array_shift($line);
             }
 
-            $addrRepo = $this->em->getRepository(Address::class);
-            $originalRecipient = $addrRepo->findOneBy(['recipient' => $originalRecipientAct]);
+            $originalRecipient = $this->addressRepository->findOneByRecipient($originalRecipientAct);
 
             if (null === $originalRecipient) {
                 $originalRecipient = new Address();
@@ -161,7 +160,7 @@ final class Importer
                     // skip this entity
                     continue;
                 }
-                $this->em->persist($originalRecipient);
+                $this->addressRepository->persist($originalRecipient);
                 $newAddresses[] = $originalRecipient;
             } else {
                 $warnings[] = __('The alias %s does already exists! A note for it which is may defined in the ' .
@@ -190,9 +189,9 @@ final class Importer
                         continue;
                     }
 
-                    $originalRecipient->addUser(new UserRecipient($username));
+                    $originalRecipient->addUser(new UserRecipient($username, $user->uuid));
 
-                    $this->em->persist($originalRecipient);
+                    $this->addressRepository->persist($originalRecipient);
                 }
             }
 
@@ -215,13 +214,13 @@ final class Importer
                         continue;
                     }
 
-                    $originalRecipient->addGroup(new GroupRecipient($g));
+                    $originalRecipient->addGroup(new GroupRecipient($g, $group->uuid));
 
-                    $this->em->persist($originalRecipient);
+                    $this->addressRepository->persist($originalRecipient);
                 }
             }
 
-            $this->em->flush();
+            $this->addressRepository->flush();
         }
 
         return new ImportResult($newAddresses, $warnings);

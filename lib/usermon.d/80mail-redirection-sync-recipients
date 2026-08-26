@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -eu
+
+fd=${1-}
+[ -n "$fd" ] || exit 0
+[ -e "/dev/fd/$fd" ] || exit 1
+
+relevant=$(jq -c '[.[] | select(.table == "users" or .table == "groups")]' "/dev/fd/$fd") || exit 1
+[ "$relevant" != '[]' ] || exit 0
+
+exec symfony iserv:mailalias:sync-recipients

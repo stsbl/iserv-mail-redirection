@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -eu
+
+exec symfony iserv:mailalias:sync-recipients

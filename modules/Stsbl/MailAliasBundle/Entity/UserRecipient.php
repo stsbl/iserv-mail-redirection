@@ -6,10 +6,12 @@ namespace Stsbl\MailAliasBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use IServ\Library\User\User\Username;
+use IServ\Library\Uuid\UuidInterface;
 use Stsbl\MailAliasBundle\Doctrine\UsernameType;
+use Stsbl\MailAliasBundle\Repository\UserRecipientRepository;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Stsbl\\MailAliasBundle\\Repository\\UserRecipientRepository")
  * @ORM\Table(name="mailredirection_recipient_users")
  */
 final class UserRecipient
@@ -20,17 +22,36 @@ final class UserRecipient
     /** @ORM\Column(name="recipient", type=UsernameType::NAME) */
     private Username $username;
 
+    /** @ORM\Column(name="uuid", type="iserv_uuid", nullable=true) */
+    private ?UuidInterface $uuid = null;
+
     /** @ORM\ManyToOne(targetEntity="Stsbl\\MailAliasBundle\\Entity\\Address", inversedBy="users") @ORM\JoinColumn(name="original_recipient_id", referencedColumnName="id", onDelete="CASCADE") */
     private Address $address;
 
-    public function __construct(Username $username)
+    public function __construct(Username $username, ?UuidInterface $uuid = null)
     {
         $this->username = $username;
+        $this->uuid = $uuid;
     }
 
     public function getUsername(): Username
     {
         return $this->username;
+    }
+
+    public function getUuid(): ?UuidInterface
+    {
+        return $this->uuid;
+    }
+
+    public function setUsername(Username $username): void
+    {
+        $this->username = $username;
+    }
+
+    public function setUuid(UuidInterface $uuid): void
+    {
+        $this->uuid = $uuid;
     }
 
     public function setAddress(Address $address): void

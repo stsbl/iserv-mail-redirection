@@ -32,6 +32,7 @@ CREATE TABLE mailredirection_recipient_users (
                                             REFERENCES users(act)
                                             ON UPDATE CASCADE
                                             ON DELETE CASCADE,
+    uuid                    UUID,
     original_recipient_id   INTEGER         REFERENCES mailredirection_addresses(id)
                                             ON UPDATE CASCADE
                                             ON DELETE CASCADE
@@ -43,6 +44,7 @@ CREATE TABLE mailredirection_recipient_groups (
                                             REFERENCES groups(act)
                                             ON UPDATE CASCADE
                                             ON DELETE CASCADE,
+    uuid                    UUID,
     original_recipient_id   INTEGER         REFERENCES mailredirection_addresses(id)
                                             ON UPDATE CASCADE
                                             ON DELETE CASCADE

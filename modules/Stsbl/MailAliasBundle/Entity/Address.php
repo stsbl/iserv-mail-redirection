@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use IServ\Bundle\Autocomplete\Form\Data\AutocompleteTagsData;
 use IServ\CrudBundle\Entity\CrudInterface;
 use IServ\Library\User\User\Username;
+use Stsbl\MailAliasBundle\Repository\AddressRepository;
 use Stsbl\MailAliasBundle\Validator\Constraints as StsblAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -43,7 +44,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenes/MIT>
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Stsbl\\MailAliasBundle\\Repository\\AddressRepository")
  * @ORM\Table(name="mailredirection_addresses")
  * @DoctrineAssert\UniqueEntity(fields="recipient", message="There is already an entry for that address.")
  * @StsblAssert\Address()
