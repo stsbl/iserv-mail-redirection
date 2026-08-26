@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle\Model;
 
-use IServ\FilesystemBundle\Model\File;
+use IServ\FilesystemBundle\FilePicker\Domain\PickedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /*
@@ -49,7 +49,7 @@ final class Import
     /**
      * @Assert\NotBlank(message="Please select a CSV file for import.")
      */
-    private ?File $file;
+    private ?PickedFile $file = null;
 
     /**
      * @return bool
@@ -68,7 +68,7 @@ final class Import
         return $this;
     }
 
-    public function getFile(): ?File
+    public function getFile(): ?PickedFile
     {
         return $this->file;
     }
@@ -76,7 +76,7 @@ final class Import
     /**
      * @return $this
      */
-    public function setFile(?File $file = null): self
+    public function setFile(?PickedFile $file = null): self
     {
         $this->file = $file;
         return $this;

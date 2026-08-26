@@ -189,9 +189,9 @@ final class MailAliasController extends StrictCrudController
             $import = $form->getData();
 
             try {
-                $importer->transform($import);
+                $result = $importer->import($import);
 
-                $warnings = $importer->getWarnings();
+                $warnings = $result->getWarnings();
 
                 if (!empty($warnings)) {
                     $session->set('mailalias_import_warnings', implode("\n", $warnings));
@@ -201,7 +201,7 @@ final class MailAliasController extends StrictCrudController
                 $module = 'Mail aliases';
                 $messages = [];
 
-                $newAddresses = $importer->getNewAddresses();
+                $newAddresses = $result->getNewAddresses();
                 foreach ($newAddresses as $address) {
                     $logger->writeForModule(sprintf(AddressAdmin::LOG_ALIAS_ADDED, $address, $servername), $module);
                     $messages[] = __('Added alias %s@%s.', $address, $servername);
@@ -229,10 +229,6 @@ final class MailAliasController extends StrictCrudController
 
                 if (count($messages) > 0) {
                     $session->set('mailalias_import_msg', implode("\n", $messages));
-                }
-
-                if (($file = $import->getFile()) && $file->isTemporary()) {
-                    $file->delete();
                 }
 
                 return new RedirectResponse($this->generateUrl('admin_mailalias_index'));

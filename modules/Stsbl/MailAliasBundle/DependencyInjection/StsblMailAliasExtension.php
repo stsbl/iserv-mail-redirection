@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Stsbl\MailAliasBundle\DependencyInjection;
 
 use IServ\CoreBundle\DependencyInjection\IServBaseExtension;
+use Stsbl\MailAliasBundle\Doctrine\UsernameType;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /*
  * The MIT License
@@ -40,4 +42,16 @@ use IServ\CoreBundle\DependencyInjection\IServBaseExtension;
  */
 final class StsblMailAliasExtension extends IServBaseExtension
 {
+    public function prepend(ContainerBuilder $container): void
+    {
+        parent::prepend($container);
+
+        $container->prependExtensionConfig('doctrine', [
+            'dbal' => [
+                'types' => [
+                    UsernameType::NAME => UsernameType::class,
+                ],
+            ],
+        ]);
+    }
 }

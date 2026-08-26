@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use IServ\Bundle\Autocomplete\Form\Data\AutocompleteTagsData;
 use IServ\CrudBundle\Entity\CrudInterface;
+use IServ\Library\User\User\Username;
 use Stsbl\MailAliasBundle\Validator\Constraints as StsblAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -200,9 +201,9 @@ class Address implements CrudInterface
         return $this;
     }
 
-    public function hasUserAccount(string $account): bool
+    public function hasUser(Username $username): bool
     {
-        return $this->users->exists(static fn (int $key, UserRecipient $recipient): bool => $recipient->getAccount() === $account);
+        return $this->users->exists(static fn (int $key, UserRecipient $recipient): bool => $recipient->getUsername()->getUsername() === $username->getUsername());
     }
 
     /**
@@ -236,7 +237,7 @@ class Address implements CrudInterface
     {
         $recipients = [];
         foreach ($this->users as $recipient) {
-            $recipients[] = new AutocompleteTagsData('user:' . $recipient->getAccount(), $recipient->getAccount(), 'user');
+            $recipients[] = new AutocompleteTagsData('user:' . $recipient->getUsername(), (string) $recipient->getUsername(), 'user');
         }
         foreach ($this->groups as $recipient) {
             $recipients[] = new AutocompleteTagsData('group:' . $recipient->getAccount(), $recipient->getAccount(), 'group');
@@ -254,8 +255,11 @@ class Address implements CrudInterface
             if (!$recipient instanceof AutocompleteTagsData || $recipient->getId() === null) {
                 continue;
             }
-            if ($recipient->getSource() === 'user' && !$this->hasUserAccount($recipient->getId())) {
-                $this->addUser(new UserRecipient($recipient->getId()));
+            if ($recipient->getSource() === 'user') {
+                $username = new Username($recipient->getId());
+                if (!$this->hasUser($username)) {
+                    $this->addUser(new UserRecipient($username));
+                }
             }
             if ($recipient->getSource() === 'group' && !$this->hasGroupAccount($recipient->getId())) {
                 $this->addGroup(new GroupRecipient($recipient->getId()));

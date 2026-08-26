@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Stsbl\MailAliasBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use IServ\Library\User\User\Username;
+use Stsbl\MailAliasBundle\Doctrine\UsernameType;
 
 /**
  * @ORM\Entity
@@ -15,20 +17,20 @@ final class UserRecipient
     /** @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer") */
     private ?int $id = null;
 
-    /** @ORM\Column(name="recipient", type="text") */
-    private string $account;
+    /** @ORM\Column(name="recipient", type=UsernameType::NAME) */
+    private Username $username;
 
     /** @ORM\ManyToOne(targetEntity="Stsbl\\MailAliasBundle\\Entity\\Address", inversedBy="users") @ORM\JoinColumn(name="original_recipient_id", referencedColumnName="id", onDelete="CASCADE") */
     private Address $address;
 
-    public function __construct(string $account)
+    public function __construct(Username $username)
     {
-        $this->account = $account;
+        $this->username = $username;
     }
 
-    public function getAccount(): string
+    public function getUsername(): Username
     {
-        return $this->account;
+        return $this->username;
     }
 
     public function setAddress(Address $address): void
@@ -38,6 +40,6 @@ final class UserRecipient
 
     public function __toString(): string
     {
-        return $this->account;
+        return (string) $this->username;
     }
 }

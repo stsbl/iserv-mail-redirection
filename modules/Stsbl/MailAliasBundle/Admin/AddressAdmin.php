@@ -238,7 +238,7 @@ final class AddressAdmin extends AdminServiceCrud
     private function logRecipients(CrudInterface $object, array $previousData = null): void
     {
         /* @var $object Address */
-        $userRecipients = array_map(static fn ($recipient): string => $recipient->getAccount(), $object->getUsers()->toArray());
+        $userRecipients = array_map(static fn ($recipient): string => (string) $recipient->getUsername(), $object->getUsers()->toArray());
         $groupRecipients = array_map(static fn ($recipient): string => $recipient->getAccount(), $object->getGroups()->toArray());
         $servername = $this->config()->get('Domain');
 

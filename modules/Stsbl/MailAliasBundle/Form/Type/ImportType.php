@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Stsbl\MailAliasBundle\Form\Type;
 
 use IServ\Bundle\Form\Form\Type\BooleanType;
-use IServ\FilesystemBundle\Upload\Form\Type\UniversalFileType;
+use IServ\FilesystemBundle\FilePicker\Form\Type\RemoteFilePickerType;
 use Stsbl\MailAliasBundle\Model\Import;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -56,10 +55,9 @@ final class ImportType extends AbstractType
     {
         $builder
             ->setAction($this->router->generate('admin_mailalias_import'))
-            ->add('file', UniversalFileType::class, [
+            ->add('file', RemoteFilePickerType::class, [
                 'label' => _('File'),
                 'multiple' => false,
-                'multiple_source' => true,
             ])
             ->add('enable', BooleanType::class, [
                 'label' => _('Enable new aliases'),

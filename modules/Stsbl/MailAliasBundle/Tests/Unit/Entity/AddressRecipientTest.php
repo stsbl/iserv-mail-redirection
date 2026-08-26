@@ -18,7 +18,7 @@ final class AddressRecipientTest extends TestCase
             new AutocompleteTagsData('group:teachers', 'teachers', 'group'),
         ]);
 
-        self::assertSame(['max'], array_map(static fn ($recipient): string => $recipient->getAccount(), $address->getUsers()->toArray()));
+        self::assertSame(['max'], array_map(static fn ($recipient): string => (string) $recipient->getUsername(), $address->getUsers()->toArray()));
         self::assertSame(['teachers'], array_map(static fn ($recipient): string => $recipient->getAccount(), $address->getGroups()->toArray()));
     }
 
