@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
-use IServ\CoreBundle\Entity\Group;
-use IServ\CoreBundle\Entity\User;
 use Stsbl\MailAliasBundle\Entity\Address as AddressEntity;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -56,14 +54,13 @@ final class AddressValidator extends ConstraintValidator
             throw new UnexpectedTypeException($value, AddressEntity::class);
         }
 
-        /** @var Group[] $groupRecipients */
         $groupRecipients = $value->getGroups()->toArray();
         $groupRecipientAccounts = [];
         $groupRecipientEntities = [];
 
         foreach ($groupRecipients as $groupRecipient) {
             $groupRecipientAccounts[] = $groupRecipient->getAccount();
-            $groupRecipientEntities[$groupRecipient->getAccount()] = $groupRecipient;
+            $groupRecipientEntities[$groupRecipient->getAccount()] = $groupRecipient->getAccount();
         }
 
         $duplicatedGroupRecipients = array_unique(array_diff_assoc(
@@ -79,14 +76,13 @@ final class AddressValidator extends ConstraintValidator
             ))->atPath('recipient')->addViolation();
         }
 
-        /** @var User[] $userRecipients */
         $userRecipients = $value->getUsers()->toArray();
         $userRecipientAccounts = [];
         $userRecipientEntities = [];
 
         foreach ($userRecipients as $userRecipient) {
-            $userRecipientAccounts[] = $userRecipient->getUsername();
-            $userRecipientEntities[$userRecipient->getUsername()] = $userRecipient;
+            $userRecipientAccounts[] = $userRecipient->getAccount();
+            $userRecipientEntities[$userRecipient->getAccount()] = $userRecipient->getAccount();
         }
 
         $duplicatedUserRecipients = array_unique(array_diff_assoc(

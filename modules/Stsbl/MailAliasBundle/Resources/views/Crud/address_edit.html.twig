@@ -4,14 +4,3 @@
 {% block crud_title %}
     <h1>{{ __('Edit %s@%s', item, cfg.get('Domain')) }}</h1>
 {% endblock crud_title %}
-
-{% block javascripts %}
-    {{ parent() }}
-    
-    {{ jqi.integrate() }}
-
-    {% if app.environment != 'prod' %}
-        <!-- {{ _self }} => mailaliases_autocomplete.js -->
-    {% endif %}
-    <script type="text/javascript" src="{{ asset('js/mailaliases_autocomplete.js', 'stsbl_mail_alias') }}"></script>
-{% endblock %}

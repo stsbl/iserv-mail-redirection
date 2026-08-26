@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace Stsbl\MailAliasBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use IServ\CoreBundle\Entity\Group;
-use IServ\CoreBundle\Entity\User;
+use IServ\Bundle\IdmDataBroker\Contract\IdmGroupFetcher;
+use IServ\Bundle\IdmDataBroker\Contract\IdmUserFetcher;
 use IServ\FilesystemBundle\Model\File;
 use Stsbl\MailAliasBundle\Entity\Address;
+use Stsbl\MailAliasBundle\Entity\GroupRecipient;
+use Stsbl\MailAliasBundle\Entity\UserRecipient;
+use Stsbl\MailAliasBundle\Idm\RecipientGroupDto;
+use Stsbl\MailAliasBundle\Idm\RecipientUserDto;
 use Stsbl\MailAliasBundle\Exception\ImportException;
 use Stsbl\MailAliasBundle\Model\Import;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -77,6 +81,8 @@ class Importer
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly ValidatorInterface $validator,
+        private readonly IdmUserFetcher $idmUserFetcher,
+        private readonly IdmGroupFetcher $idmGroupFetcher,
     ) {
     }
 
@@ -200,20 +206,18 @@ class Importer
             }
 
             $userActs = explode(',', $userActString);
-            $groupActs = explode(',', $groupActString);
-            $userRepo = $this->em->getRepository(User::class);
-            $groupRepo = $this->em->getRepository(Group::class);
-
+            $groupActs = explode(',', (string) $groupActString);
             if (!empty($userActString)) {
                 foreach ($userActs as $account) {
-                    $user = $userRepo->find($account);
+                    $users = $this->idmUserFetcher->getFilteredUsers(['user' => $account, 'deleted' => 'false'], RecipientUserDto::class);
+                    $user = current($users);
 
-                    if (null === $user) {
+                    if (!$user instanceof RecipientUserDto || $user->account !== $account) {
                         $this->warnings[] = __('A user with the account %s was not found.', $account);
                         continue;
                     }
 
-                    if ($originalRecipient->hasUser($user)) {
+                    if ($originalRecipient->hasUserAccount($account)) {
                         $this->warnings[] = __(
                             'The user %s is already assigned to the original recipient %s.',
                             $user,
@@ -222,7 +226,7 @@ class Importer
                         continue;
                     }
 
-                    $originalRecipient->addUser($user);
+                    $originalRecipient->addUser(new UserRecipient($account));
 
                     $this->em->persist($originalRecipient);
                 }
@@ -230,14 +234,15 @@ class Importer
 
             if (!empty($groupActString)) {
                 foreach ($groupActs as $g) {
-                    $group = $groupRepo->find($g);
+                    $groups = $this->idmGroupFetcher->getFilteredGroups(['group' => $g, 'deleted' => 'false'], RecipientGroupDto::class);
+                    $group = current($groups);
 
-                    if (null === $group) {
+                    if (!$group instanceof RecipientGroupDto || $group->account !== $g) {
                         $this->warnings[] = __('A group with the account %s was not found.', $g);
                         continue;
                     }
 
-                    if ($originalRecipient->hasGroup($group)) {
+                    if ($originalRecipient->hasGroupAccount($g)) {
                         $this->warnings[] = __(
                             'The group %s is already assigned to the original recipient %s.',
                             $group,
@@ -246,7 +251,7 @@ class Importer
                         continue;
                     }
 
-                    $originalRecipient->addGroup($group);
+                    $originalRecipient->addGroup(new GroupRecipient($g));
 
                     $this->em->persist($originalRecipient);
                 }

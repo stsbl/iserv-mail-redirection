@@ -4,10 +4,11 @@
 
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
-use Doctrine\ORM\EntityManagerInterface;
-use IServ\CoreBundle\Entity\User;
-use IServ\CoreBundle\Entity\Group;
+use IServ\Bundle\IdmDataBroker\Contract\IdmGroupFetcher;
+use IServ\Bundle\IdmDataBroker\Contract\IdmUserFetcher;
 use IServ\Library\Config\Config;
+use Stsbl\MailAliasBundle\Idm\RecipientGroupDto;
+use Stsbl\MailAliasBundle\Idm\RecipientUserDto;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -44,7 +45,8 @@ class NotAccountValidator extends ConstraintValidator
 {
     public function __construct(
         private readonly Config $config,
-        private readonly EntityManagerInterface $em,
+        private readonly IdmGroupFetcher $idmGroupFetcher,
+        private readonly IdmUserFetcher $idmUserFetcher,
     ) {
     }
 
@@ -62,7 +64,8 @@ class NotAccountValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, NotAccount::class);
         }
 
-        if ($this->em->find(User::class, $value) !== null) {
+        $users = $this->idmUserFetcher->getFilteredUsers(['user' => $value], RecipientUserDto::class);
+        if (current($users) instanceof RecipientUserDto) {
             $this->context->addViolation(sprintf(
                 $constraint->getUserMessage(),
                 $value . '@' . $this->config->get('Domain')
@@ -70,7 +73,8 @@ class NotAccountValidator extends ConstraintValidator
             return;
         }
 
-        if ($this->em->find(Group::class, $value) !== null) {
+        $groups = $this->idmGroupFetcher->getFilteredGroups(['group' => $value], RecipientGroupDto::class);
+        if (current($groups) instanceof RecipientGroupDto) {
             $this->context->addViolation(sprintf(
                 $constraint->getGroupMessage(),
                 $value . '@' . $this->config->get('Domain')

@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Stsbl\MailAliasBundle\Admin;
 
 use IServ\AdminBundle\Admin\AdminServiceCrud;
-use IServ\BootstrapBundle\Form\Type\BootstrapCollectionType;
 use IServ\Bundle\Form\Form\Type\BooleanType;
-use IServ\CoreBundle\Entity\Group;
-use IServ\CoreBundle\Entity\Specification\PropertyMatchSpecification;
-use IServ\CoreBundle\Entity\User;
-use IServ\CoreBundle\Service\Logger;
-use IServ\CoreBundle\Traits\LoggerTrait;
+use IServ\Bundle\Autocomplete\Domain\AutocompleteType;
+use IServ\Bundle\Autocomplete\Form\Type\AutocompleteTagsType;
+use IServ\Bundle\AdminLog\Logger\AdminLoggerInterface;
 use IServ\CrudBundle\Entity\CrudInterface;
 use IServ\CrudBundle\Mapper\AbstractBaseMapper;
 use IServ\CrudBundle\Mapper\FormMapper;
@@ -26,8 +23,6 @@ use IServ\Library\Config\Config;
 use Stsbl\MailAliasBundle\Admin\Filter\AliasAssociationSpecification;
 use Stsbl\MailAliasBundle\Controller\MailAliasController;
 use Stsbl\MailAliasBundle\Entity\Address;
-use Stsbl\MailAliasBundle\Form\Type\GroupRecipientType;
-use Stsbl\MailAliasBundle\Form\Type\UserRecipientType;
 use Stsbl\MailAliasBundle\Security\Privilege;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
@@ -63,8 +58,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
  */
 final class AddressAdmin extends AdminServiceCrud
 {
-    use LoggerTrait;
-
     public const LOG_ALIAS_ADDED = 'Alias %s@%s hinzugefügt';
 
     public const LOG_USER_RECIPIENT_ADDED = 'Benutzer %s als Empfänger von Alias %s@%s hinzugefügt';
@@ -151,36 +144,15 @@ final class AddressAdmin extends AdminServiceCrud
                     ],
                 ]
             ])
-            ->add('users', BootstrapCollectionType::class, [
+            ->add('recipients', AutocompleteTagsType::class, [
                 'required' => false,
-                'label' => _('Users'),
+                'label' => _('Recipients'),
                 'multi_edit' => true,
-                'entry_type' => UserRecipientType::class,
-                'prototype_name' => 'proto-entry',
+                'autocomplete_types' => [AutocompleteType::USER, AutocompleteType::GROUP],
+                'multiple' => true,
+                'tag_source' => '/admin/mailalias/recipients?type=user,group',
                 'attr' => [
-                    'help_text' => _('The users who should receive the e-mails to that address.'),
-                ],
-                // Child options
-                'entry_options' => [
-                    'attr' => [
-                        'widget_col' => 12, // Single child field w/o label col
-                    ],
-                ],
-            ])
-            ->add('groups', BootstrapCollectionType::class, [
-                'required' => false,
-                'label' => _('Groups'),
-                'multi_edit' => true,
-                'entry_type' => GroupRecipientType::class,
-                'prototype_name' => 'proto-entry',
-                'attr' => [
-                    'help_text' => _('The groups which should receive the e-mails to that address.'),
-                ],
-                // Child options
-                'entry_options' => [
-                    'attr' => [
-                        'widget_col' => 12, // Single child field w/o label col
-                    ],
+                    'help_text' => _('The users and groups who should receive the e-mails to that address.'),
                 ],
             ])
             ->add('enabled', BooleanType::class, [
@@ -223,8 +195,7 @@ final class AddressAdmin extends AdminServiceCrud
         // explicitly block FormMapper
         // the method will also called when building form
         if (!$mapper instanceof FormMapper) {
-            $mapper->add('users', null, ['label' => _('Users')]);
-            $mapper->add('groups', null, ['label' => _('Groups')]);
+            $mapper->add('recipients', null, ['label' => _('Recipients')]);
             $mapper->add('enabled', 'boolean', ['label' => _('Enabled')]);
             $mapper->add('comment', null, ['label' => _('Note'), 'responsive' => 'desktop']);
         }
@@ -243,8 +214,8 @@ final class AddressAdmin extends AdminServiceCrud
         $listHandler->addListFilterGroup($associationFilterGroup);
 
         $enabledFilterGroup = new FilterGroup('enabled', _('Enabled'));
-        $enabledFilterGroup->addListFilter((new ListSpecificationFilter(_('Yes'), new PropertyMatchSpecification('enabled', true)))->setName('true'));
-        $enabledFilterGroup->addListFilter((new ListSpecificationFilter(_('No'), new PropertyMatchSpecification('enabled', false)))->setName('false'));
+        $enabledFilterGroup->addListFilter((new ListSpecificationFilter(_('Yes'), new \Stsbl\MailAliasBundle\Admin\Filter\PropertyMatchSpecification('enabled', true)))->setName('true'));
+        $enabledFilterGroup->addListFilter((new ListSpecificationFilter(_('No'), new \Stsbl\MailAliasBundle\Admin\Filter\PropertyMatchSpecification('enabled', false)))->setName('false'));
 
         $listHandler->addListFilterGroup($enabledFilterGroup);
 
@@ -267,8 +238,8 @@ final class AddressAdmin extends AdminServiceCrud
     private function logRecipients(CrudInterface $object, array $previousData = null): void
     {
         /* @var $object Address */
-        $userRecipients = $object->getUsers()->toArray();
-        $groupRecipients = $object->getGroups()->toArray();
+        $userRecipients = array_map(static fn ($recipient): string => $recipient->getAccount(), $object->getUsers()->toArray());
+        $groupRecipients = array_map(static fn ($recipient): string => $recipient->getAccount(), $object->getGroups()->toArray());
         $servername = $this->config()->get('Domain');
 
         if (null === $previousData) {
@@ -286,13 +257,15 @@ final class AddressAdmin extends AdminServiceCrud
         }
 
         $previousUserRecipients = [];
-        foreach ($previousData['users'] as $recipientId) {
-            $previousUserRecipients[] = $this->getObjectManager()->findOneBy(User::class, ['username' => $recipientId]);
-        }
-
         $previousGroupRecipients = [];
-        foreach ($previousData['groups'] as $recipientId) {
-            $previousGroupRecipients[] = $this->getObjectManager()->findOneBy(Group::class, ['account' => $recipientId]);
+        foreach ($previousData['recipients'] ?? [] as $recipient) {
+            if ($recipient instanceof \IServ\Bundle\Autocomplete\Form\Data\AutocompleteTagsData && $recipient->getId() !== null) {
+                if ($recipient->getSource() === 'user') {
+                    $previousUserRecipients[] = $recipient->getId();
+                } elseif ($recipient->getSource() === 'group') {
+                    $previousGroupRecipients[] = $recipient->getId();
+                }
+            }
         }
 
         $removedUserRecipients = array_diff($previousUserRecipients, $userRecipients);
@@ -419,9 +392,16 @@ final class AddressAdmin extends AdminServiceCrud
      *
      * @required
      */
-    public function setLogger(Logger $logger): void
+    public function setLogger(AdminLoggerInterface $logger): void
     {
         $this->logger = $logger;
+    }
+
+    private AdminLoggerInterface $logger;
+
+    private function log(string $message): void
+    {
+        $this->logger->writeForModule($message, 'Mail aliases');
     }
 
     private function config(): Config

@@ -6,16 +6,11 @@ namespace Stsbl\MailAliasBundle\Controller;
 
 use IServ\Bundle\Flash\Flash\FlashInterface;
 use IServ\Bundle\Flash\Flash\FlashMessage;
-use IServ\CoreBundle\Entity\Group;
-use IServ\CoreBundle\Entity\User;
-use IServ\CoreBundle\Repository\GroupRepository;
-use IServ\CoreBundle\Repository\UserRepository;
-use IServ\CoreBundle\Service\Logger;
+use IServ\Bundle\AdminLog\Logger\AdminLoggerInterface;
 use IServ\CrudBundle\Controller\StrictCrudController;
 use IServ\Library\Breadcrumb\Breadcrumb;
 use IServ\Library\Breadcrumb\BreadcrumbManagerInterface;
 use IServ\Library\Config\Config;
-use IServ\Library\PhpImapReplacement\PhpImapReplacement;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Stsbl\MailAliasBundle\Admin\AddressAdmin;
@@ -23,6 +18,7 @@ use Stsbl\MailAliasBundle\Exception\ImportException;
 use Stsbl\MailAliasBundle\Form\Type\ImportType;
 use Stsbl\MailAliasBundle\Model\Import;
 use Stsbl\MailAliasBundle\Service\Importer;
+use Stsbl\MailAliasBundle\Service\IdmRecipientLookup;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -102,9 +98,7 @@ final class MailAliasController extends StrictCrudController
      */
     public function getRecipientsAutocompleteAction(
         Request $request,
-        Config $config,
-        GroupRepository $groupRepository,
-        UserRepository $userRepository,
+        IdmRecipientLookup $idmRecipientLookup,
     ): JsonResponse {
         $type = $request->query->get('type');
         $query = $request->query->get('query');
@@ -113,44 +107,57 @@ final class MailAliasController extends StrictCrudController
         if ($type === null) {
             throw new \InvalidArgumentException('Parameter type should not be null.');
         }
-        if ($type !== 'group' && $type !== 'user') {
+        $types = explode(',', $type);
+        if (array_diff($types, ['group', 'user'])) {
             throw new \InvalidArgumentException(sprintf('Invalid type %s.', $type));
         }
 
-        $host = $config->get('Domain');
-        if ($type === 'group') {
-            foreach ($groupRepository->addressLookup($query) as $group) {
-                /* @var $group Group */
-                $rfc822string = PhpImapReplacement::imap_rfc822_write_address($group->getAccount(), $host, $group->getName());
-                $suggestions[] = ['label' => $group->getName(), 'value' => $rfc822string, 'type' => $type, 'extra' => _('Group')];
+        $query = is_string($query) ? $query : '';
+        if (in_array('group', $types, true)) {
+            $result = $idmRecipientLookup->groups($query);
+            foreach (['exact' => 10, 'partial' => 5, 'fuzzy' => 1] as $bucket => $certainty) {
+                foreach ($result[$bucket] ?? [] as $group) {
+                $account = $group['group'] ?? null;
+                if (!is_string($account) || $account === '') {
+                    continue;
+                }
+                $suggestions[] = [
+                    'label' => $group['name'] ?? $account,
+                    'text' => $group['name'] ?? $account,
+                    'value' => 'group:' . $account,
+                    'source' => 'group',
+                    'icon' => 'pro-group',
+                    'extra' => _('Group'),
+                    'certainty' => $certainty,
+                    'fuzzy' => $bucket === 'fuzzy',
+                    'expandable' => false,
+                    'readonly' => false,
+                ];
+                }
             }
-        } elseif ($type === 'user') {
-            $users = $this->userAddressLookup($userRepository, $query);
-
-            foreach ($users as $user) {
-                /* @var $user User */
-                $rfc822string = PhpImapReplacement::imap_rfc822_write_address($user->getUsername(), $host, $user->getName());
-
-                // determine extra + type
-                if ($user->isAdmin()) {
-                    $extra = _('Administrator');
-                    $type = 'admin';
-                } elseif ($user->hasRole('ROLE_TEACHER')) {
-                    $extra = _('Teacher');
-                    $type = 'teacher';
-                } elseif ($user->hasRole('ROLE_STUDENT')) {
-                    $extra = _('Student');
-                    $type = 'student';
-                } else {
-                    $extra = _('User');
-                    $type = 'user';
+        }
+        if (in_array('user', $types, true)) {
+            $result = $idmRecipientLookup->users($query);
+            foreach (['exact' => 10, 'partial' => 5, 'fuzzy' => 1] as $bucket => $certainty) {
+                foreach ($result[$bucket] ?? [] as $user) {
+                $account = $user['user'] ?? null;
+                if (!is_string($account) || $account === '') {
+                    continue;
                 }
-
-                $label = $user->getName();
-                if ($user->getAuxInfo() != null) {
-                    $label .= ' (' . $user->getAuxInfo() . ')';
+                $label = trim(sprintf('%s %s', $user['firstname'] ?? '', $user['lastname'] ?? ''));
+                $suggestions[] = [
+                    'label' => $label === '' ? $account : $label,
+                    'text' => $label === '' ? $account : $label,
+                    'value' => 'user:' . $account,
+                    'source' => 'user',
+                    'icon' => 'pro-user',
+                    'extra' => $user['auxInfo'] ?? _('User'),
+                    'certainty' => $certainty,
+                    'fuzzy' => $bucket === 'fuzzy',
+                    'expandable' => false,
+                    'readonly' => false,
+                ];
                 }
-                $suggestions[] = ['label' => $label, 'value' => $rfc822string, 'type' => $type, 'extra' => $extra];
             }
         }
 
@@ -166,7 +173,7 @@ final class MailAliasController extends StrictCrudController
      */
     public function importAction(
         Importer $importer,
-        Logger $logger,
+        AdminLoggerInterface $logger,
         Request $request,
         Config $config,
         FlashInterface $flash,
@@ -269,37 +276,4 @@ final class MailAliasController extends StrictCrudController
         return $this->createForm(ImportType::class);
     }
 
-    /**
-     * Finds users for address lookup
-     * Inspired by the function in GroupRepository,
-     * but User has no similar function and also
-     * seems to does not have even a repository.
-     *
-     * So, we have to implement the functions here.
-     *
-     * @param string $query
-     * @return User[]
-     */
-    private function userAddressLookup(UserRepository $userRepository, string $query): array
-    {
-        $qb = $userRepository->createQueryBuilder('u');
-
-        $qb->select('u');
-
-        $terms = preg_split("/\s+/", trim($query));
-        foreach ($terms as $index => $term) {
-            $qb
-                ->andWhere(
-                    'LOWER(u.username) LIKE :adra' . $index . ' OR LOWER(u.username) LIKE :adr_mail' . $index . ' OR ' .
-                    'LOWER(u.firstname) LIKE :adra' . $index . ' OR LOWER(u.firstname) LIKE :adrb' . $index . ' OR ' .
-                    'LOWER(u.lastname) LIKE :adra' . $index . ' OR LOWER(u.lastname) LIKE :adrb' . $index
-                )
-                ->setParameter('adra' . $index, strtolower($term) . '%')
-                ->setParameter('adrb' . $index, '% ' . strtolower($term) . '%')
-                ->setParameter('adr_mail' . $index, '%.' . strtolower($term) . '%')
-            ;
-        }
-
-        return $qb->getQuery()->setMaxResults(10)->getResult();
-    }
 }

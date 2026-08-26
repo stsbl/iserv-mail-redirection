@@ -7,8 +7,7 @@ namespace Stsbl\MailAliasBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use IServ\CoreBundle\Entity\Group;
-use IServ\CoreBundle\Entity\User;
+use IServ\Bundle\Autocomplete\Form\Data\AutocompleteTagsData;
 use IServ\CrudBundle\Entity\CrudInterface;
 use Stsbl\MailAliasBundle\Validator\Constraints as StsblAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -84,24 +83,16 @@ class Address implements CrudInterface
     private ?string $comment;
 
     /**
-     * @ORM\ManyToMany(targetEntity="IServ\CoreBundle\Entity\User")
-     * @ORM\JoinTable(name="mailredirection_recipient_users",
-     *      joinColumns={@ORM\JoinColumn(name="original_recipient_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="recipient", referencedColumnName="act", unique=true)}
-     * )
+     * @ORM\OneToMany(targetEntity="Stsbl\MailAliasBundle\Entity\UserRecipient", mappedBy="address", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var User[]&Collection
+     * @var UserRecipient[]&Collection
      */
     private Collection $users;
 
     /**
-     * @ORM\ManyToMany(targetEntity="IServ\CoreBundle\Entity\Group")
-     * @ORM\JoinTable(name="mailredirection_recipient_groups",
-     *      joinColumns={@ORM\JoinColumn(name="original_recipient_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="recipient", referencedColumnName="act", unique=true)}
-     * )
+     * @ORM\OneToMany(targetEntity="Stsbl\MailAliasBundle\Entity\GroupRecipient", mappedBy="address", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Group[]&Collection
+     * @var GroupRecipient[]&Collection
      */
     private Collection $groups;
 
@@ -143,7 +134,7 @@ class Address implements CrudInterface
     }
 
     /**
-     * @return User[]&Collection
+     * @return UserRecipient[]&Collection
      */
     public function getUsers(): Collection
     {
@@ -151,7 +142,7 @@ class Address implements CrudInterface
     }
 
     /**
-     * @return Group[]&Collection
+     * @return GroupRecipient[]&Collection
      */
     public function getGroups(): Collection
     {
@@ -191,8 +182,9 @@ class Address implements CrudInterface
     /**
      * @return $this
      */
-    public function addUser(User $user): self
+    public function addUser(UserRecipient $user): self
     {
+        $user->setAddress($this);
         $this->users->add($user);
 
         return $this;
@@ -201,23 +193,24 @@ class Address implements CrudInterface
     /**
      * @return $this
      */
-    public function removeUser(User $user): self
+    public function removeUser(UserRecipient $user): self
     {
         $this->users->removeElement($user);
 
         return $this;
     }
 
-    public function hasUser(User $user): bool
+    public function hasUserAccount(string $account): bool
     {
-        return $this->users->contains($user);
+        return $this->users->exists(static fn (int $key, UserRecipient $recipient): bool => $recipient->getAccount() === $account);
     }
 
     /**
      * @return $this
      */
-    public function addGroup(Group $group): self
+    public function addGroup(GroupRecipient $group): self
     {
+        $group->setAddress($this);
         $this->groups->add($group);
 
         return $this;
@@ -226,15 +219,49 @@ class Address implements CrudInterface
     /**
      * @return $this
      */
-    public function removeGroup(Group $group): self
+    public function removeGroup(GroupRecipient $group): self
     {
         $this->groups->removeElement($group);
 
         return $this;
     }
 
-    public function hasGroup(Group $group): bool
+    public function hasGroupAccount(string $account): bool
     {
-        return $this->groups->contains($group);
+        return $this->groups->exists(static fn (int $key, GroupRecipient $recipient): bool => $recipient->getAccount() === $account);
+    }
+
+    /** @return list<AutocompleteTagsData> */
+    public function getRecipients(): array
+    {
+        $recipients = [];
+        foreach ($this->users as $recipient) {
+            $recipients[] = new AutocompleteTagsData('user:' . $recipient->getAccount(), $recipient->getAccount(), 'user');
+        }
+        foreach ($this->groups as $recipient) {
+            $recipients[] = new AutocompleteTagsData('group:' . $recipient->getAccount(), $recipient->getAccount(), 'group');
+        }
+
+        return $recipients;
+    }
+
+    /** @param iterable<AutocompleteTagsData> $recipients */
+    public function setRecipients(iterable $recipients): self
+    {
+        $this->users->clear();
+        $this->groups->clear();
+        foreach ($recipients as $recipient) {
+            if (!$recipient instanceof AutocompleteTagsData || $recipient->getId() === null) {
+                continue;
+            }
+            if ($recipient->getSource() === 'user' && !$this->hasUserAccount($recipient->getId())) {
+                $this->addUser(new UserRecipient($recipient->getId()));
+            }
+            if ($recipient->getSource() === 'group' && !$this->hasGroupAccount($recipient->getId())) {
+                $this->addGroup(new GroupRecipient($recipient->getId()));
+            }
+        }
+
+        return $this;
     }
 }

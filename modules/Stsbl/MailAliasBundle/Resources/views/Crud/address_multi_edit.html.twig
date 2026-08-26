@@ -1,5 +1,4 @@
 {% extends '@IServCrud/Crud/multi_edit.html.twig' %}
-{% import '@StsblJavaScriptLibrary/jquery.initialize.html.twig' as jqi %}
 
 {%  block content %}
     <div class="alert alert-warning">
@@ -8,14 +7,3 @@
 
     {{  parent() }}
 {%  endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-
-    {{ jqi.integrate() }}
-
-    {% if app.environment != 'prod' %}
-        <!-- {{ _self }} => mailaliases.js -->
-    {% endif %}
-    <script type="text/javascript" src="{{ asset('js/mailaliases_autocomplete.js', 'stsbl_mail_alias') }}"></script>
-{% endblock %}

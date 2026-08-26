@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Stsbl\MailAliasBundle\Admin\Filter;
 
 use Doctrine\ORM\QueryBuilder;
-use IServ\CoreBundle\Entity\Group;
-use IServ\CoreBundle\Entity\User;
 use IServ\CrudBundle\Doctrine\Specification\AbstractSpecification;
 use Stsbl\MailAliasBundle\Entity\Address;
 
@@ -51,38 +49,10 @@ final class AliasAssociationSpecification extends AbstractSpecification
      */
     public function match(QueryBuilder $qb, $dqlAlias)
     {
-        $subUser = clone $qb;
-        $subUser->resetDQLPart('from');
-
         $qb->leftJoin('parent.groups', 'ag');
         $qb->leftJoin('parent.users', 'au');
-
-        $subUser
-            ->select('u')
-            ->from(User::class, 'u')
-            ->where($subUser->expr()->eq('u.username', 'au.username'))
-        ;
-
-        if ($this->filterWithoutUser) {
-            $userExpression = $qb->expr()->not($qb->expr()->exists($subUser));
-        } else {
-            $userExpression = $qb->expr()->exists($subUser);
-        }
-
-        $subGroup = clone $qb;
-        $subGroup->resetDQLPart('from');
-
-        $subGroup
-            ->select('g')
-            ->from(Group::class, 'g')
-            ->where($subUser->expr()->eq('g.account', 'ag.account'))
-        ;
-
-        if ($this->filterWithoutGroup) {
-            $groupExpression = $qb->expr()->not($qb->expr()->exists($subGroup));
-        } else {
-            $groupExpression = $qb->expr()->exists($subGroup);
-        }
+        $userExpression = $this->filterWithoutUser ? $qb->expr()->isNull('au.id') : $qb->expr()->isNotNull('au.id');
+        $groupExpression = $this->filterWithoutGroup ? $qb->expr()->isNull('ag.id') : $qb->expr()->isNotNull('ag.id');
 
         return $qb->expr()->andX($userExpression, $groupExpression);
     }
