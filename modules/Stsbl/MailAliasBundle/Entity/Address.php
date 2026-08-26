@@ -64,6 +64,9 @@ class Address implements CrudInterface
     #[Assert\NotBlank]
     private bool $enabled = true;
 
+    #[ORM\Column(name: 'display_name', type: 'text', nullable: true)]
+    private ?string $displayName = null;
+
     #[ORM\Column(name: 'comment', type: 'text')]
     private ?string $comment;
 
@@ -112,6 +115,11 @@ class Address implements CrudInterface
         return $this->comment;
     }
 
+    public function getDisplayName(): ?string
+    {
+        return $this->displayName;
+    }
+
     /**
      * @return UserRecipient[]&Collection
      */
@@ -154,6 +162,13 @@ class Address implements CrudInterface
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function setDisplayName(?string $displayName): self
+    {
+        $this->displayName = $displayName;
 
         return $this;
     }
@@ -227,23 +242,38 @@ class Address implements CrudInterface
     /** @param iterable<AutocompleteTagsData> $recipients */
     public function setRecipients(iterable $recipients): self
     {
-        $this->users->clear();
-        $this->groups->clear();
+        $users = [];
+        $groups = [];
         foreach ($recipients as $recipient) {
             if (!$recipient instanceof AutocompleteTagsData || $recipient->getId() === null) {
                 continue;
             }
             if ($recipient->getSource() === 'user') {
-                $username = new Username($recipient->getId());
-                if (!$this->hasUser($username)) {
-                    $this->addUser(new UserRecipient($username));
-                }
+                $users[] = new Username($recipient->getId());
             }
             if ($recipient->getSource() === 'group') {
-                $account = new GroupAccount($recipient->getId());
-                if (!$this->hasGroupAccount($account)) {
-                    $this->addGroup(new GroupRecipient($account));
-                }
+                $groups[] = new GroupAccount($recipient->getId());
+            }
+        }
+
+        foreach ($this->users->toArray() as $recipient) {
+            if (!in_array($recipient->getUsername(), $users, false)) {
+                $this->removeUser($recipient);
+            }
+        }
+        foreach ($this->groups->toArray() as $recipient) {
+            if (!in_array($recipient->getAccount(), $groups, false)) {
+                $this->removeGroup($recipient);
+            }
+        }
+        foreach ($users as $username) {
+            if (!$this->hasUser($username)) {
+                $this->addUser(new UserRecipient($username));
+            }
+        }
+        foreach ($groups as $account) {
+            if (!$this->hasGroupAccount($account)) {
+                $this->addGroup(new GroupRecipient($account));
             }
         }
 

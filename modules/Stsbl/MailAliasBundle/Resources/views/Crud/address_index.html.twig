@@ -46,3 +46,8 @@
 
     {{ parent() }}
 {%  endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/recipients.css', 'stsbl-mail-alias') }}">
+{% endblock %}

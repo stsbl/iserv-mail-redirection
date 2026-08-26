@@ -47,6 +47,16 @@ final class StsblMailAliasExtension extends IServBaseExtension
     {
         parent::prepend($container);
 
+        $container->prependExtensionConfig('framework', [
+            'assets' => [
+                'packages' => [
+                    'stsbl-mail-alias' => [
+                        'json_manifest_path' => '%kernel.project_dir%/public/assets/stsbl-mail-alias/manifest.json',
+                    ],
+                ],
+            ],
+        ]);
+
         $container->prependExtensionConfig('doctrine', [
             'dbal' => [
                 'types' => [

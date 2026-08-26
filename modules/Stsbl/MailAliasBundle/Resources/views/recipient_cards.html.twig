@@ -1,0 +1,8 @@
+{% for recipient in mail_alias_recipient_cards(recipients) %}
+    {% if recipient.link %}<a href="{{ recipient.link }}" class="mail-alias-recipient">{% else %}<span class="mail-alias-recipient">{% endif %}
+        {{ recipient.avatarHtml|raw }}
+        <span class="mail-alias-recipient__label">{{ recipient.name }}</span>
+    {% if recipient.link %}</a>{% else %}</span>{% endif %}{% if list|default(false) and not loop.last %}<span class="mail-alias-recipient__separator">,</span>{% endif %}
+{% else %}
+    —
+{% endfor %}

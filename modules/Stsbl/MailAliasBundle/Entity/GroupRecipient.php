@@ -12,7 +12,7 @@ use Stsbl\MailAliasBundle\Repository\GroupRecipientRepository;
 
 #[ORM\Entity(repositoryClass: GroupRecipientRepository::class)]
 #[ORM\Table(name: 'mailredirection_recipient_groups')]
-final class GroupRecipient
+class GroupRecipient
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

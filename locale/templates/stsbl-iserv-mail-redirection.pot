@@ -1,7 +1,7 @@
 # TRANSLATION CATALOG OF STSBL-ISERV-MAIL-REDIRECTION.
-# Copyright (C) 2024 IServ GmbH
+# Copyright (C) 2026 IServ GmbH
 # This file is distributed under the same license as the stsbl-iserv-mail-redirection package.
-# IServ GmbH <info@iserv.eu>, 2024.
+# IServ GmbH <info@iserv.eu>, 2026.
 #
 #, fuzzy
 msgid ""
@@ -76,10 +76,6 @@ msgstr ""
 msgid "Added user %s as recipient for alias %s@%s."
 msgstr ""
 
-#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
-msgid "Administrator"
-msgstr ""
-
 #: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
 msgid "Aliases without associated groups"
 msgstr ""
@@ -126,11 +122,6 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: modules/Stsbl/MailAliasBundle/Form/Type/GroupRecipientType.php
-#: modules/Stsbl/MailAliasBundle/Form/Type/UserRecipientType.php
-msgid "Enter a search term..."
-msgstr ""
-
 #: modules/Stsbl/MailAliasBundle/Validator/Constraints/LocalPart.php
 msgid "Enter only the address part before the @."
 msgstr ""
@@ -169,7 +160,7 @@ msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
 #: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
-#: modules/Stsbl/MailAliasBundle/EventListener/MenuListener.php
+#: share/shared/administration/menu/stsbl-mail-redirection.php
 #: modules/Stsbl/MailAliasBundle/Resources/views/mail_alias/import.html.twig.php
 msgid "Mail aliases"
 msgstr ""
@@ -199,12 +190,8 @@ msgstr ""
 msgid "Recipient"
 msgstr ""
 
-#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
-msgid "Student"
-msgstr ""
-
-#: modules/Stsbl/MailAliasBundle/Controller/MailAliasController.php
-msgid "Teacher"
+#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
+msgid "Recipients"
 msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Resources/translations/messages.php
@@ -236,10 +223,6 @@ msgid "The group %s is already assigned to the original recipient %s."
 msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
-msgid "The groups which should receive the e-mails to that address."
-msgstr ""
-
-#: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
 msgid "The local part of the e-mail address which you want to redirect."
 msgstr ""
 
@@ -261,7 +244,7 @@ msgid "The user %s is already assigned to the original recipient %s."
 msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php
-msgid "The users who should receive the e-mails to that address."
+msgid "The users and groups who should receive the e-mails to that address."
 msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Resources/translations/messages.php
@@ -303,10 +286,6 @@ msgstr ""
 msgid ""
 "You can import mail aliases from a CSV file. The CSV file should have no "
 "column titles and the following columns (from left to right):"
-msgstr ""
-
-#: modules/Stsbl/MailAliasBundle/Form/DataTransformer/GroupToRfc822Transformer.php
-msgid "deleted"
 msgstr ""
 
 #: modules/Stsbl/MailAliasBundle/Admin/AddressAdmin.php

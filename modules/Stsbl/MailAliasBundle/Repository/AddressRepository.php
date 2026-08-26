@@ -26,6 +26,23 @@ class AddressRepository extends ServiceEntitySpecificationRepository
         return $address;
     }
 
+    /** @return list<Address> */
+    public function findEnabledByRecipientQuery(string $query): array
+    {
+        /** @var list<Address> $addresses */
+        $addresses = $this->createQueryBuilder('address')
+            ->andWhere('address.enabled = :enabled')
+            ->andWhere('LOWER(address.recipient) LIKE LOWER(:query)')
+            ->setParameter('enabled', true)
+            ->setParameter('query', '%' . $query . '%')
+            ->orderBy('address.recipient', 'ASC')
+            ->setMaxResults(20)
+            ->getQuery()
+            ->getResult();
+
+        return $addresses;
+    }
+
     public function persist(Address $address): void
     {
         $this->getEntityManager()->persist($address);

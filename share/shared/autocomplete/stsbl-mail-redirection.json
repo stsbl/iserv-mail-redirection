@@ -1,0 +1,7 @@
+{
+  "id": "mailalias",
+  "url": "http://localhost:982/iserv/mailalias/autocomplete/api",
+  "lookupUrl": "http://localhost:982/iserv/mailalias/autocomplete/api",
+  "supportedTypes": ["mail"],
+  "accessGroups": ["regular"]
+}
