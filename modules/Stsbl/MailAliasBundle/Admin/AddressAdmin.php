@@ -239,7 +239,7 @@ final class AddressAdmin extends AdminServiceCrud
     {
         /* @var $object Address */
         $userRecipients = array_map(static fn ($recipient): string => (string) $recipient->getUsername(), $object->getUsers()->toArray());
-        $groupRecipients = array_map(static fn ($recipient): string => $recipient->getAccount(), $object->getGroups()->toArray());
+        $groupRecipients = array_map(static fn ($recipient): string => (string) $recipient->getAccount(), $object->getGroups()->toArray());
         $servername = $this->config()->get('Domain');
 
         if (null === $previousData) {

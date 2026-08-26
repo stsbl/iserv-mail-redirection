@@ -1,0 +1,15 @@
+# Located before chkdb (11postgresql/80server-postgresql-chk). Backfills the
+# recipient UUIDs from the legacy account columns before the local foreign keys
+# are removed in a later schema change.
+Test "mail redirection: backfill recipient UUIDs"
+  grep -qx 42mail-redirection_recipient_uuid /var/lib/iserv/config/update.log || ! psql_auto iserv postgres -c "\\d mailredirection_recipient_users" >/dev/null 2>&1
+  ---
+  { psql_auto iserv postgres << SQL
+    \set ON_ERROR_STOP on
+    ALTER TABLE mailredirection_recipient_users ADD COLUMN IF NOT EXISTS uuid UUID;
+    UPDATE mailredirection_recipient_users r SET uuid = u.uuid FROM users u WHERE r.recipient = u.act AND r.uuid IS NULL;
+
+    ALTER TABLE mailredirection_recipient_groups ADD COLUMN IF NOT EXISTS uuid UUID;
+    UPDATE mailredirection_recipient_groups r SET uuid = g.uuid FROM groups g WHERE r.recipient = g.act AND r.uuid IS NULL;
+  SQL
+  } && echo 42mail-redirection_recipient_uuid >> /var/lib/iserv/config/update.log

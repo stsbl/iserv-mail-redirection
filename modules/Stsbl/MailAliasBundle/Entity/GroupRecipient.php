@@ -6,33 +6,36 @@ namespace Stsbl\MailAliasBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use IServ\Library\Uuid\UuidInterface;
+use Stsbl\MailAliasBundle\Doctrine\GroupAccountType;
+use Stsbl\MailAliasBundle\Domain\GroupAccount;
 use Stsbl\MailAliasBundle\Repository\GroupRecipientRepository;
 
-/**
- * @ORM\Entity(repositoryClass="Stsbl\\MailAliasBundle\\Repository\\GroupRecipientRepository")
- * @ORM\Table(name="mailredirection_recipient_groups")
- */
+#[ORM\Entity(repositoryClass: GroupRecipientRepository::class)]
+#[ORM\Table(name: 'mailredirection_recipient_groups')]
 final class GroupRecipient
 {
-    /** @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer") */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    /** @ORM\Column(name="recipient", type="text") */
-    private string $account;
+    #[ORM\Column(name: 'recipient', type: GroupAccountType::NAME)]
+    private GroupAccount $account;
 
-    /** @ORM\Column(name="uuid", type="iserv_uuid", nullable=true) */
+    #[ORM\Column(name: 'uuid', type: 'iserv_uuid', nullable: true)]
     private ?UuidInterface $uuid = null;
 
-    /** @ORM\ManyToOne(targetEntity="Stsbl\\MailAliasBundle\\Entity\\Address", inversedBy="groups") @ORM\JoinColumn(name="original_recipient_id", referencedColumnName="id", onDelete="CASCADE") */
+    #[ORM\ManyToOne(targetEntity: Address::class, inversedBy: 'groups')]
+    #[ORM\JoinColumn(name: 'original_recipient_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private Address $address;
 
-    public function __construct(string $account, ?UuidInterface $uuid = null)
+    public function __construct(GroupAccount $account, ?UuidInterface $uuid = null)
     {
         $this->account = $account;
         $this->uuid = $uuid;
     }
 
-    public function getAccount(): string
+    public function getAccount(): GroupAccount
     {
         return $this->account;
     }
@@ -42,7 +45,7 @@ final class GroupRecipient
         return $this->uuid;
     }
 
-    public function setAccount(string $account): void
+    public function setAccount(GroupAccount $account): void
     {
         $this->account = $account;
     }
@@ -59,6 +62,6 @@ final class GroupRecipient
 
     public function __toString(): string
     {
-        return $this->account;
+        return (string) $this->account;
     }
 }

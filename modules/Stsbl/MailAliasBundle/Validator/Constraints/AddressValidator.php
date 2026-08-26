@@ -59,8 +59,8 @@ final class AddressValidator extends ConstraintValidator
         $groupRecipientEntities = [];
 
         foreach ($groupRecipients as $groupRecipient) {
-            $groupRecipientAccounts[] = $groupRecipient->getAccount();
-            $groupRecipientEntities[$groupRecipient->getAccount()] = $groupRecipient->getAccount();
+            $groupRecipientAccounts[] = (string) $groupRecipient->getAccount();
+            $groupRecipientEntities[(string) $groupRecipient->getAccount()] = (string) $groupRecipient->getAccount();
         }
 
         $duplicatedGroupRecipients = array_unique(array_diff_assoc(

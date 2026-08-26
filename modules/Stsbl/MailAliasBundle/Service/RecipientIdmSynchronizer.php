@@ -8,6 +8,7 @@ use IServ\Bundle\IdmDataBroker\Contract\IdmGroupFetcher;
 use IServ\Bundle\IdmDataBroker\Contract\IdmUserFetcher;
 use IServ\Library\User\User\Username;
 use Stsbl\MailAliasBundle\Entity\GroupRecipient;
+use Stsbl\MailAliasBundle\Domain\GroupAccount;
 use Stsbl\MailAliasBundle\Entity\UserRecipient;
 use Stsbl\MailAliasBundle\Idm\RecipientGroupDto;
 use Stsbl\MailAliasBundle\Idm\RecipientUserDto;
@@ -72,7 +73,7 @@ final class RecipientIdmSynchronizer
     private function syncGroup(GroupRecipient $recipient): bool
     {
         $group = $recipient->getUuid() === null
-            ? current($this->idmGroups->getFilteredGroups(['group' => $recipient->getAccount()], RecipientGroupDto::class))
+            ? current($this->idmGroups->getFilteredGroups(['group' => (string) $recipient->getAccount()], RecipientGroupDto::class))
             : $this->idmGroups->getGroup($recipient->getUuid(), RecipientGroupDto::class);
 
         if (!$group instanceof RecipientGroupDto || $group->account === null || $group->account === '') {
@@ -84,8 +85,8 @@ final class RecipientIdmSynchronizer
             $recipient->setUuid($group->uuid);
             $changed = true;
         }
-        if ($recipient->getAccount() !== $group->account) {
-            $recipient->setAccount($group->account);
+        if ((string) $recipient->getAccount() !== $group->account) {
+            $recipient->setAccount(new GroupAccount($group->account));
             $changed = true;
         }
 

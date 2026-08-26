@@ -6,7 +6,9 @@ namespace Stsbl\MailAliasBundle\Tests\Unit\Entity;
 
 use IServ\Bundle\Autocomplete\Form\Data\AutocompleteTagsData;
 use PHPUnit\Framework\TestCase;
+use Stsbl\MailAliasBundle\Domain\GroupAccount;
 use Stsbl\MailAliasBundle\Entity\Address;
+use Stsbl\MailAliasBundle\Entity\GroupRecipient;
 
 final class AddressRecipientTest extends TestCase
 {
@@ -19,7 +21,7 @@ final class AddressRecipientTest extends TestCase
         ]);
 
         self::assertSame(['max'], array_map(static fn ($recipient): string => (string) $recipient->getUsername(), $address->getUsers()->toArray()));
-        self::assertSame(['teachers'], array_map(static fn ($recipient): string => $recipient->getAccount(), $address->getGroups()->toArray()));
+        self::assertSame(['teachers'], array_map(static fn ($recipient): string => $recipient->getAccount()->export(), $address->getGroups()->toArray()));
     }
 
     public function testDeduplicatesAndProjectsRecipientTags(): void
@@ -35,5 +37,13 @@ final class AddressRecipientTest extends TestCase
             static fn (AutocompleteTagsData $recipient): string => $recipient->getValue(),
             $address->getRecipients(),
         ));
+    }
+
+    public function testUsesGroupAccountDomainType(): void
+    {
+        $recipient = new GroupRecipient(new GroupAccount('teachers'));
+
+        self::assertInstanceOf(GroupAccount::class, $recipient->getAccount());
+        self::assertSame('teachers', $recipient->getAccount()->export());
     }
 }

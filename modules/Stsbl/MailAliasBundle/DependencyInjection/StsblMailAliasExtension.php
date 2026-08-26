@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Stsbl\MailAliasBundle\DependencyInjection;
 
 use IServ\CoreBundle\DependencyInjection\IServBaseExtension;
+use Stsbl\MailAliasBundle\Doctrine\GroupAccountType;
 use Stsbl\MailAliasBundle\Doctrine\UsernameType;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -49,7 +50,17 @@ final class StsblMailAliasExtension extends IServBaseExtension
         $container->prependExtensionConfig('doctrine', [
             'dbal' => [
                 'types' => [
+                    GroupAccountType::NAME => GroupAccountType::class,
                     UsernameType::NAME => UsernameType::class,
+                ],
+            ],
+            'orm' => [
+                'entity_managers' => [
+                    'default' => [
+                        'mappings' => [
+                            'StsblMailAliasBundle' => ['type' => 'attribute'],
+                        ],
+                    ],
                 ],
             ],
         ]);

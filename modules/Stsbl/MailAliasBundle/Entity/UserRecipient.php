@@ -10,22 +10,23 @@ use IServ\Library\Uuid\UuidInterface;
 use Stsbl\MailAliasBundle\Doctrine\UsernameType;
 use Stsbl\MailAliasBundle\Repository\UserRecipientRepository;
 
-/**
- * @ORM\Entity(repositoryClass="Stsbl\\MailAliasBundle\\Repository\\UserRecipientRepository")
- * @ORM\Table(name="mailredirection_recipient_users")
- */
+#[ORM\Entity(repositoryClass: UserRecipientRepository::class)]
+#[ORM\Table(name: 'mailredirection_recipient_users')]
 final class UserRecipient
 {
-    /** @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer") */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    /** @ORM\Column(name="recipient", type=UsernameType::NAME) */
+    #[ORM\Column(name: 'recipient', type: UsernameType::NAME)]
     private Username $username;
 
-    /** @ORM\Column(name="uuid", type="iserv_uuid", nullable=true) */
+    #[ORM\Column(name: 'uuid', type: 'iserv_uuid', nullable: true)]
     private ?UuidInterface $uuid = null;
 
-    /** @ORM\ManyToOne(targetEntity="Stsbl\\MailAliasBundle\\Entity\\Address", inversedBy="users") @ORM\JoinColumn(name="original_recipient_id", referencedColumnName="id", onDelete="CASCADE") */
+    #[ORM\ManyToOne(targetEntity: Address::class, inversedBy: 'users')]
+    #[ORM\JoinColumn(name: 'original_recipient_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private Address $address;
 
     public function __construct(Username $username, ?UuidInterface $uuid = null)

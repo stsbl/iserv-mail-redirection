@@ -9,6 +9,7 @@ use IServ\Bundle\IdmDataBroker\Contract\IdmUserFetcher;
 use IServ\Library\User\User\Username;
 use PHPUnit\Framework\TestCase;
 use Stsbl\MailAliasBundle\Entity\GroupRecipient;
+use Stsbl\MailAliasBundle\Domain\GroupAccount;
 use Stsbl\MailAliasBundle\Entity\UserRecipient;
 use Stsbl\MailAliasBundle\Idm\RecipientGroupDto;
 use Stsbl\MailAliasBundle\Idm\RecipientUserDto;
@@ -21,7 +22,7 @@ final class RecipientIdmSynchronizerTest extends TestCase
     public function testBackfillsUuidsAndUpdatesRenamedAccounts(): void
     {
         $userRecipient = new UserRecipient(new Username('old-user'));
-        $groupRecipient = new GroupRecipient('old-group');
+        $groupRecipient = new GroupRecipient(new GroupAccount('old-group'));
         $user = new RecipientUserDto('d7dcc25b-0303-43b2-b350-e400338ea223', 'new-user', 'New', 'User', null, null);
         $group = new RecipientGroupDto('dfdcc25b-0303-43b2-b350-e400338ea223', 'new-group', 'New group', null);
 
@@ -41,7 +42,7 @@ final class RecipientIdmSynchronizerTest extends TestCase
         self::assertSame(['users' => 1, 'groups' => 1], $result);
         self::assertSame('new-user', (string) $userRecipient->getUsername());
         self::assertSame($user->uuid->toNormalizedString(), $userRecipient->getUuid()?->toNormalizedString());
-        self::assertSame('new-group', $groupRecipient->getAccount());
+        self::assertSame('new-group', (string) $groupRecipient->getAccount());
         self::assertSame($group->uuid->toNormalizedString(), $groupRecipient->getUuid()?->toNormalizedString());
     }
 }
