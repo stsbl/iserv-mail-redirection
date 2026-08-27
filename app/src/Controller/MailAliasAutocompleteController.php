@@ -15,6 +15,7 @@ use Stsbl\IServ\MailRedirection\Entity\Address;
 use Stsbl\IServ\MailRedirection\Repository\AddressRepository;
 use Stsbl\IServ\MailRedirection\Service\IdmRecipientLookup;
 use Stsbl\IServ\MailRedirection\Security\Privilege;
+use Symfony\Component\Asset\Packages;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,14 +25,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class MailAliasAutocompleteController extends AbstractController
 {
     #[Route('/mailalias/autocomplete/api', name: 'mailalias_autocomplete_api', methods: ['GET'])]
-    public function aliases(Request $request, AddressRepository $addresses, IServConfig $config): JsonResponse
+    public function aliases(Request $request, AddressRepository $addresses, IServConfig $config, Packages $assets): JsonResponse
     {
         $query = $request->query->get('query') ?? $request->query->get('values');
         if (!is_string($query) || trim($query) === '') {
             return new JsonResponse([]);
         }
 
-        $suggestions = array_map(static function (Address $address) use ($config): array {
+        $suggestions = array_map(static function (Address $address) use ($config, $assets): array {
             $mail = $address->getRecipient() . '@' . $config->domain();
             $label = $address->getDisplayName() ?: $mail;
 
@@ -40,7 +41,11 @@ final class MailAliasAutocompleteController extends AbstractController
                 'text' => $label,
                 'value' => 'mailalias:' . $mail,
                 'source' => 'mailalias',
-                'avatar' => null,
+                // The shared FormBundle only has built-in icon mappings for
+                // core sources. RemoteAutocompleteSource deliberately keeps
+                // avatar URLs, so this lets the dedicated source render
+                // without pretending to be a personal or public source.
+                'avatar' => $assets->getUrl('img/mail-redirection.svg'),
                 'avatarHtml' => null,
                 'icon' => 'fa-envelope',
                 'extra' => $address->getDisplayName() ? $mail : _('Mail alias'),
