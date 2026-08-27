@@ -38,11 +38,8 @@ final class MailAliasAutocompleteController extends AbstractController
             return [
                 'label' => $label,
                 'text' => $label,
-                // RemoteAutocompleteSource separates its wire value at the
-                // first colon. The public prefix marks the address as a
-                // globally usable mail recipient for Mail and Calendar.
-                'value' => 'public:' . $mail,
-                'source' => 'public',
+                'value' => 'mailalias:' . $mail,
+                'source' => 'mailalias',
                 'avatar' => null,
                 'avatarHtml' => null,
                 'icon' => 'fa-envelope',
