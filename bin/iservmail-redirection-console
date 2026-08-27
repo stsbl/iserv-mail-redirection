@@ -1,0 +1,39 @@
+#!/bin/sh
+set -e
+
+umask 0002
+
+CONSOLE_BIN=/usr/share/iserv/stsbl-iserv-mail-redirection/app/bin/console
+USER_WEB=stsbl-iserv-mail-redirection
+USER_WEB_UID="$(id -u "$USER_WEB")"
+EUID="$(id -u)"
+
+export_variables() {
+  DBUSER="$1"
+  APP_SECRET_FILE="/var/lib/iserv/stsbl-iserv-mail-redirection/pwd/symfony.secret"
+  export APP_SECRET_FILE
+  POSTGRES_VERSION="$(psql iserv "$DBUSER" -Atc "SHOW SERVER_VERSION;")"
+  export POSTGRES_VERSION
+}
+
+if [ -z "$USER_WEB_UID" ]
+then
+  echo "$0: User $USER_WEB not found." >&2
+  exit 1
+fi
+
+if [ "$USER_WEB_UID" = "$EUID" ]
+then
+  export_variables stsbl-iserv-mail-redirection
+  exec "$CONSOLE_BIN" "$@"
+elif [ "0" = "$EUID" ]
+then
+  export_variables postgres
+  exec setpriv --reuid "$USER_WEB" --regid "$USER_WEB" --init-groups "$CONSOLE_BIN" "$@"
+else
+  echo "$0: Permission denied" >&2
+  exit 1
+fi
+
+echo "$0: Could not execute console" >&2
+exit 1

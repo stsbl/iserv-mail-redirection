@@ -1,0 +1,6 @@
+{# The base template is no full html frame, when using the ResponseContentBuilder. #}
+{% block body %}
+    <div class="page-content">
+        {% block page_content %}{% endblock %}
+    </div>
+{% endblock %}

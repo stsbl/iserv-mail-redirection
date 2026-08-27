@@ -1,0 +1,40 @@
+location ^~ /iserv/mail-redirection/static/ {
+    alias /usr/share/iserv/stsbl-iserv-mail-redirection/app/public/static/;
+
+    location ~* "\.(?:ico|png|svg|woff|woff2|ttf)$" {
+        gzip on;
+        gzip_types font/eot font/ttf image/svg+xml image/x-icon;
+
+        expires 1w;
+        add_header Cache-Control "public";
+    }
+
+    location ~* "\.(?:[0-9a-z]{8})\.(?:css|js)$" {
+       gzip on;
+       gzip_types text/css application/javascript text/javascript;
+
+       expires 1y;
+       add_header Cache-Control "public";
+    }
+}
+
+location ^~ /iserv/mail-redirection/bundles/ {
+    alias /usr/share/iserv/stsbl-iserv-mail-redirection/app/public/bundles/;
+
+    location ~* "\.(?:ico|png|svg|woff|woff2|ttf)$" {
+        gzip on;
+        gzip_types font/eot font/ttf image/svg+xml image/x-icon;
+
+        expires 1w;
+        add_header Cache-Control "public";
+    }
+
+    location ~* "\.(?:[0-9a-z]{8})\.(?:css|js)$" {
+       gzip on;
+       gzip_types text/css application/javascript text/javascript;
+
+       expires 1y;
+       add_header Cache-Control "public";
+    }
+}
+

@@ -1,0 +1,33 @@
+doctrine:
+    dbal:
+        driver: pdo_pgsql
+        types:
+            stsbl_mail_alias_username: Stsbl\IServ\MailRedirection\Doctrine\UsernameType
+            stsbl_mail_alias_group_account: Stsbl\IServ\MailRedirection\Doctrine\GroupAccountType
+        host: null
+        port: null
+        dbname: iserv
+        user: stsbl-iserv-mail-redirection
+        password: null
+        charset:  UTF8
+
+        server_version: '%env(POSTGRES_VERSION)%'
+
+    orm:
+        auto_generate_proxy_classes: true
+        enable_lazy_ghost_objects: true
+        proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: false
+        report_fields_where_declared: true
+        controller_resolver:
+            # This will find entites as controller arguments by $id, but not by $slug or other properties.
+            # https://symfony.com/doc/current/doctrine.html#fetch-automatically
+            auto_mapping: false
+        mappings:
+            App:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'Stsbl\IServ\MailRedirection\Entity'
+                alias: App

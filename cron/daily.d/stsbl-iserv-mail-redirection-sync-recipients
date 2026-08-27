@@ -2,4 +2,4 @@
 
 set -eu
 
-exec symfony iserv:mailalias:sync-recipients
+exec /usr/sbin/iservmail-redirection-console iserv:mailalias:sync-recipients

@@ -9,4 +9,4 @@ fd=${1-}
 relevant=$(jq -c '[.[] | select(.table == "users" or .table == "groups")]' "/dev/fd/$fd") || exit 1
 [ "$relevant" != '[]' ] || exit 0
 
-exec symfony iserv:mailalias:sync-recipients
+exec /usr/sbin/iservmail-redirection-console iserv:mailalias:sync-recipients

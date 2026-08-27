@@ -1,0 +1,4 @@
+iserv_routing_definition:
+  resource: .
+  type: iserv_routing_definition
+  stateless: false

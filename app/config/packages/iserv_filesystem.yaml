@@ -1,0 +1,8 @@
+framework:
+    assets:
+        packages:
+            iserv-filesystem:
+                json_manifest_path: "%kernel.project_dir%/public/bundles/iservfilesystem/manifest.json"
+
+iserv_filesystem:
+    module_path: 'mail-redirection'

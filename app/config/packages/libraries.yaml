@@ -1,0 +1,6 @@
+services:
+  IServ\Library\Config\Config:
+    factory: [!service { class: IServ\Library\Config\SystemConfigFactory }, 'create']
+
+  IServ\Library\Zeit\Clock\Clock:
+    factory: ['IServ\Library\Zeit\Clock\SystemClock', 'create']

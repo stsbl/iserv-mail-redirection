@@ -1,0 +1,11 @@
+/var/log/iserv/stsbl-iserv-mail-redirection/*.log {
+	daily
+	dateext
+	dateyesterday
+	missingok
+	rotate 7
+	su stsbl-iserv-mail-redirection stsbl-iserv-mail-redirection
+	compress
+	create 644 stsbl-iserv-mail-redirection stsbl-iserv-mail-redirection
+}
+

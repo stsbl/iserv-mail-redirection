@@ -1,33 +1,31 @@
 Source: stsbl-iserv-mail-redirection
-Section: misc
+Section: non-free/misc
 Priority: optional
 Maintainer: Stadtteilschule Blankenese <repository@stsbl.de>
-Build-Depends: debhelper-compat (= 13), dh-sequence-iserv, dh-sequence-stsbl
+Build-Depends:
+  debhelper-compat (= 13),
+  dh-sequence-iserv,
+  dh-sequence-stsbl,
+  dpkg-dev,
 Standards-Version: 4.5.0
 Homepage: https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection
 
 Package: stsbl-iserv-mail-redirection
 Architecture: all
-Depends: iserv-portal,
-         iserv-admin,
-         iserv-autocomplete,
-         iserv3-crud (>= 21.05.27),
-         php-mailparse,
-         stsbl-iserv3-js-libs,
-         stsbl-iserv3-maintenance,
-         ${misc:Depends},
-         ${perl:Depends}
-Xb-Private-Iserv-Revision: ${iserv:Revision}
+Depends: ${misc:Depends},
+  ${perl:Depends},
+  adduser,
+  iserv-portal-web,
+  iserv-server-nginx,
+  iserv-server-php,
+  iserv-server-postgresql,
+  iserv-update,
+  php-cli (>= 0),
+  php-fpm (>= 0),
+  php-intl (>= 0),
+  php-mbstring (>= 0),
+  php-pgsql (>= 0),
+  php-xml (>= 0)
 Description: E-Mail-Weiterleitungs-Modul für IServ
- Dieses Modul bringt die Möglichkeit mit, E-Mail-Weiterleitungen (auch Alias
- genannt) über den IDesk einzurichten.
- .
- Diese verhalten sich ähnlich, wie diejenigen, die sich als root über die
- /etc/aliases definieren lassen. Der Vorteil dieses Moduls ist, dass
- diese nun einfach über den IDesk einzurichten sind und dafür nicht
- mehr das Root-Konto verwendet werden muss.
- .
- https://it.stsbl.de/wp-content/uploads/2019/12/stsbl-iserv-mail-redirection.png
- .
- Weitere Hilfen zur Einrichtung finden sie auf der verlinkten Homepage.
+ Dieses Modul verwaltet lokale E-Mail-Aliasse und deren Empfänger über das IServ-Portal.
 Tag: suite::iserv:portal, role::plugin, status::recommended, implemented-in::php

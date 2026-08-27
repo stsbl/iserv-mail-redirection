@@ -1,0 +1,17 @@
+security:
+    enable_authenticator_manager: true
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        portal:
+            request_matcher: IServ\Bundle\Authentication\Firewall\PortalFirewallMatcher
+            custom_authenticators:
+                - IServ\Bundle\Authentication\Authentication\PortalAuthenticator
+            entry_point: IServ\Bundle\Authentication\Firewall\PortalAuthenticationEntryPoint
+            stateless: true
+            logout: ~
+    access_control:
+        - { path: ^/mailalias/autocomplete/api, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, allow_if: 'is_granted("PRIV_f5f8da73-2a25-44ec-af7b-3acc8aa7fce4")' }
+        - { path: ^/, roles: ROLE_USER }

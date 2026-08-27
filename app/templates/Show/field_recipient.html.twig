@@ -1,0 +1,5 @@
+{% extends admin.getTemplate('show_field_base') %}
+
+{%- block field -%}
+    {{- value -}}@{{- mail_redirection_config.domain -}}
+{%- endblock -%}

@@ -1,0 +1,9 @@
+location /iserv/mail-redirection/ {
+    root /usr/share/iserv/stsbl-iserv-mail-redirection/app/public;
+
+    include fastcgi_module_params;
+    fastcgi_param SCRIPT_NAME /iserv/mail-redirection/index.php;
+
+    fastcgi_pass unix:/run/php/php-fpm.iserv-stsbl-iserv-mail-redirection.sock;
+}
+

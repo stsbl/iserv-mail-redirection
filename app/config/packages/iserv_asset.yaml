@@ -1,0 +1,3 @@
+iserv_asset:
+    css_manifest_path: '/usr/share/iserv/css/public/static/manifest.json'
+    js_manifest_path: '/usr/share/iserv/js/public/static/manifest.json'

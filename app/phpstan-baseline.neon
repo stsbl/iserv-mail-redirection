@@ -1,0 +1,481 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Call to an undefined method IServ\\CrudBundle\\Entity\\CrudInterface\:\:getComment\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Call to an undefined method IServ\\CrudBundle\\Entity\\CrudInterface\:\:getEnabled\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Call to an undefined method IServ\\CrudBundle\\Entity\\CrudInterface\:\:getGroups\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Call to an undefined method IServ\\CrudBundle\\Entity\\CrudInterface\:\:getRecipient\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Call to an undefined method IServ\\CrudBundle\\Entity\\CrudInterface\:\:getUsers\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Cannot call method getAccount\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Cannot call method getUsername\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Cannot call method toArray\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Method Stsbl\\IServ\\MailRedirection\\Admin\\AddressAdmin\:\:iservConfig\(\) should return Stsbl\\IServ\\MailRedirection\\Config\\IServConfig but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Offset ''comment'' might not exist on array\<string, mixed\>\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Offset ''enabled'' might not exist on array\<string, mixed\>\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Offset ''recipient'' might not exist on array\<string, mixed\>\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 3
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strlen expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Admin/AddressAdmin.php
+
+		-
+			message: '#^Parameter \#1 \$literal of method Doctrine\\ORM\\Query\\Expr\:\:literal\(\) expects bool\|float\|int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Admin/Filter/PropertyMatchSpecification.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/Config/IServConfig.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 2
+			path: src/Controller/MailAliasAutocompleteController.php
+
+		-
+			message: '#^Cannot access offset ''auxInfo'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/MailAliasAutocompleteController.php
+
+		-
+			message: '#^Cannot access offset ''firstname'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/MailAliasAutocompleteController.php
+
+		-
+			message: '#^Cannot access offset ''group'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/MailAliasAutocompleteController.php
+
+		-
+			message: '#^Cannot access offset ''hexUuid'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/MailAliasAutocompleteController.php
+
+		-
+			message: '#^Cannot access offset ''lastname'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/MailAliasAutocompleteController.php
+
+		-
+			message: '#^Cannot access offset ''name'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/MailAliasAutocompleteController.php
+
+		-
+			message: '#^Cannot access offset ''user'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/MailAliasAutocompleteController.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: src/Controller/MailAliasAutocompleteController.php
+
+		-
+			message: '#^Parameter \#1 \$text of method IServ\\Library\\Avatar\\Renderer\\AvatarRendererInterface\:\:renderPlaceholder\(\) expects non\-empty\-string, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/MailAliasAutocompleteController.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/MailAliasAutocompleteController.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/MailAliasAutocompleteController.php
+
+		-
+			message: '#^Binary operation "\." between ''group\:'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Binary operation "\." between ''user\:'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Cannot call method getAccount\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Cannot call method getUsername\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Instanceof between IServ\\Bundle\\Autocomplete\\Form\\Data\\AutocompleteTagsData and IServ\\Bundle\\Autocomplete\\Form\\Data\\AutocompleteTagsData will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Method Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:getGroups\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Method Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:getUsers\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^PHPDoc tag @return contains unresolvable type\.$#'
+			identifier: return.unresolvableType
+			count: 2
+			path: src/Entity/Address.php
+
+		-
+			message: '#^PHPDoc tag @var for property Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:\$groups contains unresolvable type\.$#'
+			identifier: property.unresolvableType
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^PHPDoc tag @var for property Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:\$users contains unresolvable type\.$#'
+			identifier: property.unresolvableType
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Parameter \#1 \$group of method Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:removeGroup\(\) expects Stsbl\\IServ\\MailRedirection\\Entity\\GroupRecipient, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Parameter \#1 \$p of method Doctrine\\Common\\Collections\\ReadableCollection\<\(int\|string\),mixed\>\:\:exists\(\) expects Closure\(int\|string, mixed\)\: bool, Closure\(int, Stsbl\\IServ\\MailRedirection\\Entity\\GroupRecipient\)\: bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Parameter \#1 \$p of method Doctrine\\Common\\Collections\\ReadableCollection\<\(int\|string\),mixed\>\:\:exists\(\) expects Closure\(int\|string, mixed\)\: bool, Closure\(int, Stsbl\\IServ\\MailRedirection\\Entity\\UserRecipient\)\: bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Parameter \#1 \$user of method Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:removeUser\(\) expects Stsbl\\IServ\\MailRedirection\\Entity\\UserRecipient, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Property Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:\$comment type mapping mismatch\: property can contain string\|null but database expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Property Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:\$enabled \(bool\) does not accept bool\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Property Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:\$groups type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<Stsbl\\IServ\\MailRedirection\\Entity\\GroupRecipient\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Property Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:\$groups with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Property Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:\$recipient type mapping mismatch\: property can contain string\|null but database expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Property Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:\$users type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<Stsbl\\IServ\\MailRedirection\\Entity\\UserRecipient\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Property Stsbl\\IServ\\MailRedirection\\Entity\\Address\:\:\$users with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Property Stsbl\\IServ\\MailRedirection\\Entity\\GroupRecipient\:\:\$address type mapping mismatch\: database can contain Stsbl\\IServ\\MailRedirection\\Entity\\Address\|null but property expects Stsbl\\IServ\\MailRedirection\\Entity\\Address\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/GroupRecipient.php
+
+		-
+			message: '#^Property Stsbl\\IServ\\MailRedirection\\Entity\\UserRecipient\:\:\$address type mapping mismatch\: database can contain Stsbl\\IServ\\MailRedirection\\Entity\\Address\|null but property expects Stsbl\\IServ\\MailRedirection\\Entity\\Address\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/UserRecipient.php
+
+		-
+			message: '#^Parameter \#1 \$message of method Exception\:\:__construct\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Exception/ImportException.php
+
+		-
+			message: '#^Class Stsbl\\IServ\\MailRedirection\\Form\\Type\\ImportType extends generic class Symfony\\Component\\Form\\AbstractType but does not specify its types\: TData$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Form/Type/ImportType.php
+
+		-
+			message: '#^Method Stsbl\\IServ\\MailRedirection\\Service\\IdmRecipientLookup\:\:groups\(\) should return array\<string, mixed\> but returns array\<array\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Service/IdmRecipientLookup.php
+
+		-
+			message: '#^Method Stsbl\\IServ\\MailRedirection\\Service\\IdmRecipientLookup\:\:users\(\) should return array\<string, mixed\> but returns array\<array\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Service/IdmRecipientLookup.php
+
+		-
+			message: '#^Method Stsbl\\IServ\\MailRedirection\\Service\\Importer\:\:validateColumnNumber\(\) has parameter \$stream with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Service/Importer.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fgetcsv expects resource, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/Importer.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/Importer.php
+
+		-
+			message: '#^Parameter \#2 \$warnings of class Stsbl\\IServ\\MailRedirection\\Model\\ImportResult constructor expects array\<string\>, list\<string\|Stringable\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/Importer.php
+
+		-
+			message: '#^Parameter \#1 \$text of method IServ\\Library\\Avatar\\Renderer\\AvatarRendererInterface\:\:renderPlaceholder\(\) expects non\-empty\-string, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/RecipientCardResolver.php
+
+		-
+			message: '#^Cannot call method getAccount\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: src/Validator/Constraints/AddressValidator.php
+
+		-
+			message: '#^Cannot call method getUsername\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: src/Validator/Constraints/AddressValidator.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 6
+			path: src/Validator/Constraints/AddressValidator.php
+
+		-
+			message: '#^Method Stsbl\\IServ\\MailRedirection\\Validator\\Constraints\\AddressValidator\:\:validate\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Validator/Constraints/AddressValidator.php
+
+		-
+			message: '#^Binary operation "\." between mixed and ''@example\.com'' results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Validator/Constraints/LocalPartValidator.php
+
+		-
+			message: '#^Method Stsbl\\IServ\\MailRedirection\\Validator\\Constraints\\LocalPartValidator\:\:validate\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Validator/Constraints/LocalPartValidator.php
+
+		-
+			message: '#^Parameter \#1 \$haystack of function str_contains expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Validator/Constraints/LocalPartValidator.php
+
+		-
+			message: '#^Parameter \#2 \$subject of function preg_match expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Validator/Constraints/LocalPartValidator.php
+
+		-
+			message: '#^Method Stsbl\\IServ\\MailRedirection\\Validator\\Constraints\\NotAccount\:\:getTargets\(\) never returns array\<string\> so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/Validator/Constraints/NotAccount.php
+
+		-
+			message: '#^Binary operation "\." between mixed and ''@'' results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: src/Validator/Constraints/NotAccountValidator.php
+
+		-
+			message: '#^Method Stsbl\\IServ\\MailRedirection\\Validator\\Constraints\\NotAccountValidator\:\:validate\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Validator/Constraints/NotAccountValidator.php
+
+		-
+			message: '#^Parameter \#1 \$username of function posix_getpwnam expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Validator/Constraints/NotAccountValidator.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Validator/Constraints/NotAccountValidator.php
+
+		-
+			message: '#^Binary operation "\." between mixed and ''@'' results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Validator/Constraints/SystemAddressValidator.php
+
+		-
+			message: '#^Method Stsbl\\IServ\\MailRedirection\\Validator\\Constraints\\SystemAddressValidator\:\:validate\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Validator/Constraints/SystemAddressValidator.php
+
+		-
+			message: '#^Parameter \#2 \$subject of function preg_match expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Validator/Constraints/SystemAddressValidator.php

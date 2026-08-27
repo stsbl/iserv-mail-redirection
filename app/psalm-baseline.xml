@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.14.3@d0b040a91f280f071c1abcb1b77ce3822058725a">
+  <file src="src/Admin/AddressAdmin.php">
+    <MissingClosureParamType>
+      <code><![CDATA[$recipient]]></code>
+      <code><![CDATA[$recipient]]></code>
+    </MissingClosureParamType>
+    <MixedArgument>
+      <code><![CDATA[$object->getComment() ?? '']]></code>
+      <code><![CDATA[$object->getGroups()->toArray()]]></code>
+      <code><![CDATA[$object->getRecipient()]]></code>
+      <code><![CDATA[$object->getUsers()->toArray()]]></code>
+      <code><![CDATA[$previousData['comment'] ?? '']]></code>
+      <code><![CDATA[$previousData['recipient']]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$recipient]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getAccount]]></code>
+      <code><![CDATA[getUsername]]></code>
+      <code><![CDATA[toArray]]></code>
+      <code><![CDATA[toArray]]></code>
+    </MixedMethodCall>
+    <PossiblyNullArgument>
+      <code><![CDATA[$previousData['recipient']]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$previousData['comment']]]></code>
+      <code><![CDATA[$previousData['comment']]]></code>
+      <code><![CDATA[$previousData['enabled']]]></code>
+      <code><![CDATA[$previousData['enabled']]]></code>
+      <code><![CDATA[$previousData['recipient']]]></code>
+      <code><![CDATA[$previousData['recipient']]]></code>
+      <code><![CDATA[$previousData['recipient']]]></code>
+    </PossiblyNullArrayAccess>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setLogger]]></code>
+    </PossiblyUnusedMethod>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[AddressAdmin]]></code>
+      <code><![CDATA[AddressAdmin]]></code>
+      <code><![CDATA[AddressAdmin]]></code>
+    </PropertyNotSetInConstructor>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(string) $added]]></code>
+      <code><![CDATA[(string) $added]]></code>
+      <code><![CDATA[(string) $removed]]></code>
+      <code><![CDATA[(string) $removed]]></code>
+    </RedundantCastGivenDocblockType>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[getComment]]></code>
+      <code><![CDATA[getComment]]></code>
+      <code><![CDATA[getComment]]></code>
+      <code><![CDATA[getEnabled]]></code>
+      <code><![CDATA[getEnabled]]></code>
+      <code><![CDATA[getEnabled]]></code>
+      <code><![CDATA[getGroups]]></code>
+      <code><![CDATA[getRecipient]]></code>
+      <code><![CDATA[getRecipient]]></code>
+      <code><![CDATA[getRecipient]]></code>
+      <code><![CDATA[getUsers]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Admin/Filter/AliasAssociationSpecification.php">
+    <TooManyArguments>
+      <code><![CDATA[andX]]></code>
+    </TooManyArguments>
+  </file>
+  <file src="src/Admin/Filter/PropertyMatchSpecification.php">
+    <MixedArgument>
+      <code><![CDATA[$this->value]]></code>
+    </MixedArgument>
+  </file>
+  <file src="src/Controller/MailAliasAutocompleteController.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$name]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$user['firstname'] ?? '']]></code>
+      <code><![CDATA[$user['lastname'] ?? '']]></code>
+    </MixedArgument>
+    <MixedArrayAccess>
+      <code><![CDATA[$group['group']]]></code>
+      <code><![CDATA[$group['name']]]></code>
+      <code><![CDATA[$user['auxInfo']]]></code>
+      <code><![CDATA[$user['firstname']]]></code>
+      <code><![CDATA[$user['hexUuid']]]></code>
+      <code><![CDATA[$user['lastname']]]></code>
+      <code><![CDATA[$user['user']]]></code>
+    </MixedArrayAccess>
+    <MixedAssignment>
+      <code><![CDATA[$account]]></code>
+      <code><![CDATA[$group]]></code>
+      <code><![CDATA[$user]]></code>
+    </MixedAssignment>
+    <PossiblyNullOperand>
+      <code><![CDATA[$address->getRecipient()]]></code>
+    </PossiblyNullOperand>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$address->getDisplayName()]]></code>
+      <code><![CDATA[$address->getDisplayName()]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Entity/Address.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Address]]></code>
+    </ClassMustBeFinal>
+    <DocblockTypeContradiction>
+      <code><![CDATA[!$recipient instanceof AutocompleteTagsData]]></code>
+    </DocblockTypeContradiction>
+    <InvalidDocblock>
+      <code><![CDATA[#[ORM\OneToMany(targetEntity: GroupRecipient::class, mappedBy: 'address', cascade: ['persist', 'remove'], orphanRemoval: true)]]]></code>
+      <code><![CDATA[#[ORM\OneToMany(targetEntity: UserRecipient::class, mappedBy: 'address', cascade: ['persist', 'remove'], orphanRemoval: true)]]]></code>
+      <code><![CDATA[public function getGroups(): Collection]]></code>
+      <code><![CDATA[public function getUsers(): Collection]]></code>
+    </InvalidDocblock>
+    <InvalidNullableReturnType>
+      <code><![CDATA[?int]]></code>
+    </InvalidNullableReturnType>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$recipient]]></code>
+      <code><![CDATA[$recipient]]></code>
+      <code><![CDATA[static fn(int $key, GroupRecipient $recipient): bool => $recipient->getAccount()->export() === $account->export()]]></code>
+      <code><![CDATA[static fn(int $key, UserRecipient $recipient): bool => $recipient->getUsername()->getUsername() === $username->getUsername()]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedMethodCall>
+      <code><![CDATA[getAccount]]></code>
+      <code><![CDATA[getAccount]]></code>
+      <code><![CDATA[getAccount]]></code>
+      <code><![CDATA[getUsername]]></code>
+      <code><![CDATA[getUsername]]></code>
+      <code><![CDATA[getUsername]]></code>
+    </MixedMethodCall>
+    <MixedOperand>
+      <code><![CDATA[$recipient->getAccount()]]></code>
+      <code><![CDATA[$recipient->getUsername()]]></code>
+    </MixedOperand>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->id]]></code>
+    </NullableReturnStatement>
+    <PossiblyNullPropertyAssignmentValue>
+      <code><![CDATA[$enabled]]></code>
+    </PossiblyNullPropertyAssignmentValue>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getComment]]></code>
+      <code><![CDATA[getEnabled]]></code>
+      <code><![CDATA[getRecipients]]></code>
+      <code><![CDATA[setDisplayName]]></code>
+      <code><![CDATA[setRecipients]]></code>
+    </PossiblyUnusedMethod>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$comment]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$recipient]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Entity/GroupRecipient.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[GroupRecipient]]></code>
+    </ClassMustBeFinal>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$address]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedProperty>
+      <code><![CDATA[$address]]></code>
+      <code><![CDATA[$id]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Entity/UserRecipient.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UserRecipient]]></code>
+    </ClassMustBeFinal>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$address]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedProperty>
+      <code><![CDATA[$address]]></code>
+      <code><![CDATA[$id]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Exception/CsvFileExceptionInterface.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getColumnAmount]]></code>
+      <code><![CDATA[getExpected]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Exception/ImportException.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$message]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Form/Type/ImportType.php">
+    <MissingTemplateParam>
+      <code><![CDATA[ImportType]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="src/Idm/RecipientGroupDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$deleted]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Idm/RecipientUserDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$auxInfo]]></code>
+      <code><![CDATA[$deleted]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Model/Import.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setEnable]]></code>
+      <code><![CDATA[setFile]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Repository/AddressRepository.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[AddressRepository]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$address]]></code>
+      <code><![CDATA[$query]]></code>
+      <code><![CDATA[$recipient]]></code>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/GroupRecipientRepository.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[GroupRecipientRepository]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/UserRecipientRepository.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UserRecipientRepository]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Service/IdmRecipientLookup.php">
+    <MixedReturnTypeCoercion>
+      <code><![CDATA[$this->client->performRequest('GET', $url, new ArrayHydrator(new RawHydrator()))]]></code>
+      <code><![CDATA[$this->client->performRequest('GET', $url, new ArrayHydrator(new RawHydrator()))]]></code>
+      <code><![CDATA[array<string, mixed>]]></code>
+      <code><![CDATA[array<string, mixed>]]></code>
+    </MixedReturnTypeCoercion>
+  </file>
+  <file src="src/Service/Importer.php">
+    <ImplicitToStringCast>
+      <code><![CDATA[$warnings]]></code>
+    </ImplicitToStringCast>
+    <MissingParamType>
+      <code><![CDATA[$stream]]></code>
+    </MissingParamType>
+    <MixedArgument>
+      <code><![CDATA[$stream]]></code>
+    </MixedArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$line]]></code>
+      <code><![CDATA[$userActString]]></code>
+    </PossiblyNullArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($groupActString)]]></code>
+      <code><![CDATA[empty($originalRecipientAct)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Service/RecipientCardResolver.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$name]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Service/RecipientIdmSynchronizer.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$recipient->getUuid()]]></code>
+      <code><![CDATA[$recipient->getUuid()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Service/RemoteCsvFileReader.php">
+    <MixedAssignment>
+      <code><![CDATA[$mimeType]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Validator/Constraints/AddressValidator.php">
+    <MissingParamType>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MixedAssignment>
+      <code><![CDATA[$groupRecipient]]></code>
+      <code><![CDATA[$userRecipient]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getAccount]]></code>
+      <code><![CDATA[getAccount]]></code>
+      <code><![CDATA[getAccount]]></code>
+      <code><![CDATA[getUsername]]></code>
+      <code><![CDATA[getUsername]]></code>
+      <code><![CDATA[getUsername]]></code>
+    </MixedMethodCall>
+    <PossiblyNullArgument>
+      <code><![CDATA[$value->getRecipient()]]></code>
+      <code><![CDATA[$value->getRecipient()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Validator/Constraints/LocalPartValidator.php">
+    <MissingParamType>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MixedArgument>
+      <code><![CDATA[$value]]></code>
+    </MixedArgument>
+    <MixedOperand>
+      <code><![CDATA[$value]]></code>
+    </MixedOperand>
+  </file>
+  <file src="src/Validator/Constraints/NotAccountValidator.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[NotAccountValidator]]></code>
+    </ClassMustBeFinal>
+    <MissingParamType>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MixedArgument>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedArgument>
+    <MixedOperand>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedOperand>
+  </file>
+  <file src="src/Validator/Constraints/SystemAddressValidator.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SystemAddressValidator]]></code>
+    </ClassMustBeFinal>
+    <MissingParamType>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MixedArgument>
+      <code><![CDATA[$value]]></code>
+    </MixedArgument>
+    <MixedOperand>
+      <code><![CDATA[$value]]></code>
+    </MixedOperand>
+  </file>
+  <file src="src/View/RecipientCard.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$account]]></code>
+      <code><![CDATA[$avatarHtml]]></code>
+      <code><![CDATA[$link]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+</files>
