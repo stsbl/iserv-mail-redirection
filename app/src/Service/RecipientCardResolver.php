@@ -13,19 +13,19 @@ use IServ\Library\Avatar\Renderer\AvatarRenderStyle;
 use IServ\Library\Avatar\UrlGenerator\AvatarPlaceholderStyle;
 use Stsbl\IServ\MailRedirection\Idm\RecipientGroupDto;
 use Stsbl\IServ\MailRedirection\Idm\RecipientUserDto;
-use Stsbl\IServ\MailRedirection\Security\Privilege;
 use Stsbl\IServ\MailRedirection\View\RecipientCard;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final readonly class RecipientCardResolver
 {
+    /** Global Administrator role UUID from user-backend/roles/user-backend.yml. */
+    private const ADMIN_ROLE = 'ROLE_f66aee04-c335-4299-9cfe-ca7176cc0213';
+
     public function __construct(
         private IdmUserFetcher $users,
         private IdmGroupFetcher $groups,
         private AvatarRendererInterface $avatars,
         private AuthorizationCheckerInterface $authorization,
-        private UrlGeneratorInterface $router,
     ) {
     }
 
@@ -58,7 +58,7 @@ final readonly class RecipientCardResolver
 
         $name = $user->getName() ?: ($user->account ?? $account);
         $link = $this->isMailAliasAdministrator()
-            ? $this->router->generate('admin_user_show', ['id' => $user->account])
+            ? '/iserv/admin/user/show/' . rawurlencode($user->account ?? $account)
             : '/iserv/account/profile/' . $user->uuid->toNormalizedString();
 
         return new RecipientCard(
@@ -78,7 +78,7 @@ final readonly class RecipientCardResolver
 
         $name = $group->name !== '' ? $group->name : ($group->account ?? $account);
         $link = $this->isMailAliasAdministrator()
-            ? $this->router->generate('admin_group_show', ['id' => $group->account])
+            ? '/iserv/admin/group/show/' . rawurlencode($group->account ?? $account)
             : null;
 
         return new RecipientCard(
@@ -91,7 +91,6 @@ final readonly class RecipientCardResolver
 
     private function isMailAliasAdministrator(): bool
     {
-        return $this->authorization->isGranted('AUTHENTICATED_AS_ADMIN')
-            && $this->authorization->isGranted(Privilege::ADMIN);
+        return $this->authorization->isGranted(self::ADMIN_ROLE);
     }
 }
