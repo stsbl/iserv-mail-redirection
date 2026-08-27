@@ -38,12 +38,10 @@ final class MailAliasAutocompleteController extends AbstractController
             return [
                 'label' => $label,
                 'text' => $label,
-                // Mail and calendar consume the standardized autocomplete
-                // representation: the value is the address and public marks
-                // an address that may be used by every account.  Prefixing
-                // it with a Selectize-only source causes their validators to
-                // reject the otherwise valid address.
-                'value' => $mail,
+                // RemoteAutocompleteSource separates its wire value at the
+                // first colon. The public prefix marks the address as a
+                // globally usable mail recipient for Mail and Calendar.
+                'value' => 'public:' . $mail,
                 'source' => 'public',
                 'avatar' => null,
                 'avatarHtml' => null,
