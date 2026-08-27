@@ -16,7 +16,7 @@ msgstr ""
 #: app/src/Controller/MailAliasImportController.php
 #, php-format
 msgid "%s near line %s."
-msgstr ""
+msgstr "%s in Zeile %s."
 
 #: app/src/Admin/AddressAdmin.php
 msgid "(Account names as a comma separated list, can be empty)"
@@ -92,7 +92,7 @@ msgstr "Deaktivieren"
 
 #: app/src/Admin/AddressAdmin.php
 msgid "Display name"
-msgstr ""
+msgstr "Anzeigename"
 
 #: priv/mailredirection
 msgid "E-mail"
@@ -155,7 +155,7 @@ msgstr "Importieren"
 #: app/src/Controller/MailAliasImportController.php
 #, php-format
 msgid "Imported %d mail aliases."
-msgstr ""
+msgstr "%d Mailaliase importiert."
 
 #: app/src/Admin/AddressAdmin.php
 #: app/src/Controller/MailAliasAutocompleteController.php
@@ -243,6 +243,8 @@ msgid ""
 "The public name displayed for this alias in IServ autocomplete. Leave empty "
 "to display the e-mail address."
 msgstr ""
+"Der öffentliche Name, der für diesen Alias in der IServ-Autovervollständigung "
+"angezeigt wird. Leer lassen, um die E-Mail-Adresse anzuzeigen."
 
 #: app/translations/messages.php
 msgid "The uploaded file is not a plain text file."

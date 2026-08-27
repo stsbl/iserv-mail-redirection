@@ -1,5 +1,5 @@
 Source: stsbl-iserv-mail-redirection
-Section: non-free/misc
+Section: misc
 Priority: optional
 Maintainer: Stadtteilschule Blankenese <repository@stsbl.de>
 Build-Depends:
@@ -16,6 +16,8 @@ Xb-Private-Iserv-Revision: ${iserv:Revision}
 Depends: ${misc:Depends},
   ${perl:Depends},
   adduser,
+  iserv-admin,
+  iserv-autocomplete,
   iserv-portal-web,
   iserv-server-nginx,
   iserv-server-php,
@@ -27,7 +29,18 @@ Depends: ${misc:Depends},
   php-mailparse (>= 0),
   php-mbstring (>= 0),
   php-pgsql (>= 0),
-  php-xml (>= 0)
+  php-xml (>= 0),
+  stsbl-iserv3-maintenance
 Description: E-Mail-Weiterleitungs-Modul für IServ
- Dieses Modul verwaltet lokale E-Mail-Aliasse und deren Empfänger über das IServ-Portal.
+ Dieses Modul bringt die Möglichkeit mit, E-Mail-Weiterleitungen (auch Aliase
+ genannt) über die IServ-Administration einzurichten.
+ .
+ Diese verhalten sich ähnlich wie diejenigen, die sich als root über
+ /etc/aliases definieren lassen. Der Vorteil dieses Moduls ist, dass diese
+ einfach über die Administration eingerichtet werden können und dafür nicht
+ mehr das Root-Konto verwendet werden muss.
+ .
+ https://it.stsbl.de/wp-content/uploads/2019/12/stsbl-iserv-mail-redirection.png
+ .
+ Weitere Hilfen zur Einrichtung finden Sie auf der verlinkten Homepage.
 Tag: suite::iserv:portal, role::plugin, status::recommended, implemented-in::php
