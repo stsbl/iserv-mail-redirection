@@ -2,4 +2,4 @@
 
 set -eu
 
-exec /usr/sbin/iservmail-redirection-console iserv:mailalias:sync-recipients
+exec /usr/bin/iservmail-redirection-console iserv:mailalias:sync-recipients

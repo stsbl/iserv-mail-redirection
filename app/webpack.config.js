@@ -1,8 +1,5 @@
-// Ändere mich! - Toolchain
-
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { globSync } from 'glob';
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
@@ -16,8 +13,7 @@ const __dirname = path.dirname(__filename);
 const config = {
     mode: 'production',
     entry: {
-        'css/recipients': globSync('./assets/css/*.*', {dotRelative: true}),
-        'js/mail-redirection': globSync('./assets/js/*.*', {dotRelative: true}),
+        'css/recipients': './assets/css/recipients.css',
     },
     output: {
         filename: "[name].[chunkhash:8].js",

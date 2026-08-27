@@ -1,7 +1,7 @@
 {
   "id": "mailalias",
-  "url": "http://localhost:982/iserv/mail-redirection/mailalias/autocomplete/api",
-  "lookupUrl": "http://localhost:982/iserv/mail-redirection/mailalias/autocomplete/api",
+  "url": "http://localhost:982/iserv/stsbl/mail-redirection/mailalias/autocomplete/api",
+  "lookupUrl": "http://localhost:982/iserv/stsbl/mail-redirection/mailalias/autocomplete/api",
   "supportedTypes": ["mail"],
   "accessGroups": ["regular"]
 }

@@ -12,6 +12,7 @@ Homepage: https://it.stsbl.de/documentation/mods/stsbl-iserv-mail-redirection
 
 Package: stsbl-iserv-mail-redirection
 Architecture: all
+Xb-Private-Iserv-Revision: ${iserv:Revision}
 Depends: ${misc:Depends},
   ${perl:Depends},
   adduser,
@@ -23,6 +24,7 @@ Depends: ${misc:Depends},
   php-cli (>= 0),
   php-fpm (>= 0),
   php-intl (>= 0),
+  php-mailparse (>= 0),
   php-mbstring (>= 0),
   php-pgsql (>= 0),
   php-xml (>= 0)

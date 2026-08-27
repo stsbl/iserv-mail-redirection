@@ -2,7 +2,7 @@
   "module": {
     "id": "stsbl/mail-redirection",
     "name": "Mail aliases",
-    "location": "http://localhost:982/iserv/mail-redirection",
+    "location": "http://localhost:982/iserv/stsbl/mail-redirection",
     "adminUrlPrefixes": ["admin/"],
     "assets": {
       "manifestFile": "app/public/static/manifest.json"

@@ -1,4 +1,4 @@
-location ^~ /iserv/mail-redirection/static/ {
+location ^~ /iserv/stsbl/mail-redirection/static/ {
     alias /usr/share/iserv/stsbl-iserv-mail-redirection/app/public/static/;
 
     location ~* "\.(?:ico|png|svg|woff|woff2|ttf)$" {
@@ -18,7 +18,7 @@ location ^~ /iserv/mail-redirection/static/ {
     }
 }
 
-location ^~ /iserv/mail-redirection/bundles/ {
+location ^~ /iserv/stsbl/mail-redirection/bundles/ {
     alias /usr/share/iserv/stsbl-iserv-mail-redirection/app/public/bundles/;
 
     location ~* "\.(?:ico|png|svg|woff|woff2|ttf)$" {
@@ -37,4 +37,3 @@ location ^~ /iserv/mail-redirection/bundles/ {
        add_header Cache-Control "public";
     }
 }
-

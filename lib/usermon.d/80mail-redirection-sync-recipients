@@ -6,7 +6,26 @@ fd=${1-}
 [ -n "$fd" ] || exit 0
 [ -e "/dev/fd/$fd" ] || exit 1
 
-relevant=$(jq -c '[.[] | select(.table == "users" or .table == "groups")]' "/dev/fd/$fd") || exit 1
+JSON_DATA=$(cat "/dev/fd/$fd") || exit 1
+relevant=$(printf '%s' "$JSON_DATA" | jq -c '[.[] | select(.table == "users" or .table == "groups")]') || exit 1
 [ "$relevant" != '[]' ] || exit 0
 
-exec /usr/sbin/iservmail-redirection-console iserv:mailalias:sync-recipients
+USER_UUIDS=$(printf '%s' "$relevant" | jq -r 'map(select(.user_uuid) | .user_uuid) | unique | join(" ")') || exit 1
+if [ -n "$USER_UUIDS" ]
+then
+  # Intentional word splitting: each UUID is an individual command argument.
+  # shellcheck disable=SC2086
+  /usr/bin/iservmail-redirection-console iserv:idm-data-broker:invalidate-data user ${USER_UUIDS} || true
+  /usr/bin/iservmail-redirection-console iserv:idm-data-broker:invalidate-tags user.filter || true
+fi
+
+GROUP_UUIDS=$(printf '%s' "$relevant" | jq -r 'map(select(.group_uuid) | .group_uuid) | unique | join(" ")') || exit 1
+if [ -n "$GROUP_UUIDS" ]
+then
+  # Intentional word splitting: each UUID is an individual command argument.
+  # shellcheck disable=SC2086
+  /usr/bin/iservmail-redirection-console iserv:idm-data-broker:invalidate-data group ${GROUP_UUIDS} || true
+  /usr/bin/iservmail-redirection-console iserv:idm-data-broker:invalidate-tags group.filter || true
+fi
+
+exec /usr/bin/iservmail-redirection-console iserv:mailalias:sync-recipients
