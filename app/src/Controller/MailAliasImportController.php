@@ -12,6 +12,7 @@ use Stsbl\IServ\MailRedirection\Config\IServConfig;
 use Stsbl\IServ\MailRedirection\Exception\ImportException;
 use Stsbl\IServ\MailRedirection\Form\Type\ImportType;
 use Stsbl\IServ\MailRedirection\Model\Import;
+use Stsbl\IServ\MailRedirection\Security\Privilege;
 use Stsbl\IServ\MailRedirection\Service\Importer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,7 +24,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class MailAliasImportController extends AbstractController
 {
     #[Route('/admin/mailalias/import', name: 'admin_mailalias_import', methods: ['GET', 'POST'])]
-    #[IsGranted('PRIV_f5f8da73-2a25-44ec-af7b-3acc8aa7fce4')]
+    #[IsGranted(Privilege::ADMIN)]
     public function __invoke(Importer $importer, AdminLoggerInterface $logger, Request $request, IServConfig $config, FlashInterface $flash): Response
     {
         $form = $this->createForm(ImportType::class);

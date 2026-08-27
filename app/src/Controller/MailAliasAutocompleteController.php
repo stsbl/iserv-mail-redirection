@@ -14,6 +14,7 @@ use Stsbl\IServ\MailRedirection\Config\IServConfig;
 use Stsbl\IServ\MailRedirection\Entity\Address;
 use Stsbl\IServ\MailRedirection\Repository\AddressRepository;
 use Stsbl\IServ\MailRedirection\Service\IdmRecipientLookup;
+use Stsbl\IServ\MailRedirection\Security\Privilege;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,8 +38,13 @@ final class MailAliasAutocompleteController extends AbstractController
             return [
                 'label' => $label,
                 'text' => $label,
-                'value' => 'personal:' . $mail,
-                'source' => 'personal',
+                // Mail and calendar consume the standardized autocomplete
+                // representation: the value is the address and public marks
+                // an address that may be used by every account.  Prefixing
+                // it with a Selectize-only source causes their validators to
+                // reject the otherwise valid address.
+                'value' => $mail,
+                'source' => 'public',
                 'avatar' => null,
                 'avatarHtml' => null,
                 'icon' => 'fa-envelope',
@@ -54,7 +60,7 @@ final class MailAliasAutocompleteController extends AbstractController
     }
 
     #[Route('/admin/mailalias/recipients', name: 'admin_mailalias_recipients', methods: ['GET'])]
-    #[IsGranted('PRIV_f5f8da73-2a25-44ec-af7b-3acc8aa7fce4')]
+    #[IsGranted(Privilege::ADMIN)]
     public function recipients(
         Request $request,
         IdmRecipientLookup $lookup,

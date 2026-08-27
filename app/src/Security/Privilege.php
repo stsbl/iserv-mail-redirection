@@ -28,16 +28,10 @@ namespace Stsbl\IServ\MailRedirection\Security;
  * THE SOFTWARE.
  */
 
-/**
- * Container for easier access to privilege
- *
- * @author Felix Jacobi <felix.jacobi@stsbl.de>
- * @license MIT license <https://opensource.org/licenses/MIT>
- */
 final class Privilege
 {
-    /**
-     * Privilege that allows users to edit the mail aliases (admin password required)
-     */
-    public const ADMIN = 'PRIV_MAIL_REDIRECTION_ADMIN';
+    public const ADMIN_UUID = 'f5f8da73-2a25-44ec-af7b-3acc8aa7fce4';
+
+    /** PrivilegeVoter attribute for mail alias management. */
+    public const ADMIN = 'PRIV_' . self::ADMIN_UUID;
 }

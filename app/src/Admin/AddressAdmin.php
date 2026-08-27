@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Stsbl\IServ\MailRedirection\Admin;
 
 use IServ\CrudBundle\Crud\ServiceCrud;
+use IServ\CrudBundle\Crud\Command\Request\CrudCommand;
+use IServ\CrudBundle\Crud\Response\Asset\Asset;
 use IServ\Bundle\Form\Form\Type\BooleanType;
 use IServ\Bundle\Autocomplete\Domain\AutocompleteType;
 use IServ\Bundle\Autocomplete\Form\Type\AutocompleteTagsType;
@@ -115,6 +117,19 @@ final class AddressAdmin extends ServiceCrud
         $this->options['multi_edit'] = true;
         $this->options['use_admin_integration_bundle'] = true;
         $this->options['secure_index'] = true;
+    }
+
+    /** @return list<Asset> */
+    public function getAssetsForCommand(CrudCommand $command): array
+    {
+        return [
+            ...parent::getAssetsForCommand($command),
+            // AutocompleteTagsType only supplies data attributes. Its renderer
+            // is provided by this separate bundle asset.
+            Asset::css('js/autocomplete.css', 'iserv-autocomplete'),
+            Asset::js('js/autocomplete.js', 'iserv-autocomplete'),
+            Asset::css('css/recipients.css'),
+        ];
     }
 
     /**

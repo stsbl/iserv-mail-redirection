@@ -65,3 +65,4 @@ GRANT SELECT ON "mailredirection_addresses", "mailredirection_recipient_users", 
 GRANT INSERT, SELECT, UPDATE, DELETE ON "mailredirection_addresses", "mailredirection_recipient_users", 
     "mailredirection_recipient_groups"
     TO "stsbl-iserv-mail-redirection";
+GRANT INSERT ON log TO "stsbl-iserv-mail-redirection";
