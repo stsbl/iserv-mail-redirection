@@ -13,6 +13,7 @@ use IServ\Library\Avatar\Renderer\AvatarRenderStyle;
 use IServ\Library\Avatar\UrlGenerator\AvatarPlaceholderStyle;
 use Stsbl\IServ\MailRedirection\Idm\RecipientGroupDto;
 use Stsbl\IServ\MailRedirection\Idm\RecipientUserDto;
+use Stsbl\IServ\MailRedirection\Security\Privilege;
 use Stsbl\IServ\MailRedirection\View\RecipientCard;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -56,7 +57,7 @@ final readonly class RecipientCardResolver
         }
 
         $name = $user->getName() ?: ($user->account ?? $account);
-        $link = $this->authorization->isGranted('ROLE_ADMIN')
+        $link = $this->isMailAliasAdministrator()
             ? $this->router->generate('admin_user_show', ['id' => $user->account])
             : '/iserv/account/profile/' . $user->uuid->toNormalizedString();
 
@@ -76,7 +77,7 @@ final readonly class RecipientCardResolver
         }
 
         $name = $group->name !== '' ? $group->name : ($group->account ?? $account);
-        $link = $this->authorization->isGranted('ROLE_ADMIN')
+        $link = $this->isMailAliasAdministrator()
             ? $this->router->generate('admin_group_show', ['id' => $group->account])
             : null;
 
@@ -86,5 +87,11 @@ final readonly class RecipientCardResolver
             $this->avatars->renderPlaceholder($name, AvatarSize::default(), AvatarRenderStyle::CIRCLE, AvatarPlaceholderStyle::GROUP),
             $link,
         );
+    }
+
+    private function isMailAliasAdministrator(): bool
+    {
+        return $this->authorization->isGranted('AUTHENTICATED_AS_ADMIN')
+            && $this->authorization->isGranted(Privilege::ADMIN);
     }
 }

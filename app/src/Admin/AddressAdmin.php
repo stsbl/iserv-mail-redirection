@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Stsbl\IServ\MailRedirection\Admin;
 
+use IServ\Bundle\AdminIntegration\Menu\AdminBreadcrumbsInterface;
 use IServ\CrudBundle\Crud\ServiceCrud;
 use IServ\CrudBundle\Crud\Command\Request\CrudCommand;
 use IServ\CrudBundle\Crud\Response\Asset\Asset;
@@ -117,6 +118,12 @@ final class AddressAdmin extends ServiceCrud
         $this->options['multi_edit'] = true;
         $this->options['use_admin_integration_bundle'] = true;
         $this->options['secure_index'] = true;
+    }
+
+    /** @return list<\IServ\Library\Breadcrumb\Breadcrumb> */
+    public function prepareBreadcrumbs(): array
+    {
+        return [$this->adminBreadcrumbs()->root()];
     }
 
     /** @return list<Asset> */
@@ -432,6 +439,11 @@ final class AddressAdmin extends ServiceCrud
         return $this->locator->get(IServConfig::class);
     }
 
+    private function adminBreadcrumbs(): AdminBreadcrumbsInterface
+    {
+        return $this->locator->get(AdminBreadcrumbsInterface::class);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -439,6 +451,7 @@ final class AddressAdmin extends ServiceCrud
     {
         $deps = parent::getSubscribedServices();
         $deps[] = IServConfig::class;
+        $deps[] = AdminBreadcrumbsInterface::class;
 
         return $deps;
     }
