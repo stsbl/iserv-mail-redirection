@@ -4,6 +4,8 @@
  * Created: 30.12.2019
  */
 
+CREATE USER "stsbl-iserv-mail-redirection";
+
 CREATE TABLE mailredirection_addresses (
     id                  SERIAL          PRIMARY KEY,
     recipient           VARCHAR(255)    NOT NULL UNIQUE,
@@ -57,9 +59,10 @@ CREATE UNIQUE INDEX mailredirection_recipient_groups_key ON mailredirection_reci
 -- permissions
 GRANT SELECT, USAGE ON "mailredirection_recipient_users_id_seq", "mailredirection_recipient_groups_id_seq", 
     "mailredirection_addresses_id_seq" 
-    TO exim, symfony;
+    TO exim, "stsbl-iserv-mail-redirection";
 GRANT SELECT ON "mailredirection_addresses", "mailredirection_recipient_users", "mailredirection_recipient_groups"
     TO exim;
 GRANT INSERT, SELECT, UPDATE, DELETE ON "mailredirection_addresses", "mailredirection_recipient_users", 
     "mailredirection_recipient_groups"
-    TO symfony;
+    TO "stsbl-iserv-mail-redirection";
+GRANT INSERT ON log TO "stsbl-iserv-mail-redirection";

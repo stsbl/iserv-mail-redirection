@@ -1,0 +1,6 @@
+{% extends admin.getTemplate('list_field_base') %}
+
+{%- block field -%}
+    {{ icon('fa-envelope') }}
+    {{- value -}}@{{- mail_redirection_config.domain -}}
+{%- endblock -%}

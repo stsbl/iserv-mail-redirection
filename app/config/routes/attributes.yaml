@@ -1,0 +1,10 @@
+controllers:
+    resource:
+        path: ../../src/Controller/
+        namespace: Stsbl\IServ\MailRedirection\Controller
+    type: attribute
+    stateless: false
+
+kernel:
+    resource: ../../src/Kernel.php
+    type: attribute

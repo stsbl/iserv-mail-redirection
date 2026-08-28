@@ -1,3 +1,0 @@
-{% extends admin.getTemplate('show_field_base') %}
-
-{% block field %}<div class="mail-alias-recipients mail-alias-recipients--stacked">{% include '@StsblMailAlias/recipient_cards.html.twig' with {recipients: value} only %}</div>{% endblock %}

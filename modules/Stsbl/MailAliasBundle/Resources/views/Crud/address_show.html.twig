@@ -1,9 +1,0 @@
-{%  extends '@IServCrud/Crud/show.html.twig' %}
-
-{% block crud_title %}
-    <h1>{{ __('Details for %s@%s', item, cfg.get('Domain')) }}</h1>
-{% endblock crud_title %}
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/recipients.css', 'stsbl-mail-alias') }}">
-{% endblock %}

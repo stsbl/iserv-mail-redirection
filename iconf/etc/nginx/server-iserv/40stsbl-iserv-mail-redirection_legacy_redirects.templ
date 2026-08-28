@@ -1,0 +1,21 @@
+# The Portal-Web v4 module is mounted at its vendor-aware module path.
+# Preserve links, bookmarks and the public autocomplete source from the legacy Bundle.
+location = /iserv/admin/mailalias {
+    return 301 /iserv/stsbl/mail-redirection/admin/mailalias\$is_args\$args;
+}
+
+location = /iserv/admin/mailaliases {
+    return 301 /iserv/stsbl/mail-redirection/admin/mailalias\$is_args\$args;
+}
+
+location ^~ /iserv/admin/mailalias/ {
+    rewrite ^/iserv/admin/mailalias/(.*)$ /iserv/stsbl/mail-redirection/admin/mailalias/\$1 permanent;
+}
+
+location = /iserv/mailalias {
+    return 301 /iserv/stsbl/mail-redirection/admin/mailalias\$is_args\$args;
+}
+
+location = /iserv/mailalias/autocomplete/api {
+    return 301 /iserv/stsbl/mail-redirection/mailalias/autocomplete/api\$is_args\$args;
+}

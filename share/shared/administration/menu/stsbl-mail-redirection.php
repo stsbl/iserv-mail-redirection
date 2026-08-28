@@ -12,9 +12,10 @@ return static function (MenuConfigurator $config): void {
         ->add(
             key: 'mail_aliases_admin',
             label: _('Mail aliases'),
-            url: '/iserv/admin/mailalias',
-            icon: new MenuIcon('img/mail-alias.svg', '/usr/share/iserv/web/public/assets/stsbl-mail-alias/manifest.json'),
+            url: '/admin/mailalias',
+            icon: new MenuIcon('img/mail-redirection.svg', '/usr/share/iserv/stsbl-iserv-mail-redirection/app/public/static/manifest.json'),
             accessExpr: 'user.hasPrivilege("f5f8da73-2a25-44ec-af7b-3acc8aa7fce4")',
+            moduleId: 'stsbl/mail-redirection',
             weight: 1000,
         )
     ;

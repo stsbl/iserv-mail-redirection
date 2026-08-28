@@ -1,3 +1,10 @@
+stsbl-iserv-mail-redirection (26.08.27-1) UNRELEASED; urgency=medium
+
+  * Migrate Mail Alias management to Portal-Web v4.
+  * Preserve legacy URLs and require authenticated administrator access.
+
+ -- Felix Jacobi <felix.jacobi@iserv.eu>  Thu, 27 Aug 2026 19:40:05 +0200
+
 stsbl-iserv-mail-redirection (24.07.23.1) testing; urgency=medium
 
   * Updated .gitignore

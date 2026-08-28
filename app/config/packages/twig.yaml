@@ -1,0 +1,10 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    debug: '%kernel.debug%'
+    strict_variables: true
+    form_themes:
+        - '@IServBootstrap/Form/bootstrap.html.twig'
+        - '@IServForm/form.html.twig'
+        - '@IServCrud/Form/crud.html.twig'
+    globals:
+        mail_redirection_config: '@Stsbl\IServ\MailRedirection\Config\IServConfig'

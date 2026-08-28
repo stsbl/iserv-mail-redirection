@@ -1,0 +1,22 @@
+{% extends '@IServCrud/Crud/index.html.twig' %}
+{% import '@IServCrud/macros.html.twig' as m %}
+
+{# @var crud \Stsbl\IServ\MailRedirection\Admin\AddressAdmin #}
+
+{% block crud_actions %}
+    <div class="list-actions">
+        {{ m.linkButton(crud.generateUrl('add'), _('Add'), 'fa-plus') }}
+        <a class="btn btn-default" href="{{ path('admin_mailalias_import') }}">{{ icon('fa-file-import') }} {{ _('Import') }}</a>
+    </div>
+{% endblock %}
+
+{% block crud_table %}
+    {{ parent() }}
+{% endblock %}
+
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/recipients.css') }}">
+{% endblock %}

@@ -1,0 +1,10 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    paths:
+        - src
+    parallel:
+        maximumNumberOfProcesses: 4
+    level: max
+    inferPrivatePropertyTypeFromConstructor: true
