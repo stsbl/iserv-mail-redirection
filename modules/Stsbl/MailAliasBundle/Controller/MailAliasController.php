@@ -11,12 +11,20 @@ use IServ\CrudBundle\Controller\StrictCrudController;
 use IServ\Library\Breadcrumb\Breadcrumb;
 use IServ\Library\Breadcrumb\BreadcrumbManagerInterface;
 use IServ\Library\Config\Config;
+use IServ\Library\Avatar\AvatarSize;
+use IServ\Library\Avatar\Renderer\AvatarRendererInterface;
+use IServ\Library\Avatar\Renderer\AvatarRenderStyle;
+use IServ\Library\Avatar\Renderer\Exception\AvatarRendererException;
+use IServ\Library\Avatar\UrlGenerator\AvatarPlaceholderStyle;
+use IServ\Library\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Stsbl\MailAliasBundle\Admin\AddressAdmin;
+use Stsbl\MailAliasBundle\Entity\Address;
 use Stsbl\MailAliasBundle\Exception\ImportException;
 use Stsbl\MailAliasBundle\Form\Type\ImportType;
 use Stsbl\MailAliasBundle\Model\Import;
+use Stsbl\MailAliasBundle\Repository\AddressRepository;
 use Stsbl\MailAliasBundle\Service\Importer;
 use Stsbl\MailAliasBundle\Service\IdmRecipientLookup;
 use Symfony\Component\Form\FormInterface;
@@ -59,6 +67,40 @@ use Symfony\Component\Routing\Annotation\Route;
 final class MailAliasController extends StrictCrudController
 {
     /**
+     * Public mail-alias source for the IServ autocomplete module.
+     *
+     * @Route("/mailalias/autocomplete/api", name="mailalias_autocomplete_api", methods={"GET"})
+     */
+    public function autocompleteApiAction(Request $request, AddressRepository $addresses, Config $config): JsonResponse
+    {
+        $query = $request->query->get('query') ?? $request->query->get('values');
+        if (!is_string($query) || trim($query) === '') {
+            return new JsonResponse([]);
+        }
+
+        $suggestions = array_map(static function (Address $address) use ($config): array {
+            $mail = $address->getRecipient() . '@' . $config->get('Domain');
+
+            return [
+                'label' => $address->getDisplayName() ?: $mail,
+                'text' => $address->getDisplayName() ?: $mail,
+                'value' => 'personal:' . $mail,
+                'source' => 'personal',
+                'avatar' => null,
+                'avatarHtml' => null,
+                'icon' => 'fa-envelope',
+                'extra' => $address->getDisplayName() ? $mail : _('Mail alias'),
+                'certainty' => 5,
+                'fuzzy' => false,
+                'expandable' => false,
+                'readonly' => false,
+            ];
+        }, $addresses->findEnabledByRecipientQuery($query));
+
+        return $request->query->has('values') ? new JsonResponse(['data' => $suggestions]) : new JsonResponse($suggestions);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function indexAction(Request $request): array|Response
@@ -99,6 +141,7 @@ final class MailAliasController extends StrictCrudController
     public function getRecipientsAutocompleteAction(
         Request $request,
         IdmRecipientLookup $idmRecipientLookup,
+        AvatarRendererInterface $avatarRenderer,
     ): JsonResponse {
         $type = $request->query->get('type');
         $query = $request->query->get('query');
@@ -126,7 +169,8 @@ final class MailAliasController extends StrictCrudController
                     'text' => $group['name'] ?? $account,
                     'value' => 'group:' . $account,
                     'source' => 'group',
-                    'icon' => 'pro-group',
+                    'avatarHtml' => $this->renderGroupAvatar($avatarRenderer, (string) ($group['name'] ?? $account)),
+                    'icon' => 'fa-users',
                     'extra' => _('Group'),
                     'certainty' => $certainty,
                     'fuzzy' => $bucket === 'fuzzy',
@@ -150,7 +194,8 @@ final class MailAliasController extends StrictCrudController
                     'text' => $label === '' ? $account : $label,
                     'value' => 'user:' . $account,
                     'source' => 'user',
-                    'icon' => 'pro-user',
+                    'avatarHtml' => $this->renderUserAvatar($avatarRenderer, $user['hexUuid'] ?? null),
+                    'icon' => 'fa-user',
                     'extra' => $user['auxInfo'] ?? _('User'),
                     'certainty' => $certainty,
                     'fuzzy' => $bucket === 'fuzzy',
@@ -162,6 +207,33 @@ final class MailAliasController extends StrictCrudController
         }
 
         return new JsonResponse($suggestions);
+    }
+
+    private function renderUserAvatar(AvatarRendererInterface $avatarRenderer, mixed $uuid): ?string
+    {
+        if (!is_string($uuid) || $uuid === '') {
+            return null;
+        }
+
+        try {
+            return $avatarRenderer->render(Uuid::createFromNormalized($uuid), AvatarSize::default());
+        } catch (\InvalidArgumentException|AvatarRendererException) {
+            return null;
+        }
+    }
+
+    private function renderGroupAvatar(AvatarRendererInterface $avatarRenderer, string $name): ?string
+    {
+        try {
+            return $avatarRenderer->renderPlaceholder(
+                $name,
+                AvatarSize::default(),
+                AvatarRenderStyle::ROUNDED,
+                AvatarPlaceholderStyle::GROUP,
+            );
+        } catch (AvatarRendererException) {
+            return null;
+        }
     }
 
     /**

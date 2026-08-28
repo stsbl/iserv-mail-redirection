@@ -10,6 +10,7 @@ use IServ\FilesystemBundle\FilePicker\Domain\PickedFile;
 use IServ\Library\User\User\Username;
 use Stsbl\MailAliasBundle\Entity\Address;
 use Stsbl\MailAliasBundle\Entity\GroupRecipient;
+use Stsbl\MailAliasBundle\Domain\GroupAccount;
 use Stsbl\MailAliasBundle\Entity\UserRecipient;
 use Stsbl\MailAliasBundle\Idm\RecipientGroupDto;
 use Stsbl\MailAliasBundle\Idm\RecipientUserDto;
@@ -205,7 +206,7 @@ final class Importer
                         continue;
                     }
 
-                    if ($originalRecipient->hasGroupAccount($g)) {
+                    if ($originalRecipient->hasGroupAccount(new GroupAccount($g))) {
                         $warnings[] = __(
                             'The group %s is already assigned to the original recipient %s.',
                             $group,
@@ -214,7 +215,7 @@ final class Importer
                         continue;
                     }
 
-                    $originalRecipient->addGroup(new GroupRecipient($g, $group->uuid));
+                    $originalRecipient->addGroup(new GroupRecipient(new GroupAccount($g), $group->uuid));
 
                     $this->addressRepository->persist($originalRecipient);
                 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Stsbl\MailAliasBundle\Validator\Constraints;
 
+use Attribute;
 use Symfony\Component\Validator\Constraint;
 
 /*
@@ -37,6 +38,7 @@ use Symfony\Component\Validator\Constraint;
  * @license MIT license <https://opensource.org/licenses/MIT>
  * @Annotation
  */
+#[Attribute(Attribute::TARGET_CLASS)]
 final class Address extends Constraint
 {
     /**

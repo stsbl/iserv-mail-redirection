@@ -8,6 +8,7 @@ CREATE TABLE mailredirection_addresses (
     id                  SERIAL          PRIMARY KEY,
     recipient           VARCHAR(255)    NOT NULL UNIQUE,
     enabled             BOOLEAN         NOT NULL,
+    display_name        TEXT,
     comment             TEXT,
     CHECK (recipient != 'root'),
     CHECK (recipient != 'postmaster'),

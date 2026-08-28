@@ -1,6 +1,8 @@
-// src/Stsbl/MailAliasBundle/Resources/webpack.config.js
-let merge = require('webpack-merge');
-let path = require('path');
-let baseConfig = require(path.join(process.env.WEBPACK_BASE_PATH, 'webpack.config.base.js'));
+const base = require(process.env.WEBPACK_BASE_PATH + '/webpack.config.base.js');
 
-module.exports = merge(baseConfig.get(__dirname), {});
+module.exports = base.merge(__dirname, {
+    entry: {
+        'img/mail-alias.svg': './assets/img/mail-alias.svg',
+        'css/recipients': './assets/css/recipients.css',
+    },
+});

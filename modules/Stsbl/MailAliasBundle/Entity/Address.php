@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use IServ\Bundle\Autocomplete\Form\Data\AutocompleteTagsData;
 use IServ\CrudBundle\Entity\CrudInterface;
 use IServ\Library\User\User\Username;
+use Stsbl\MailAliasBundle\Domain\GroupAccount;
 use Stsbl\MailAliasBundle\Repository\AddressRepository;
 use Stsbl\MailAliasBundle\Validator\Constraints as StsblAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -39,63 +40,42 @@ use Symfony\Component\Validator\Constraints as Assert;
  * THE SOFTWARE.
  */
 
-/**
- * StsblMailAliasBundle:Address
- *
- * @author Felix Jacobi <felix.jacobi@stsbl.de>
- * @license MIT license <https://opensource.org/licenes/MIT>
- * @ORM\Entity(repositoryClass="Stsbl\\MailAliasBundle\\Repository\\AddressRepository")
- * @ORM\Table(name="mailredirection_addresses")
- * @DoctrineAssert\UniqueEntity(fields="recipient", message="There is already an entry for that address.")
- * @StsblAssert\Address()
- */
+#[ORM\Entity(repositoryClass: AddressRepository::class)]
+#[ORM\Table(name: 'mailredirection_addresses')]
+#[DoctrineAssert\UniqueEntity(fields: 'recipient', message: 'There is already an entry for that address.')]
+#[StsblAssert\Address]
 class Address implements CrudInterface
 {
     public const CRUD_ICON = 'message-forward';
 
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
+    #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id;
 
-    /**
-     * @Assert\NotBlank()
-     * @StsblAssert\SystemAddress()
-     * @StsblAssert\LocalPart()
-     * @StsblAssert\NotAccount()
-     * @ORM\Column(name="recipient", type="text")
-     */
+    #[Assert\NotBlank]
+    #[StsblAssert\SystemAddress]
+    #[StsblAssert\LocalPart]
+    #[StsblAssert\NotAccount]
+    #[ORM\Column(name: 'recipient', type: 'text')]
     private ?string $recipient;
 
-    /**
-     * @ORM\Column(name="enabled", type="boolean")
-     * @Assert\NotBlank()
-     *
-     * @var bool
-     */
+    #[ORM\Column(name: 'enabled', type: 'boolean')]
+    #[Assert\NotBlank]
     private bool $enabled = true;
 
-    /**
-     * @ORM\Column(name="comment", type="text")
-     */
+    #[ORM\Column(name: 'display_name', type: 'text', nullable: true)]
+    private ?string $displayName = null;
+
+    #[ORM\Column(name: 'comment', type: 'text')]
     private ?string $comment;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Stsbl\MailAliasBundle\Entity\UserRecipient", mappedBy="address", cascade={"persist", "remove"}, orphanRemoval=true)
-     *
-     * @var UserRecipient[]&Collection
-     */
+    /** @var UserRecipient[]&Collection */
+    #[ORM\OneToMany(targetEntity: UserRecipient::class, mappedBy: 'address', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $users;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Stsbl\MailAliasBundle\Entity\GroupRecipient", mappedBy="address", cascade={"persist", "remove"}, orphanRemoval=true)
-     *
-     * @var GroupRecipient[]&Collection
-     */
+    /** @var GroupRecipient[]&Collection */
+    #[ORM\OneToMany(targetEntity: GroupRecipient::class, mappedBy: 'address', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $groups;
 
     public function __construct()
@@ -133,6 +113,11 @@ class Address implements CrudInterface
     public function getComment(): ?string
     {
         return $this->comment;
+    }
+
+    public function getDisplayName(): ?string
+    {
+        return $this->displayName;
     }
 
     /**
@@ -177,6 +162,13 @@ class Address implements CrudInterface
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function setDisplayName(?string $displayName): self
+    {
+        $this->displayName = $displayName;
 
         return $this;
     }
@@ -228,9 +220,9 @@ class Address implements CrudInterface
         return $this;
     }
 
-    public function hasGroupAccount(string $account): bool
+    public function hasGroupAccount(GroupAccount $account): bool
     {
-        return $this->groups->exists(static fn (int $key, GroupRecipient $recipient): bool => $recipient->getAccount() === $account);
+        return $this->groups->exists(static fn (int $key, GroupRecipient $recipient): bool => $recipient->getAccount()->export() === $account->export());
     }
 
     /** @return list<AutocompleteTagsData> */
@@ -241,7 +233,7 @@ class Address implements CrudInterface
             $recipients[] = new AutocompleteTagsData('user:' . $recipient->getUsername(), (string) $recipient->getUsername(), 'user');
         }
         foreach ($this->groups as $recipient) {
-            $recipients[] = new AutocompleteTagsData('group:' . $recipient->getAccount(), $recipient->getAccount(), 'group');
+            $recipients[] = new AutocompleteTagsData('group:' . $recipient->getAccount(), (string) $recipient->getAccount(), 'group');
         }
 
         return $recipients;
@@ -250,20 +242,38 @@ class Address implements CrudInterface
     /** @param iterable<AutocompleteTagsData> $recipients */
     public function setRecipients(iterable $recipients): self
     {
-        $this->users->clear();
-        $this->groups->clear();
+        $users = [];
+        $groups = [];
         foreach ($recipients as $recipient) {
             if (!$recipient instanceof AutocompleteTagsData || $recipient->getId() === null) {
                 continue;
             }
             if ($recipient->getSource() === 'user') {
-                $username = new Username($recipient->getId());
-                if (!$this->hasUser($username)) {
-                    $this->addUser(new UserRecipient($username));
-                }
+                $users[] = new Username($recipient->getId());
             }
-            if ($recipient->getSource() === 'group' && !$this->hasGroupAccount($recipient->getId())) {
-                $this->addGroup(new GroupRecipient($recipient->getId()));
+            if ($recipient->getSource() === 'group') {
+                $groups[] = new GroupAccount($recipient->getId());
+            }
+        }
+
+        foreach ($this->users->toArray() as $recipient) {
+            if (!in_array($recipient->getUsername(), $users, false)) {
+                $this->removeUser($recipient);
+            }
+        }
+        foreach ($this->groups->toArray() as $recipient) {
+            if (!in_array($recipient->getAccount(), $groups, false)) {
+                $this->removeGroup($recipient);
+            }
+        }
+        foreach ($users as $username) {
+            if (!$this->hasUser($username)) {
+                $this->addUser(new UserRecipient($username));
+            }
+        }
+        foreach ($groups as $account) {
+            if (!$this->hasGroupAccount($account)) {
+                $this->addGroup(new GroupRecipient($account));
             }
         }
 

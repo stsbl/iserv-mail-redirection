@@ -25,6 +25,7 @@ use Stsbl\MailAliasBundle\Controller\MailAliasController;
 use Stsbl\MailAliasBundle\Entity\Address;
 use Stsbl\MailAliasBundle\Security\Privilege;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /*
  * The MIT License
@@ -150,7 +151,7 @@ final class AddressAdmin extends AdminServiceCrud
                 'multi_edit' => true,
                 'autocomplete_types' => [AutocompleteType::USER, AutocompleteType::GROUP],
                 'multiple' => true,
-                'tag_source' => '/admin/mailalias/recipients?type=user,group',
+                'tag_source' => $this->router()->generate('admin_mailalias_recipients', ['type' => 'user,group']),
                 'attr' => [
                     'help_text' => _('The users and groups who should receive the e-mails to that address.'),
                 ],
@@ -163,6 +164,14 @@ final class AddressAdmin extends AdminServiceCrud
                     'help_text' => _('You can enable or disable this redirection. If it is disabled all assigned ' .
                         'users and groups will stop receiving the mails of this address.'),
                 ]
+            ])
+            ->add('displayName', TextType::class, [
+                'required' => false,
+                'label' => _('Display name'),
+                'multi_edit' => true,
+                'attr' => [
+                    'help_text' => _('The public name displayed for this alias in IServ autocomplete. Leave empty to display the e-mail address.'),
+                ],
             ])
             ->add('comment', TextareaType::class, [
                 'required' => false,
@@ -185,6 +194,10 @@ final class AddressAdmin extends AdminServiceCrud
                 'label' => _('Original recipient'),
                 'template' => '@StsblMailAlias/List/field_recipient.html.twig',
             ]);
+            $mapper->add('recipients', null, [
+                'label' => _('Recipients'),
+                'template' => '@StsblMailAlias/List/field_recipients.html.twig',
+            ]);
         } elseif ($mapper instanceof ShowMapper) {
             $mapper->add('recipient', null, [
                 'label' => _('Original recipient'),
@@ -195,8 +208,14 @@ final class AddressAdmin extends AdminServiceCrud
         // explicitly block FormMapper
         // the method will also called when building form
         if (!$mapper instanceof FormMapper) {
-            $mapper->add('recipients', null, ['label' => _('Recipients')]);
+            if (!$mapper instanceof ListMapper) {
+                $mapper->add('recipients', null, [
+                    'label' => _('Recipients'),
+                    'template' => '@StsblMailAlias/Show/field_recipients.html.twig',
+                ]);
+            }
             $mapper->add('enabled', 'boolean', ['label' => _('Enabled')]);
+            $mapper->add('displayName', null, ['label' => _('Display name')]);
             $mapper->add('comment', null, ['label' => _('Note'), 'responsive' => 'desktop']);
         }
     }
@@ -239,7 +258,7 @@ final class AddressAdmin extends AdminServiceCrud
     {
         /* @var $object Address */
         $userRecipients = array_map(static fn ($recipient): string => (string) $recipient->getUsername(), $object->getUsers()->toArray());
-        $groupRecipients = array_map(static fn ($recipient): string => $recipient->getAccount(), $object->getGroups()->toArray());
+        $groupRecipients = array_map(static fn ($recipient): string => (string) $recipient->getAccount(), $object->getGroups()->toArray());
         $servername = $this->config()->get('Domain');
 
         if (null === $previousData) {
