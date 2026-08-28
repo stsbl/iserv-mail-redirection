@@ -1,9 +1,18 @@
-stsbl-iserv-mail-redirection (26.08.27-1) UNRELEASED; urgency=medium
+stsbl-iserv-mail-redirection (26.08.28.1) stable; urgency=medium
 
   * Migrate Mail Alias management to Portal-Web v4.
   * Preserve legacy URLs and require authenticated administrator access.
+  * Replace Core mail alias dependencies with IDM services
+  * Migrate MailAlias module to Portal-Web v4
 
- -- Felix Jacobi <felix.jacobi@iserv.eu>  Thu, 27 Aug 2026 19:40:05 +0200
+  iserv: Der Fehler bezüglich der nicht mehr verfügbaren PhpImapReplacement
+    PHP-Klasse wurde behoben. Weiterhin wurde das Modul auf eine
+    zukunftsweisende Architektur aktualisiert und die Verwaltung optisch
+    und funktionell überholt. Außerdem integriert sich das Modul nun in die
+    Autovervollständigung und bietet die Aliasse an den meisten Stellen, wo in
+    IServ E-Mail-Adressen eingegeben werden können.
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Fri, 28 Aug 2026 22:23:11 +0200
 
 stsbl-iserv-mail-redirection (24.07.23.1) testing; urgency=medium
 
