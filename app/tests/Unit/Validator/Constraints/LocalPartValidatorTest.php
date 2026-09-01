@@ -8,6 +8,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Stsbl\IServ\MailRedirection\Validator\Constraints\LocalPart;
 use Stsbl\IServ\MailRedirection\Validator\Constraints\LocalPartValidator;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 /** @extends ConstraintValidatorTestCase<LocalPartValidator> */
@@ -45,5 +47,11 @@ final class LocalPartValidatorTest extends ConstraintValidatorTestCase
         $constraint = new LocalPart();
         $this->validator->validate('invalid local part', $constraint);
         $this->buildViolation($constraint->getMessage())->assertRaised();
+    }
+
+    public function testRejectsTheWrongConstraintType(): void
+    {
+        $this->expectException(UnexpectedTypeException::class);
+        $this->validator->validate('support', new NotBlank());
     }
 }

@@ -10,6 +10,8 @@ use Stsbl\IServ\MailRedirection\Config\IServConfig;
 use Stsbl\IServ\MailRedirection\Validator\Constraints\SystemAddress;
 use Stsbl\IServ\MailRedirection\Validator\Constraints\SystemAddressValidator;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 /** @extends ConstraintValidatorTestCase<SystemAddressValidator> */
@@ -34,5 +36,11 @@ final class SystemAddressValidatorTest extends ConstraintValidatorTestCase
     {
         $this->validator->validate('helpdesk', new SystemAddress());
         $this->assertNoViolation();
+    }
+
+    public function testRejectsTheWrongConstraintType(): void
+    {
+        $this->expectException(UnexpectedTypeException::class);
+        $this->validator->validate('helpdesk', new NotBlank());
     }
 }
