@@ -124,6 +124,16 @@ final class AddressAdminWebTest extends WebTestCase
         $address = $entityManager->getRepository(Address::class)->findOneBy(['recipient' => 'new-help']);
         self::assertSame('new-help', $address?->getRecipient());
         self::assertNotNull($address?->getId());
+
+        $client->request('GET', '/admin/mailalias/edit/' . $address->getId());
+        $client->submitForm('Save', [
+            'mailalias[recipient]' => 'renamed-help',
+            'mailalias[enabled]' => '0',
+            'mailalias[comment]' => 'Updated in test',
+        ]);
+
+        self::assertResponseRedirects();
+
     }
 
 }

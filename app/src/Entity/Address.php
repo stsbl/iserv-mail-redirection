@@ -61,7 +61,7 @@ class Address implements CrudInterface
     private ?string $recipient;
 
     #[ORM\Column(name: 'enabled', type: 'boolean')]
-    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private bool $enabled = true;
 
     #[ORM\Column(name: 'display_name', type: 'text', nullable: true)]
