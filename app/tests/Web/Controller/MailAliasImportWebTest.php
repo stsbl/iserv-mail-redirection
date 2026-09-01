@@ -87,4 +87,32 @@ final class MailAliasImportWebTest extends WebTestCase
 
         self::assertResponseRedirects('/admin/mailalias');
     }
+
+    public function testRejectsRemoteCsvWithAnInvalidColumnAmount(): void
+    {
+        /** @var TestBrowser $client */
+        $client = self::createClient();
+        $stream = fopen('php://temp', 'r+');
+        fwrite($stream, "help\n");
+        rewind($stream);
+        $reader = $this->createMock(CsvFileReaderInterface::class);
+        $reader->method('getMimeType')->willReturn('text/csv');
+        $reader->method('open')->willReturn($stream);
+        self::getContainer()->set(Importer::class, new Importer(
+            $this->createMock(AddressRepository::class),
+            $this->createMock(ValidatorInterface::class),
+            $this->createMock(IdmUserFetcher::class),
+            $this->createMock(IdmGroupFetcher::class),
+            $reader,
+        ));
+        self::getContainer()->set(Config::class, new Config(['Domain' => 'example.test']));
+        self::getContainer()->set(IdmClientInterface::class, $this->createMock(IdmClientInterface::class));
+        self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
+        $client->disableReboot();
+        $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
+        $client->request('GET', '/admin/mailalias/import');
+        $client->submitForm('Import', ['import[file]' => base64_encode('remote/file.csv')]);
+
+        self::assertResponseRedirects('/admin/mailalias');
+    }
 }

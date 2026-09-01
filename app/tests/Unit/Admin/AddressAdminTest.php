@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Stsbl\IServ\MailRedirection\Tests\Unit\Admin;
+
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\TestCase;
+use Stsbl\IServ\MailRedirection\Admin\AddressAdmin;
+
+#[CoversClass(AddressAdmin::class)]
+final class AddressAdminTest extends TestCase
+{
+    public function testProvidesCsvImportInstructions(): void
+    {
+        self::assertStringContainsString('CSV', AddressAdmin::getImportExplanation());
+        self::assertSame([
+            'Original recipient (Only local part, without the @ and the domain)',
+            'Users (Account names as a comma separated list, can be empty)',
+            'Groups (Account names as a comma separated list, can be empty)',
+            'Note (optional)',
+        ], AddressAdmin::getImportExplanationFieldList());
+    }
+}
