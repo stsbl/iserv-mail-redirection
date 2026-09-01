@@ -10,6 +10,7 @@ use IServ\Library\Avatar\Renderer\AvatarRenderStyle;
 use IServ\Library\Avatar\Renderer\Exception\AvatarRendererException;
 use IServ\Library\Avatar\UrlGenerator\AvatarPlaceholderStyle;
 use IServ\Library\Uuid\Uuid;
+use IServ\Library\Uuid\Exception\InvalidUuidException;
 use Stsbl\IServ\MailRedirection\Config\IServConfig;
 use Stsbl\IServ\MailRedirection\Entity\Address;
 use Stsbl\IServ\MailRedirection\Repository\AddressRepository;
@@ -121,7 +122,7 @@ final class MailAliasAutocompleteController extends AbstractController
         }
         try {
             return $renderer->render(Uuid::createFromNormalized($uuid), AvatarSize::default());
-        } catch (\InvalidArgumentException|AvatarRendererException) {
+        } catch (InvalidUuidException|\InvalidArgumentException|AvatarRendererException) {
             return null;
         }
     }

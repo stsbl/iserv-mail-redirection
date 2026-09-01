@@ -61,4 +61,27 @@ final class MailAliasRecipientsControllerTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(403);
     }
+
+    public function testSuppressesAnInvalidIdmUserUuidInsteadOfFailingTheLookup(): void
+    {
+        /** @var TestBrowser $client */
+        $client = self::createClient();
+        $idm = $this->createMock(IdmClientInterface::class);
+        $idm->method('performRequest')->willReturn(['exact' => [[
+            'user' => 'teacher.one',
+            'firstname' => 'Tea',
+            'lastname' => 'Cher',
+            'hexUuid' => 'invalid',
+        ]]]);
+        $avatars = $this->createMock(AvatarRendererInterface::class);
+        $avatars->expects(self::never())->method('render');
+
+        self::getContainer()->set(IdmClientInterface::class, $idm);
+        self::getContainer()->set(AvatarRendererInterface::class, $avatars);
+        $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
+        $client->request('GET', '/admin/mailalias/recipients?type=user&query=tea');
+
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString('"avatarHtml":null', (string) $client->getResponse()->getContent());
+    }
 }
