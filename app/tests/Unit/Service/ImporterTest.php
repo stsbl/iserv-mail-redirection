@@ -17,6 +17,7 @@ use Stsbl\IServ\MailRedirection\Repository\AddressRepository;
 use Stsbl\IServ\MailRedirection\Service\CsvFileReaderInterface;
 use Stsbl\IServ\MailRedirection\Service\Importer;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[CoversClass(Importer::class)]
@@ -95,6 +96,28 @@ final class ImporterTest extends TestCase
         self::assertCount(1, $result->getNewAddresses()[0]->getUsers());
         self::assertCount(1, $result->getNewAddresses()[0]->getGroups());
         self::assertCount(4, $result->getWarnings());
+    }
+
+    public function testSkipsNewAliasesRejectedByValidation(): void
+    {
+        $stream = fopen('php://temp', 'r+');
+        fwrite($stream, "invalid,,\n");
+        rewind($stream);
+        $reader = $this->createMock(CsvFileReaderInterface::class);
+        $reader->method('getMimeType')->willReturn('text/csv');
+        $reader->method('open')->willReturn($stream);
+        $repository = $this->createMock(AddressRepository::class);
+        $repository->method('findOneByRecipient')->willReturn(null);
+        $repository->expects(self::never())->method('persist');
+        $repository->expects(self::never())->method('flush');
+        $validator = $this->createMock(ValidatorInterface::class);
+        $validator->method('validate')->willReturn(new ConstraintViolationList([new ConstraintViolation('Invalid alias', null, [], null, 'recipient', 'invalid')]));
+
+        $result = (new Importer($repository, $validator, $this->createMock(IdmUserFetcher::class), $this->createMock(IdmGroupFetcher::class), $reader))
+            ->import((new Import())->setFile(new PickedFile(base64_encode('remote/import.csv'))));
+
+        self::assertSame([], $result->getNewAddresses());
+        self::assertSame(['Invalid alias'], $result->getWarnings());
     }
 
 }
