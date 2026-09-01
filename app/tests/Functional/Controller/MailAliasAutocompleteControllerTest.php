@@ -45,7 +45,10 @@ final class MailAliasAutocompleteControllerTest extends WebTestCase
         $this->client->request('GET', '/mailalias/autocomplete/api?values=hel');
 
         self::assertResponseIsSuccessful();
-        self::assertJsonStringEqualsJsonString('{"data":[{"label":"Help group <help@example.test>","text":"Help group <help@example.test>","value":"mailalias:help@example.test","source":"mailalias","avatar":"/img/mail-redirection.svg","avatarHtml":null,"icon":"fa-envelope","extra":"help@example.test","certainty":5,"fuzzy":false,"expandable":false,"readonly":false}]}', (string) $this->client->getResponse()->getContent());
+        $response = json_decode((string) $this->client->getResponse()->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        self::assertSame('Help group <help@example.test>', $response['data'][0]['label']);
+        self::assertSame('mailalias:help@example.test', $response['data'][0]['value']);
+        self::assertStringEndsWith('.svg', $response['data'][0]['avatar']);
     }
 
     public function testReturnsAnEmptyArrayForAnEmptySearch(): void

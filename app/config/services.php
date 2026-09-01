@@ -8,6 +8,7 @@ use IServ\Library\Config\Config;
 use IServ\Library\Avatar\Renderer\AvatarRendererInterface;
 use IServ\Library\IdmApiClient\IdmClientInterface;
 use Stsbl\IServ\MailRedirection\Service\IdmRecipientLookup;
+use Stsbl\IServ\MailRedirection\Service\Importer;
 
 // This file is the entry point to configure your own services.
 // Files in the packages/ subdirectory configure your dependencies.
@@ -42,6 +43,7 @@ return static function (ContainerConfigurator $configurator): void {
 
         // Web tests replace remote integrations with deterministic doubles.
         $services->get(IdmRecipientLookup::class)->public();
+        $services->get(Importer::class)->public();
         $services->set(IdmClientInterface::class)->synthetic()->public();
         $services->set(AvatarRendererInterface::class)->synthetic()->public();
     }

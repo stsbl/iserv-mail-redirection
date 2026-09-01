@@ -11,7 +11,13 @@ use IServ\Library\IdmApiClient\IdmClientInterface;
 use IServ\Library\UserToken\Test\User\TestUserBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Stsbl\IServ\MailRedirection\Controller\MailAliasImportController;
+use Stsbl\IServ\MailRedirection\Repository\AddressRepository;
 use Stsbl\IServ\MailRedirection\Security\Privilege;
+use Stsbl\IServ\MailRedirection\Service\CsvFileReaderInterface;
+use Stsbl\IServ\MailRedirection\Service\Importer;
+use IServ\Bundle\IdmDataBroker\Contract\IdmGroupFetcher;
+use IServ\Bundle\IdmDataBroker\Contract\IdmUserFetcher;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 #[CoversClass(MailAliasImportController::class)]
@@ -29,5 +35,23 @@ final class MailAliasImportWebTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('Enable new aliases', (string) $client->getResponse()->getContent());
+    }
+
+    public function testSubmitsAnInvalidRemoteFile(): void
+    {
+        /** @var TestBrowser $client */
+        $client = self::createClient();
+        $reader = $this->createMock(CsvFileReaderInterface::class);
+        $reader->method('getMimeType')->willReturn('application/pdf');
+        self::getContainer()->set(Importer::class, new Importer($this->createMock(AddressRepository::class), $this->createMock(ValidatorInterface::class), $this->createMock(IdmUserFetcher::class), $this->createMock(IdmGroupFetcher::class), $reader));
+        self::getContainer()->set(Config::class, new Config(['Domain' => 'example.test']));
+        self::getContainer()->set(IdmClientInterface::class, $this->createMock(IdmClientInterface::class));
+        self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
+        $client->disableReboot();
+        $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
+        $client->request('GET', '/admin/mailalias/import');
+        $client->submitForm('Import', ['import[file]' => base64_encode('remote/file.pdf')]);
+
+        self::assertResponseRedirects('/admin/mailalias');
     }
 }
