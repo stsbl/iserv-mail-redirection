@@ -76,4 +76,12 @@ final class NotAccountValidatorTest extends ConstraintValidatorTestCase
 
         $this->buildViolation(sprintf($constraint->getGroupMessage(), 'former-group@example.test'))->assertRaised();
     }
+
+    public function testIgnoresNullValues(): void
+    {
+        $this->users->expects(self::never())->method('getFilteredUsers');
+        $this->groups->expects(self::never())->method('getFilteredGroups');
+        $this->validator->validate(null, new NotAccount());
+        $this->assertNoViolation();
+    }
 }

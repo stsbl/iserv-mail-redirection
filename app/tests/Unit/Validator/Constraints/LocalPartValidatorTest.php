@@ -39,4 +39,11 @@ final class LocalPartValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate('grüppe', $constraint);
         $this->buildViolation($constraint->getMessageForUmlauts())->assertRaised();
     }
+
+    public function testReportsGenericInvalidLocalPart(): void
+    {
+        $constraint = new LocalPart();
+        $this->validator->validate('invalid local part', $constraint);
+        $this->buildViolation($constraint->getMessage())->assertRaised();
+    }
 }
