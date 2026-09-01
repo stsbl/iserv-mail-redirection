@@ -64,8 +64,8 @@ final class AddressValidator extends ConstraintValidator
         }
 
         $duplicatedGroupRecipients = array_unique(array_diff_assoc(
-            array_unique($groupRecipientAccounts),
             $groupRecipientAccounts,
+            array_unique($groupRecipientAccounts),
         ));
 
         foreach ($duplicatedGroupRecipients as $duplicate) {
@@ -86,8 +86,8 @@ final class AddressValidator extends ConstraintValidator
         }
 
         $duplicatedUserRecipients = array_unique(array_diff_assoc(
-            array_unique($userRecipientAccounts),
             $userRecipientAccounts,
+            array_unique($userRecipientAccounts),
         ));
 
         foreach ($duplicatedUserRecipients as $duplicate) {

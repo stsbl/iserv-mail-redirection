@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 use Stsbl\IServ\MailRedirection\Domain\GroupAccount;
 use Stsbl\IServ\MailRedirection\Entity\Address;
 use Stsbl\IServ\MailRedirection\Entity\GroupRecipient;
+use Stsbl\IServ\MailRedirection\Entity\UserRecipient;
+use Stsbl\IServ\MailRedirection\Domain\Username;
 
 #[CoversClass(Address::class)]
 final class AddressRecipientTest extends TestCase
@@ -47,5 +49,23 @@ final class AddressRecipientTest extends TestCase
 
         self::assertInstanceOf(GroupAccount::class, $recipient->getAccount());
         self::assertSame('teachers', $recipient->getAccount()->export());
+    }
+    public function testReplacesAndRemovesRecipientAssociations(): void
+    {
+        $address = (new Address())->setRecipient('help')->setEnabled(false)->setComment('note')->setDisplayName('Help');
+        $user = new UserRecipient(new Username('alice'));
+        $group = new GroupRecipient(new GroupAccount('teachers'));
+        $address->addUser($user)->addGroup($group);
+
+        self::assertSame('help', $address->getRecipient());
+        self::assertFalse($address->getEnabled());
+        self::assertSame('note', $address->getComment());
+        self::assertSame('Help', $address->getDisplayName());
+        self::assertTrue($address->hasUser(new Username('alice')));
+        self::assertTrue($address->hasGroupAccount(new GroupAccount('teachers')));
+
+        $address->removeUser($user)->removeGroup($group);
+        self::assertCount(0, $address->getUsers());
+        self::assertCount(0, $address->getGroups());
     }
 }
