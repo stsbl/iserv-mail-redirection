@@ -125,15 +125,47 @@ final class AddressAdminWebTest extends WebTestCase
         self::assertSame('new-help', $address?->getRecipient());
         self::assertNotNull($address?->getId());
 
-        $client->request('GET', '/admin/mailalias/edit/' . $address->getId());
-        $client->submitForm('Save', [
+        /** @var TestBrowser $editClient */
+        self::ensureKernelShutdown();
+        $editClient = self::createClient();
+        self::getContainer()->set(Config::class, new Config(['Domain' => 'example.test']));
+        $editIdm = $this->createMock(IdmClientInterface::class);
+        $editIdm->method('performRequest')->willReturn([]);
+        self::getContainer()->set(IdmClientInterface::class, $editIdm);
+        self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
+        $editClient->disableReboot();
+        $editClient->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
+        $editClient->request('GET', '/admin/mailalias/edit/' . $address->getId());
+        $editClient->submitForm('Save', [
             'mailalias[recipient]' => 'renamed-help',
             'mailalias[enabled]' => '0',
             'mailalias[comment]' => 'Updated in test',
         ]);
 
         self::assertResponseRedirects();
+        $entityManager->clear();
+        self::assertSame('renamed-help', $entityManager->getRepository(Address::class)->find($address->getId())?->getRecipient());
 
+    }
+
+    public function testRendersAliasDeletionConfirmation(): void
+    {
+        /** @var TestBrowser $client */
+        $client = self::createClient();
+        $entityManager = self::recreateSchema();
+        $address = (new Address())->setRecipient('obsolete')->setComment('Test');
+        $entityManager->persist($address);
+        $entityManager->flush();
+        self::getContainer()->set(Config::class, new Config(['Domain' => 'example.test']));
+        $idm = $this->createMock(IdmClientInterface::class);
+        $idm->method('performRequest')->willReturn([]);
+        self::getContainer()->set(IdmClientInterface::class, $idm);
+        self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
+        $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
+        $client->request('GET', '/admin/mailalias/delete/' . $address->getId());
+
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString('delete', strtolower((string) $client->getResponse()->getContent()));
     }
 
 }
