@@ -43,8 +43,12 @@ final class MailAliasImportWebTest extends WebTestCase
         /** @var TestBrowser $client */
         $client = self::createClient();
         $reader = $this->createMock(CsvFileReaderInterface::class);
-        $reader->method('getMimeType')->willReturn('application/pdf');
-        self::getContainer()->set(Importer::class, new Importer($this->createMock(AddressRepository::class), $this->createMock(ValidatorInterface::class), $this->createMock(IdmUserFetcher::class), $this->createMock(IdmGroupFetcher::class), $reader));
+        $reader->expects(self::once())->method('getMimeType')->willReturn('application/pdf');
+        $reader->expects(self::never())->method('open');
+        $addresses = $this->createMock(AddressRepository::class);
+        $addresses->expects(self::never())->method('persist');
+        $addresses->expects(self::never())->method('flush');
+        self::getContainer()->set(Importer::class, new Importer($addresses, $this->createMock(ValidatorInterface::class), $this->createMock(IdmUserFetcher::class), $this->createMock(IdmGroupFetcher::class), $reader));
         self::getContainer()->set(Config::class, new Config(['Domain' => 'example.test']));
         self::getContainer()->set(IdmClientInterface::class, $this->createMock(IdmClientInterface::class));
         self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
@@ -64,10 +68,12 @@ final class MailAliasImportWebTest extends WebTestCase
         fwrite($stream, "help,,\n");
         rewind($stream);
         $reader = $this->createMock(CsvFileReaderInterface::class);
-        $reader->method('getMimeType')->willReturn('text/csv');
-        $reader->method('open')->willReturn($stream);
+        $reader->expects(self::once())->method('getMimeType')->willReturn('text/csv');
+        $reader->expects(self::once())->method('open')->willReturn($stream);
         $addresses = $this->createMock(AddressRepository::class);
         $addresses->method('findOneByRecipient')->willReturn(null);
+        $addresses->expects(self::once())->method('persist');
+        $addresses->expects(self::once())->method('flush');
         $validator = $this->createMock(ValidatorInterface::class);
         $validator->method('validate')->willReturn(new ConstraintViolationList());
         self::getContainer()->set(Importer::class, new Importer($addresses, $validator, $this->createMock(IdmUserFetcher::class), $this->createMock(IdmGroupFetcher::class), $reader));
