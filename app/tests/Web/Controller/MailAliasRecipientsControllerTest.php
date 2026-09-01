@@ -84,4 +84,16 @@ final class MailAliasRecipientsControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('"avatarHtml":null', (string) $client->getResponse()->getContent());
     }
+
+    public function testRejectsUnknownRecipientTypes(): void
+    {
+        /** @var TestBrowser $client */
+        $client = self::createClient();
+        self::getContainer()->set(IdmClientInterface::class, $this->createMock(IdmClientInterface::class));
+        self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
+        $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
+        $client->request('GET', '/admin/mailalias/recipients?type=invalid&query=tea');
+
+        self::assertResponseStatusCodeSame(404);
+    }
 }
