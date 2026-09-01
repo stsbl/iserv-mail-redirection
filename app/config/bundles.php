@@ -26,4 +26,5 @@ return [
     IServ\Bundle\AdminLog\IServAdminLogBundle::class => ['all' => true],
     IServ\Bundle\Autocomplete\IServAutocompleteBundle::class => ['all' => true],
     IServ\Bundle\IdmDataBroker\IdmDataBrokerBundle::class => ['all' => true],
+    IServ\Bundle\TestBrowser\IServTestBrowserBundle::class => ['test' => true],
 ];

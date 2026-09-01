@@ -441,7 +441,10 @@ final class AddressAdmin extends ServiceCrud
 
     private function adminBreadcrumbs(): AdminBreadcrumbsInterface
     {
-        return $this->locator->get(AdminBreadcrumbsInterface::class);
+        /** @var AdminBreadcrumbsInterface $breadcrumbs */
+        $breadcrumbs = $this->locator->get(AdminBreadcrumbsInterface::class);
+
+        return $breadcrumbs;
     }
 
     /**

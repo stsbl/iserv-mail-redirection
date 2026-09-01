@@ -97,10 +97,6 @@
     <PossiblyNullOperand>
       <code><![CDATA[$address->getRecipient()]]></code>
     </PossiblyNullOperand>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$address->getDisplayName()]]></code>
-      <code><![CDATA[$address->getDisplayName()]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/Entity/Address.php">
     <ClassMustBeFinal>

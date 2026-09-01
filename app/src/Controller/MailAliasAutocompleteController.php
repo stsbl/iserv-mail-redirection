@@ -34,11 +34,12 @@ final class MailAliasAutocompleteController extends AbstractController
 
         $suggestions = array_map(static function (Address $address) use ($config, $assets): array {
             $mail = $address->getRecipient() . '@' . $config->domain();
+            $displayName = $address->getDisplayName();
             // Mail's recipient model uses the selected label as the RFC 822
             // address for every source except mailing lists. A display name
             // alone therefore becomes an invalid recipient.
-            $label = $address->getDisplayName()
-                ? sprintf('%s <%s>', $address->getDisplayName(), $mail)
+            $label = $displayName !== null && $displayName !== ''
+                ? sprintf('%s <%s>', $displayName, $mail)
                 : $mail;
 
             return [
@@ -53,7 +54,7 @@ final class MailAliasAutocompleteController extends AbstractController
                 'avatar' => $assets->getUrl('img/mail-redirection.svg'),
                 'avatarHtml' => null,
                 'icon' => 'fa-envelope',
-                'extra' => $address->getDisplayName() ? $mail : _('Mail alias'),
+                'extra' => $displayName !== null && $displayName !== '' ? $mail : _('Mail alias'),
                 'certainty' => 5,
                 'fuzzy' => false,
                 'expandable' => false,

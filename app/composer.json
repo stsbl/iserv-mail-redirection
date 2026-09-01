@@ -49,6 +49,7 @@
     "symfony/validator": "^6.4"
   },
   "require-dev": {
+    "iserv/testbrowser-bundle": "^2.1",
     "roave/security-advisories": "dev-latest",
     "symfony/browser-kit": "^6.4",
     "symfony/debug-bundle": "^6.4",
@@ -98,7 +99,8 @@
       "Stsbl\\IServ\\MailRedirection\\Tests\\Common\\": "tests/Common",
       "Stsbl\\IServ\\MailRedirection\\Tests\\Unit\\": "tests/Unit",
       "Stsbl\\IServ\\MailRedirection\\Tests\\Integration\\": "tests/Integration",
-      "Stsbl\\IServ\\MailRedirection\\Tests\\Functional\\": "tests/Functional"
+      "Stsbl\\IServ\\MailRedirection\\Tests\\Functional\\": "tests/Functional",
+      "Stsbl\\IServ\\MailRedirection\\Tests\\Web\\": "tests/Web"
     }
   },
   "config": {

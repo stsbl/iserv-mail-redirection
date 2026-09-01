@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use IServ\Library\Config\Config;
+use IServ\Library\Avatar\Renderer\AvatarRendererInterface;
+use IServ\Library\IdmApiClient\IdmClientInterface;
+use Stsbl\IServ\MailRedirection\Service\IdmRecipientLookup;
 
 // This file is the entry point to configure your own services.
 // Files in the packages/ subdirectory configure your dependencies.
@@ -34,6 +37,12 @@ return static function (ContainerConfigurator $configurator): void {
         $services
             ->set(Config::class)
             ->args([[]])
+            ->public()
         ;
+
+        // Web tests replace remote integrations with deterministic doubles.
+        $services->get(IdmRecipientLookup::class)->public();
+        $services->set(IdmClientInterface::class)->synthetic()->public();
+        $services->set(AvatarRendererInterface::class)->synthetic()->public();
     }
 };
