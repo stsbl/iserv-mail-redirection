@@ -26,9 +26,11 @@ final class AddressAdminWebTest extends WebTestCase
     {
         /** @var TestBrowser $client */
         $client = self::createClient();
-        self::recreateSchema();
+        $entityManager = self::recreateSchema();
         self::getContainer()->set(Config::class, new Config(['Domain' => 'example.test']));
-        self::getContainer()->set(IdmClientInterface::class, $this->createMock(IdmClientInterface::class));
+        $idm = $this->createMock(IdmClientInterface::class);
+        $idm->method('performRequest')->willReturn([]);
+        self::getContainer()->set(IdmClientInterface::class, $idm);
         self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
         $client->disableReboot();
         $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
@@ -41,10 +43,13 @@ final class AddressAdminWebTest extends WebTestCase
     {
         /** @var TestBrowser $client */
         $client = self::createClient();
-        self::recreateSchema();
+        $entityManager = self::recreateSchema();
         self::getContainer()->set(Config::class, new Config(['Domain' => 'example.test']));
-        self::getContainer()->set(IdmClientInterface::class, $this->createMock(IdmClientInterface::class));
+        $idm = $this->createMock(IdmClientInterface::class);
+        $idm->method('performRequest')->willReturn([]);
+        self::getContainer()->set(IdmClientInterface::class, $idm);
         self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
+        $client->disableReboot();
         $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
         $client->request('GET', '/admin/mailalias/add');
 
@@ -64,6 +69,7 @@ final class AddressAdminWebTest extends WebTestCase
         self::getContainer()->set(Config::class, new Config(['Domain' => 'example.test']));
         self::getContainer()->set(IdmClientInterface::class, $this->createMock(IdmClientInterface::class));
         self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
+        $client->disableReboot();
         $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
         $client->request('GET', '/admin/mailalias/show/' . $address->getId());
 
@@ -93,6 +99,29 @@ final class AddressAdminWebTest extends WebTestCase
         $client->request('GET', '/admin/mailalias/edit/' . $address->getId());
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('Recipients', (string) $client->getResponse()->getContent());
+    }
+
+    public function testCreatesAnAliasThroughTheAdministrationForm(): void
+    {
+        /** @var TestBrowser $client */
+        $client = self::createClient();
+        $entityManager = self::recreateSchema();
+        self::getContainer()->set(Config::class, new Config(['Domain' => 'example.test']));
+        $idm = $this->createMock(IdmClientInterface::class);
+        $idm->method('performRequest')->willReturn([]);
+        self::getContainer()->set(IdmClientInterface::class, $idm);
+        self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
+        $client->disableReboot();
+        $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
+        $client->request('GET', '/admin/mailalias/add');
+        $client->submitForm('Save', [
+            'mailalias[recipient]' => 'new-help',
+            'mailalias[enabled]' => '1',
+            'mailalias[comment]' => 'Created in test',
+        ]);
+
+        self::assertResponseRedirects();
+        self::assertSame('new-help', $entityManager->getRepository(Address::class)->findOneBy(['recipient' => 'new-help'])?->getRecipient());
     }
 
 }
