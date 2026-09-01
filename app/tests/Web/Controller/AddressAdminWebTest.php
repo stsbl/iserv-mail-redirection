@@ -194,6 +194,20 @@ final class AddressAdminWebTest extends WebTestCase
                 new AutocompleteTagsData('group:old-group', 'old-group', 'group'),
             ],
         ]);
+        $address->setEnabled(true)->setComment('');
+        $admin->preUpdate($address, [
+            'recipient' => 'new-help',
+            'enabled' => false,
+            'comment' => 'note',
+            'recipients' => [],
+        ]);
+        $address->setComment('changed');
+        $admin->preUpdate($address, [
+            'recipient' => 'new-help',
+            'enabled' => true,
+            'comment' => '',
+            'recipients' => [],
+        ]);
         $admin->postRemove($address);
 
         self::assertTrue(true);

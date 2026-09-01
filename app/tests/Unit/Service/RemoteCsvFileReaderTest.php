@@ -51,7 +51,7 @@ final class RemoteCsvFileReaderTest extends TestCase
         $stream = fopen('php://temp', 'r+');
         fwrite($stream, 'alias,');
         rewind($stream);
-        $content = new class($stream) implements ResponseInterface {
+        $content = new class ($stream) implements ResponseInterface {
             public function __construct(private $stream)
             {
             }
