@@ -47,4 +47,22 @@ final class RecipientIdmSynchronizerTest extends TestCase
         self::assertSame('new-group', (string) $groupRecipient->getAccount());
         self::assertSame($group->uuid->toNormalizedString(), $groupRecipient->getUuid()?->toNormalizedString());
     }
+
+    public function testKeepsRecipientsWhenIdmCannotResolveAnAccount(): void
+    {
+        $userRecipient = new UserRecipient(new Username('missing-user'));
+        $groupRecipient = new GroupRecipient(new GroupAccount('missing-group'));
+        $users = $this->createMock(UserRecipientRepository::class);
+        $users->method('all')->willReturn([$userRecipient]);
+        $users->expects(self::once())->method('flush');
+        $groups = $this->createMock(GroupRecipientRepository::class);
+        $groups->method('all')->willReturn([$groupRecipient]);
+        $groups->expects(self::once())->method('flush');
+        $idmUsers = $this->createMock(IdmUserFetcher::class);
+        $idmUsers->method('getFilteredUsers')->willReturn([]);
+        $idmGroups = $this->createMock(IdmGroupFetcher::class);
+        $idmGroups->method('getFilteredGroups')->willReturn([]);
+
+        self::assertSame(['users' => 0, 'groups' => 0], (new RecipientIdmSynchronizer($users, $groups, $idmUsers, $idmGroups))->sync());
+    }
 }

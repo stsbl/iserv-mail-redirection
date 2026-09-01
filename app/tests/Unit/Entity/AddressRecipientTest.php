@@ -68,4 +68,18 @@ final class AddressRecipientTest extends TestCase
         self::assertCount(0, $address->getUsers());
         self::assertCount(0, $address->getGroups());
     }
+
+    public function testHandlesEmptyAndInvalidAutocompleteTagCollections(): void
+    {
+        $address = new Address();
+
+        self::assertSame('?', (string) $address);
+        $address->setRecipient('help')->setRecipients([
+            new \stdClass(),
+            new AutocompleteTagsData('other:ignored', 'ignored', 'other'),
+        ]);
+
+        self::assertSame('help', (string) $address);
+        self::assertSame([], $address->getRecipients());
+    }
 }
