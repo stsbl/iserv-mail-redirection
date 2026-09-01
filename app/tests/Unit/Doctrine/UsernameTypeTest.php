@@ -22,4 +22,21 @@ final class UsernameTypeTest extends TestCase
         self::assertEquals(new Username('max'), $type->convertToPHPValue('max', $platform));
         self::assertSame('max', $type->convertToDatabaseValue(new Username('max'), $platform));
     }
+
+    public function testHandlesNullAndRejectsInvalidValues(): void
+    {
+        $type = new UsernameType();
+        $platform = new PostgreSQLPlatform();
+
+        self::assertNull($type->convertToPHPValue(null, $platform));
+        self::assertNull($type->convertToDatabaseValue(null, $platform));
+        $this->expectException(\LogicException::class);
+        $type->convertToPHPValue(1, $platform);
+    }
+
+    public function testRejectsNonUsernameDatabaseValues(): void
+    {
+        $this->expectException(\LogicException::class);
+        (new UsernameType())->convertToDatabaseValue('max', new PostgreSQLPlatform());
+    }
 }

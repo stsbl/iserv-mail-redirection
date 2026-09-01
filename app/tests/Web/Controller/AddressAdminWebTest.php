@@ -30,6 +30,7 @@ final class AddressAdminWebTest extends WebTestCase
         self::getContainer()->set(Config::class, new Config(['Domain' => 'example.test']));
         self::getContainer()->set(IdmClientInterface::class, $this->createMock(IdmClientInterface::class));
         self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
+        $client->disableReboot();
         $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
         $client->request('GET', '/admin/mailalias');
 
@@ -68,6 +69,30 @@ final class AddressAdminWebTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('help', (string) $client->getResponse()->getContent());
+    }
+
+    public function testAppliesAdministrationFiltersAndRendersEditPage(): void
+    {
+        /** @var TestBrowser $client */
+        $client = self::createClient();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::recreateSchema();
+        $address = (new Address())->setRecipient('help')->setComment('Test');
+        $entityManager->persist($address);
+        $entityManager->flush();
+        self::getContainer()->set(Config::class, new Config(['Domain' => 'example.test']));
+        self::getContainer()->set(IdmClientInterface::class, $this->createMock(IdmClientInterface::class));
+        self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
+        $client->disableReboot();
+        $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
+
+        foreach (['without', 'without-users', 'without-groups'] as $association) {
+            $client->request('GET', '/admin/mailalias?filter[associations]=' . $association . '&filter[enabled]=true&filter[recipient]=help');
+            self::assertResponseIsSuccessful();
+        }
+        $client->request('GET', '/admin/mailalias/edit/' . $address->getId());
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString('Recipients', (string) $client->getResponse()->getContent());
     }
 
 }

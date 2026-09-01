@@ -22,4 +22,21 @@ final class GroupAccountTypeTest extends TestCase
         self::assertEquals(new GroupAccount('max'), $type->convertToPHPValue('max', $platform));
         self::assertSame('max', $type->convertToDatabaseValue(new GroupAccount('max'), $platform));
     }
+
+    public function testHandlesNullAndRejectsInvalidValues(): void
+    {
+        $type = new GroupAccountType();
+        $platform = new PostgreSQLPlatform();
+
+        self::assertNull($type->convertToPHPValue(null, $platform));
+        self::assertNull($type->convertToDatabaseValue(null, $platform));
+        $this->expectException(\LogicException::class);
+        $type->convertToPHPValue(1, $platform);
+    }
+
+    public function testRejectsNonGroupAccountDatabaseValues(): void
+    {
+        $this->expectException(\LogicException::class);
+        (new GroupAccountType())->convertToDatabaseValue('max', new PostgreSQLPlatform());
+    }
 }
