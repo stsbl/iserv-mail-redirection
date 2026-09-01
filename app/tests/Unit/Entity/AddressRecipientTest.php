@@ -73,6 +73,7 @@ final class AddressRecipientTest extends TestCase
     {
         $address = new Address();
 
+        self::assertNull($address->getId());
         self::assertSame('?', (string) $address);
         $address->setRecipient('help')->setRecipients([
             new \stdClass(),

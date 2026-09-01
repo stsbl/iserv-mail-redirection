@@ -36,6 +36,11 @@ final class AddressRepositoryTest extends KernelTestCase
 
         self::assertSame(['Alpha'], array_map(static fn(Address $address): ?string => $address->getRecipient(), $repository->findEnabledByRecipientQuery('alp')));
         self::assertSame('zebra', $repository->findOneByRecipient('zebra')?->getRecipient());
+
+        $address = (new Address())->setRecipient('persisted')->setComment('test');
+        $repository->persist($address);
+        $repository->flush();
+        self::assertNotNull($address->getId());
     }
 
     private function persistAddress(string $recipient, bool $enabled): void
