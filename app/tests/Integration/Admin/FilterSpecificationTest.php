@@ -6,7 +6,6 @@ namespace Stsbl\IServ\MailRedirection\Tests\Integration\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\TestCase;
 use Stsbl\IServ\MailRedirection\Admin\Filter\AliasAssociationSpecification;
 use Stsbl\IServ\MailRedirection\Admin\Filter\PropertyMatchSpecification;
 use Stsbl\IServ\MailRedirection\Entity\Address;

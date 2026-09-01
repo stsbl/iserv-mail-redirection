@@ -184,7 +184,7 @@ final class Importer
                     if ($originalRecipient->hasUser($username)) {
                         $warnings[] = __(
                             'The user %s is already assigned to the original recipient %s.',
-                            $user,
+                            $account,
                             $originalRecipient,
                         );
                         continue;
@@ -209,7 +209,7 @@ final class Importer
                     if ($originalRecipient->hasGroupAccount(new GroupAccount($g))) {
                         $warnings[] = __(
                             'The group %s is already assigned to the original recipient %s.',
-                            $group,
+                            $g,
                             $originalRecipient,
                         );
                         continue;

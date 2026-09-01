@@ -15,6 +15,8 @@ use Stsbl\IServ\MailRedirection\Idm\RecipientGroupDto;
 use Stsbl\IServ\MailRedirection\Validator\Constraints\NotAccount;
 use Stsbl\IServ\MailRedirection\Validator\Constraints\NotAccountValidator;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 /** @extends ConstraintValidatorTestCase<NotAccountValidator> */
@@ -83,5 +85,23 @@ final class NotAccountValidatorTest extends ConstraintValidatorTestCase
         $this->groups->expects(self::never())->method('getFilteredGroups');
         $this->validator->validate(null, new NotAccount());
         $this->assertNoViolation();
+    }
+
+    public function testRejectsAnUnexpectedConstraint(): void
+    {
+        $this->expectException(UnexpectedTypeException::class);
+
+        $this->validator->validate('alias', new NotBlank());
+    }
+
+    public function testRejectsSystemAccounts(): void
+    {
+        $this->users->method('getFilteredUsers')->willReturn([]);
+        $this->groups->method('getFilteredGroups')->willReturn([]);
+        $constraint = new NotAccount();
+
+        $this->validator->validate('root', $constraint);
+
+        $this->buildViolation(sprintf($constraint->getSystemAccountMessage(), 'root'))->assertRaised();
     }
 }

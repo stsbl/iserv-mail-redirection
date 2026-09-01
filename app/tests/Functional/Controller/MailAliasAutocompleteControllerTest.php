@@ -58,4 +58,17 @@ final class MailAliasAutocompleteControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSame('[]', $this->client->getResponse()->getContent());
     }
+
+    public function testUsesTheMailAddressAsLabelWithoutDisplayName(): void
+    {
+        $this->entityManager->persist((new Address())->setRecipient('support')->setComment(''));
+        $this->entityManager->flush();
+
+        $this->client->request('GET', '/mailalias/autocomplete/api?query=support');
+
+        self::assertResponseIsSuccessful();
+        $response = json_decode((string) $this->client->getResponse()->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        self::assertSame('support@example.test', $response[0]['label']);
+        self::assertSame('Mail alias', $response[0]['extra']);
+    }
 }

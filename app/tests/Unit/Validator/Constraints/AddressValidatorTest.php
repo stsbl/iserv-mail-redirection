@@ -13,6 +13,8 @@ use Stsbl\IServ\MailRedirection\Entity\UserRecipient;
 use Stsbl\IServ\MailRedirection\Validator\Constraints\Address;
 use Stsbl\IServ\MailRedirection\Validator\Constraints\AddressValidator;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 /** @extends ConstraintValidatorTestCase<AddressValidator> */
@@ -47,6 +49,20 @@ final class AddressValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate($address, $constraint);
 
         $this->buildViolation(sprintf($constraint->getDuplicateUserMessage(), 'alice', 'help'))->atPath('property.path.recipient')->assertRaised();
+    }
+
+    public function testRejectsUnexpectedConstraint(): void
+    {
+        $this->expectException(UnexpectedTypeException::class);
+
+        $this->validator->validate(new AddressEntity(), new NotBlank());
+    }
+
+    public function testRejectsUnexpectedValue(): void
+    {
+        $this->expectException(UnexpectedTypeException::class);
+
+        $this->validator->validate('help', new Address());
     }
 
 }

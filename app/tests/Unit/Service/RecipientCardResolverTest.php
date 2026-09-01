@@ -67,4 +67,27 @@ final class RecipientCardResolverTest extends TestCase
         self::assertSame('zoe.admin', $cards[0]->name);
         self::assertSame('/iserv/account/profile/0fd3d1ec-5146-47ef-8c11-70f23850dd8e', $cards[0]->link);
     }
+
+    public function testUsesNoGroupLinkForNonAdministratorsAndIgnoresUnknownUsers(): void
+    {
+        $users = $this->createMock(IdmUserFetcher::class);
+        $groups = $this->createMock(IdmGroupFetcher::class);
+        $avatars = $this->createMock(AvatarRendererInterface::class);
+        $authorization = $this->createMock(AuthorizationCheckerInterface::class);
+        $users->method('getFilteredUsers')->willReturn([]);
+        $groups->method('getFilteredGroups')->willReturn([
+            new RecipientGroupDto('10d3d1ec-5146-47ef-8c11-70f23850dd8e', 'teachers', 'Teachers', null),
+        ]);
+        $authorization->method('isGranted')->willReturn(false);
+        $avatars->method('renderPlaceholder')->willReturn('<span>Teachers</span>');
+
+        $cards = (new RecipientCardResolver($users, $groups, $avatars, $authorization))->resolve([
+            new AutocompleteTagsData('user:missing', 'missing', 'user'),
+            new AutocompleteTagsData('group:teachers', 'teachers', 'group'),
+        ]);
+
+        self::assertCount(1, $cards);
+        self::assertSame('Teachers', $cards[0]->name);
+        self::assertNull($cards[0]->link);
+    }
 }

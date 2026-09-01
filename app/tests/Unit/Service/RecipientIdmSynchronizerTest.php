@@ -65,4 +65,26 @@ final class RecipientIdmSynchronizerTest extends TestCase
 
         self::assertSame(['users' => 0, 'groups' => 0], (new RecipientIdmSynchronizer($users, $groups, $idmUsers, $idmGroups))->sync());
     }
+
+    public function testUsesStoredUuidsForExistingRecipients(): void
+    {
+        $user = new RecipientUserDto('d7dcc25b-0303-43b2-b350-e400338ea223', 'alice', 'Alice', 'Example', null, null);
+        $group = new RecipientGroupDto('dfdcc25b-0303-43b2-b350-e400338ea223', 'teachers', 'Teachers', null);
+        $userRecipient = new UserRecipient(new Username('alice'));
+        $userRecipient->setUuid($user->uuid);
+        $groupRecipient = new GroupRecipient(new GroupAccount('teachers'));
+        $groupRecipient->setUuid($group->uuid);
+        $users = $this->createMock(UserRecipientRepository::class);
+        $users->method('all')->willReturn([$userRecipient]);
+        $users->method('flush');
+        $groups = $this->createMock(GroupRecipientRepository::class);
+        $groups->method('all')->willReturn([$groupRecipient]);
+        $groups->method('flush');
+        $idmUsers = $this->createMock(IdmUserFetcher::class);
+        $idmUsers->expects(self::once())->method('getUser')->with($user->uuid, RecipientUserDto::class)->willReturn($user);
+        $idmGroups = $this->createMock(IdmGroupFetcher::class);
+        $idmGroups->expects(self::once())->method('getGroup')->with($group->uuid, RecipientGroupDto::class)->willReturn($group);
+
+        self::assertSame(['users' => 0, 'groups' => 0], (new RecipientIdmSynchronizer($users, $groups, $idmUsers, $idmGroups))->sync());
+    }
 }

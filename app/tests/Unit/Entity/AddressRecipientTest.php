@@ -82,4 +82,19 @@ final class AddressRecipientTest extends TestCase
         self::assertSame('help', (string) $address);
         self::assertSame([], $address->getRecipients());
     }
+
+    public function testReplacesExistingRecipientsFromAutocompleteTags(): void
+    {
+        $address = new Address();
+        $address->addUser(new UserRecipient(new Username('alice')));
+        $address->addGroup(new GroupRecipient(new GroupAccount('teachers')));
+
+        $address->setRecipients([
+            new AutocompleteTagsData('user:bob', 'bob', 'user'),
+            new AutocompleteTagsData('group:students', 'students', 'group'),
+        ]);
+
+        self::assertSame(['bob'], array_values(array_map(static fn(UserRecipient $recipient): string => (string) $recipient->getUsername(), $address->getUsers()->toArray())));
+        self::assertSame(['students'], array_values(array_map(static fn(GroupRecipient $recipient): string => (string) $recipient->getAccount(), $address->getGroups()->toArray())));
+    }
 }

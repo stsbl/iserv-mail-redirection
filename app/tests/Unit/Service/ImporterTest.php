@@ -10,6 +10,10 @@ use IServ\FilesystemBundle\FilePicker\Domain\PickedFile;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Stsbl\IServ\MailRedirection\Entity\Address;
+use Stsbl\IServ\MailRedirection\Entity\GroupRecipient;
+use Stsbl\IServ\MailRedirection\Entity\UserRecipient;
+use Stsbl\IServ\MailRedirection\Domain\GroupAccount;
+use Stsbl\IServ\MailRedirection\Domain\Username;
 use Stsbl\IServ\MailRedirection\Idm\RecipientUserDto;
 use Stsbl\IServ\MailRedirection\Idm\RecipientGroupDto;
 use Stsbl\IServ\MailRedirection\Model\Import;
@@ -118,6 +122,40 @@ final class ImporterTest extends TestCase
 
         self::assertSame([], $result->getNewAddresses());
         self::assertSame(['Invalid alias'], $result->getWarnings());
+    }
+
+    public function testWarnsWhenExistingAliasAlreadyContainsImportedRecipients(): void
+    {
+        $stream = fopen('php://temp', 'r+');
+        fwrite($stream, "existing,alice,teachers\n");
+        rewind($stream);
+        $reader = $this->createMock(CsvFileReaderInterface::class);
+        $reader->method('getMimeType')->willReturn('text/csv');
+        $reader->method('open')->willReturn($stream);
+        $existing = (new Address())->setRecipient('existing');
+        $existing->addUser(new UserRecipient(new Username('alice')));
+        $existing->addGroup(new GroupRecipient(new GroupAccount('teachers')));
+        $repository = $this->createMock(AddressRepository::class);
+        $repository->method('findOneByRecipient')->with('existing')->willReturn($existing);
+        $repository->expects(self::never())->method('persist');
+        $repository->expects(self::once())->method('flush');
+        $validator = $this->createMock(ValidatorInterface::class);
+        $users = $this->createMock(IdmUserFetcher::class);
+        $users->method('getFilteredUsers')->willReturn([
+            new RecipientUserDto('0fd3d1ec-5146-47ef-8c11-70f23850dd8e', 'alice', 'Alice', 'Example', null, null),
+        ]);
+        $groups = $this->createMock(IdmGroupFetcher::class);
+        $groups->method('getFilteredGroups')->willReturn([
+            new RecipientGroupDto('10d3d1ec-5146-47ef-8c11-70f23850dd8e', 'teachers', 'Teachers', null),
+        ]);
+
+        $result = (new Importer($repository, $validator, $users, $groups, $reader))
+            ->import((new Import())->setFile(new PickedFile(base64_encode('remote/import.csv'))));
+
+        self::assertSame([], $result->getNewAddresses());
+        self::assertCount(3, $result->getWarnings());
+        self::assertStringContainsString('already assigned', $result->getWarnings()[1]);
+        self::assertStringContainsString('already assigned', $result->getWarnings()[2]);
     }
 
 }

@@ -96,4 +96,23 @@ final class MailAliasRecipientsControllerTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(404);
     }
+
+    public function testSkipsLookupResultsWithoutAnAccount(): void
+    {
+        /** @var TestBrowser $client */
+        $client = self::createClient();
+        $idm = $this->createMock(IdmClientInterface::class);
+        $idm->method('performRequest')->willReturn(['exact' => [['group' => null, 'user' => null]]]);
+        $avatars = $this->createMock(AvatarRendererInterface::class);
+        $avatars->expects(self::never())->method('render');
+        $avatars->expects(self::never())->method('renderPlaceholder');
+
+        self::getContainer()->set(IdmClientInterface::class, $idm);
+        self::getContainer()->set(AvatarRendererInterface::class, $avatars);
+        $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
+        $client->request('GET', '/admin/mailalias/recipients?type=group,user&query=tea');
+
+        self::assertResponseIsSuccessful();
+        self::assertSame('[]', $client->getResponse()->getContent());
+    }
 }
