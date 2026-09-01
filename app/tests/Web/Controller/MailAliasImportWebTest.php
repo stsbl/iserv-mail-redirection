@@ -18,6 +18,7 @@ use Stsbl\IServ\MailRedirection\Service\Importer;
 use IServ\Bundle\IdmDataBroker\Contract\IdmGroupFetcher;
 use IServ\Bundle\IdmDataBroker\Contract\IdmUserFetcher;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 #[CoversClass(MailAliasImportController::class)]
@@ -51,6 +52,32 @@ final class MailAliasImportWebTest extends WebTestCase
         $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
         $client->request('GET', '/admin/mailalias/import');
         $client->submitForm('Import', ['import[file]' => base64_encode('remote/file.pdf')]);
+
+        self::assertResponseRedirects('/admin/mailalias');
+    }
+
+    public function testSubmitsAValidRemoteCsvFile(): void
+    {
+        /** @var TestBrowser $client */
+        $client = self::createClient();
+        $stream = fopen('php://temp', 'r+');
+        fwrite($stream, "help,,\n");
+        rewind($stream);
+        $reader = $this->createMock(CsvFileReaderInterface::class);
+        $reader->method('getMimeType')->willReturn('text/csv');
+        $reader->method('open')->willReturn($stream);
+        $addresses = $this->createMock(AddressRepository::class);
+        $addresses->method('findOneByRecipient')->willReturn(null);
+        $validator = $this->createMock(ValidatorInterface::class);
+        $validator->method('validate')->willReturn(new ConstraintViolationList());
+        self::getContainer()->set(Importer::class, new Importer($addresses, $validator, $this->createMock(IdmUserFetcher::class), $this->createMock(IdmGroupFetcher::class), $reader));
+        self::getContainer()->set(Config::class, new Config(['Domain' => 'example.test']));
+        self::getContainer()->set(IdmClientInterface::class, $this->createMock(IdmClientInterface::class));
+        self::getContainer()->set(AvatarRendererInterface::class, $this->createMock(AvatarRendererInterface::class));
+        $client->disableReboot();
+        $client->loginAdmin(TestUserBuilder::create()->privilege(Privilege::ADMIN_UUID)->getUser());
+        $client->request('GET', '/admin/mailalias/import');
+        $client->submitForm('Import', ['import[file]' => base64_encode('remote/file.csv')]);
 
         self::assertResponseRedirects('/admin/mailalias');
     }
