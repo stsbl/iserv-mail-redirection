@@ -121,7 +121,9 @@ final class AddressAdminWebTest extends WebTestCase
         ]);
 
         self::assertResponseRedirects();
-        self::assertSame('new-help', $entityManager->getRepository(Address::class)->findOneBy(['recipient' => 'new-help'])?->getRecipient());
+        $address = $entityManager->getRepository(Address::class)->findOneBy(['recipient' => 'new-help']);
+        self::assertSame('new-help', $address?->getRecipient());
+        self::assertNotNull($address?->getId());
     }
 
 }
